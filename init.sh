@@ -1,5 +1,8 @@
 #!/bin/bash
 
+git clone git@github.com:msuadOf/ysyx_scripts.git utils
+chmod +x utils/*.sh
+
 # usage: addenv env_name path
 function addenv() {
   sed -i -e "/^export $1=.*/d" ~/.bashrc
