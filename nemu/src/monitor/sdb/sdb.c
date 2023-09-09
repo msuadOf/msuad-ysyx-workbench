@@ -101,9 +101,11 @@ word_t word=paddr_read(addr, 8);
 printf("%#018x ", word);
 }
 static int cmd_x(char *args) {
+  HALHook_displayMem(0x80000000);
   memory_rw_test(0x80000000,1);
-
+HALHook_displayMem(0x80000000);
 paddr_write(0x80000000, 1, 1);
+HALHook_displayMem(0x80000000);
   return 0;
 }
 
