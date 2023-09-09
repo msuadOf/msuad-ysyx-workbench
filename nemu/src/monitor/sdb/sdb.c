@@ -19,6 +19,7 @@
 #include <readline/history.h>
 #include "sdb.h"
 #include <stdlib.h>
+#include <common.h>
 
 static int is_batch_mode = false;
 
@@ -84,8 +85,11 @@ static int cmd_info(char *args) {
   
   return 0;
 }
+word_t paddr_read(paddr_t addr, int len) ;
+void paddr_write(paddr_t addr, int len, word_t data) ;
 static int cmd_x(char *args) {
-  cpu_exec(-1);
+paddr_read(CONFIG_MSIZE, 1) ;
+paddr_write(CONFIG_MSIZE, 1, 1);
   return 0;
 }
 
