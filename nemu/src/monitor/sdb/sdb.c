@@ -77,6 +77,7 @@ static int cmd_info(char *args) {
   {
     char* new_args=args+1;
     int i = atoi(new_args);
+    printf("r%-2d",i);
     isa_reg_displayByIndex(i);
 
   }
