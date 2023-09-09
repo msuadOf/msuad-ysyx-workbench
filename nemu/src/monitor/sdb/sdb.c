@@ -68,7 +68,11 @@ static int cmd_si(char *args) {
   return 0;
 }
 static int cmd_info(char *args) {
-  cpu_exec(-1);
+  char *arg = strtok(NULL, " ");
+  
+  if (strcmp(arg, "r") == 0) {
+    isa_reg_display();
+  }
   return 0;
 }
 static int cmd_x(char *args) {
