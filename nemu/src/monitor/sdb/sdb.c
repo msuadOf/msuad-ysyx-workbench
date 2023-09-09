@@ -67,12 +67,20 @@ static int cmd_si(char *args) {
   cpu_exec(n);
   return 0;
 }
+extern void isa_reg_displayByIndex(int i);
 static int cmd_info(char *args) {
   args=strtok(NULL, " ");
   
   if (strcmp(args, "r") == 0) {
     isa_reg_display();
+  }else if (args[0]=='r')
+  {
+    char* new_args=args+1;
+    int i = atoi(new_args);
+    isa_reg_displayByIndex(i);
+
   }
+  
   return 0;
 }
 static int cmd_x(char *args) {
