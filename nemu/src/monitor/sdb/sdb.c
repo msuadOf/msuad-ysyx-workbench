@@ -19,7 +19,8 @@
 #include <readline/history.h>
 #include "sdb.h"
 #include <stdlib.h>
-#include <common.h>
+#include <isa.h>
+#include <memory/paddr.h>
 
 static int is_batch_mode = false;
 
@@ -85,8 +86,6 @@ static int cmd_info(char *args) {
   
   return 0;
 }
-word_t paddr_read(paddr_t addr, int len) ;
-void paddr_write(paddr_t addr, int len, word_t data) ;
 
 void memory_rw_test(paddr_t addr,int len){
     printf("====memory r&w test====\n  read: %d\n",paddr_read(addr, len) );
