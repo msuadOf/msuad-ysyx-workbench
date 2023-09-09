@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <isa.h>
 #include <memory/paddr.h>
+#include <utils.h>
 
 static int is_batch_mode = false;
 
@@ -95,6 +96,7 @@ void memory_rw_test(paddr_t addr,int len){
 
 }
 static int cmd_x(char *args) {
+  printf(ANSI_FMT("%#018x: ", ANSI_FG_CYAN), 1);
 memory_rw_test(0x80000000,1);
 
 paddr_write(0x80000000, 1, 1);
