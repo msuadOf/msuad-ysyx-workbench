@@ -95,7 +95,13 @@ void memory_rw_test(paddr_t addr,int len){
   printf("====memory r&w test Failed!====");
 
 }
+void print_byte_without_0x(uint8_t n){
+  char s[10];
+  sprintf(s,"%#02x ", n);
+  printf(s+2);
+}
 void HALHook_displayMem(paddr_t addr){
+  print_byte_without_0x(3);
 printf(ANSI_FMT("%#018x: ", ANSI_FG_CYAN), 1);
 word_t word=paddr_read(addr, 4);
 printf("%#018x ", word);
