@@ -56,9 +56,9 @@ static int cmd_q(char *args) {
 static int cmd_help(char *args);
 
 static int cmd_si(char *args) {
-  char *arg = strtok(NULL, " ");
+  args = strtok(NULL, " ");
   int n;
-  if (arg == NULL) {
+  if (args == NULL) {
     n = 1;
   } else {
     n=atoi(args);
@@ -68,9 +68,9 @@ static int cmd_si(char *args) {
   return 0;
 }
 static int cmd_info(char *args) {
-  char *arg = strtok(NULL, " ");
+  strtok(NULL, " ");
   
-  if (strcmp(arg, "r") == 0) {
+  if (strcmp(args, "r") == 0) {
     isa_reg_display();
   }
   return 0;
