@@ -87,8 +87,17 @@ static int cmd_info(char *args) {
 }
 word_t paddr_read(paddr_t addr, int len) ;
 void paddr_write(paddr_t addr, int len, word_t data) ;
+
+void memory_rw_test(paddr_t addr,int len){
+    printf("====memory r&w test====\n  read: %d\n",paddr_read(addr, len) );
+  paddr_write( addr,  len,  2) ;
+  printf("read: %d \n",paddr_read(addr, len) );
+  printf("====memory r&w test Failed!====");
+
+}
 static int cmd_x(char *args) {
-paddr_read(0x80000000, 1) ;
+memory_rw_test(0x80000000,1);
+
 paddr_write(0x80000000, 1, 1);
   return 0;
 }
