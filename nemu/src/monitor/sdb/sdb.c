@@ -117,7 +117,7 @@ void HALHook_displayMem(paddr_t addr)
   printf(ANSI_FMT("%#018x: ", ANSI_FG_CYAN), 1);
   for (int i = 0; i < 4; i++)
   {
-    word_t word = paddr_read(addr, 4);
+    word_t word = paddr_read(addr+i, 4);
     print_byte_without_0x(word);
   }
   putchar('\n');
