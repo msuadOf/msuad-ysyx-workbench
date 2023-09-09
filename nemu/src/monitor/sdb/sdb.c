@@ -97,7 +97,7 @@ void memory_rw_test(paddr_t addr,int len){
 }
 void HALHook_displayMem(paddr_t addr){
 printf(ANSI_FMT("%#018x: ", ANSI_FG_CYAN), 1);
-word_t word=paddr_read(addr, 8);
+word_t word=paddr_read(addr, 4);
 printf("%#018x ", word);
 }
 static int cmd_x(char *args) {
