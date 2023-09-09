@@ -116,24 +116,40 @@ void HALHook_displayMem(paddr_t addr)
   printf(ANSI_FMT("%#010x: ", ANSI_FG_CYAN), addr);
   for (int i = 0; i < 4; i++)
   {
-    word_t word = paddr_read(addr+i*1, 1);
+    word_t word = paddr_read(addr + i * 1, 1);
     print_byte_without_0x(word);
   }
   putchar('\n');
 }
 static int cmd_x(char *args)
 {
-  int N=2;
-  paddr_t addr= 0x80000000;
-  for(int i=0;i<N;i++){
-    HALHook_displayMem(addr+i*4);
+  int N = 1;
+  paddr_t addr = 0x80000000;
+
+  //paras
+  char *arg1 = strtok(NULL, " ");
+  if (arg1 == NULL)
+  {
+    printf("Usage: x N EXPR\n");
+    return 0;
+  }
+  N = atoi(arg1);
+
+  char *arg2 = strtok(NULL, " ");
+  if (arg2 == NULL)
+  {
+    printf("Usage: x N EXPR\n");
+    return 0;
+  }
+  addr = strtol(arg2, NULL, 0);
+
+//do with addr&N
+
+  for (int i = 0; i < N; i++)
+  {
+    HALHook_displayMem(addr + i * 4);
   }
 
-  HALHook_displayMem(0x80000000);
-  memory_rw_test(0x80000000, 1);
-  HALHook_displayMem(0x80000000);
-  paddr_write(0x80000000, 1, 1);
-  HALHook_displayMem(0x80000000);
   return 0;
 }
 
