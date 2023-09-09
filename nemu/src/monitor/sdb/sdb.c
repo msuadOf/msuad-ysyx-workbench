@@ -68,7 +68,7 @@ static int cmd_si(char *args) {
   return 0;
 }
 static int cmd_info(char *args) {
-  strtok(NULL, " ");
+  args=strtok(NULL, " ");
   
   if (strcmp(args, "r") == 0) {
     isa_reg_display();
