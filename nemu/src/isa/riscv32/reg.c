@@ -25,12 +25,10 @@ const char *regs[] = {
 
 void isa_reg_display() {
   int i=0;
-  for(i=0;i<31;i++){
-    printf("r%d = %d ; ",i,gpr(i));
-    if(i%2){
-      putchar('\n');
-    }
+  for (i = 0; i < 32; i++) {
+    printf("%-8s%-#20x%-20d\n", regs[i], gpr(i), gpr(i));
   }
+  printf("%-8s%-#20x%-20d\n", "pc",cpu.pc, cpu.pc);
   putchar('\n');
 }
 
