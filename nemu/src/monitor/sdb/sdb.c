@@ -113,8 +113,7 @@ void print_byte_without_0x(uint8_t n)
 }
 void HALHook_displayMem(paddr_t addr)
 {
-  print_byte_without_0x(3);
-  printf(ANSI_FMT("%#018x: ", ANSI_FG_CYAN), 1);
+  printf(ANSI_FMT("%#018x: ", ANSI_FG_CYAN), addr);
   for (int i = 0; i < 4; i++)
   {
     word_t word = paddr_read(addr+i*1, 1);
@@ -124,6 +123,12 @@ void HALHook_displayMem(paddr_t addr)
 }
 static int cmd_x(char *args)
 {
+  int N=2;
+  paddr_t addr= 0x80000000;
+  for(int i=0;i<N;i++){
+    HALHook_displayMem(addr+i*4);
+  }
+
   HALHook_displayMem(0x80000000);
   memory_rw_test(0x80000000, 1);
   HALHook_displayMem(0x80000000);
