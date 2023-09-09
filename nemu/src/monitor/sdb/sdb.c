@@ -96,9 +96,9 @@ void memory_rw_test(paddr_t addr,int len){
 
 }
 void print_byte_without_0x(uint8_t n){
-  char s[30];
+  char s[20];
   sprintf(s,"%#04x ", n);
-  printf(s+1);
+  printf(s+2);
 }
 void HALHook_displayMem(paddr_t addr){
   print_byte_without_0x(3);
