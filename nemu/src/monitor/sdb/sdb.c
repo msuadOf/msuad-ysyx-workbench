@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include <stdlib.h>
 
 static int is_batch_mode = false;
 
@@ -55,7 +56,8 @@ static int cmd_q(char *args) {
 static int cmd_help(char *args);
 
 static int cmd_si(char *args) {
-  cpu_exec(-1);
+  int n=atoi(args);
+  cpu_exec(n);
   return 0;
 }
 static int cmd_info(char *args) {
