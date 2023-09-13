@@ -83,11 +83,16 @@ static int cmd_info(char *args)
 {
   args = strtok(NULL, " ");
 
+  if(args==NULL){
+    printf("Usage: info SUBCMD(r/w)\n");
+    return 0;
+  }
+
   if (strcmp(args, "r") == 0)
   {
     isa_reg_display();
   }
-  else if (args[0] == 'r')
+  else if (args[0] == 'r') //r1;r2...r31;r32
   {
     char *new_args = args + 1;
     int i = atoi(new_args);
