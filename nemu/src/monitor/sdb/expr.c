@@ -126,6 +126,8 @@ static bool make_token(char *e)
             case '-':
             case '*':
             case '/':
+            case '(':
+            case ')':
             case TK_NUM:
             default:
             {
@@ -151,6 +153,11 @@ static bool make_token(char *e)
 static void clear_expr_once(){
   nr_token=0;
 }
+static void print_token(){
+  for (int i=0;i<32;i++){
+    Log("%d: %s,type=%c",i,tokens[i].str,tokens[i].type);
+  }
+}
 word_t expr(char *e, bool *success)
 {
   *success = true;
@@ -162,6 +169,7 @@ word_t expr(char *e, bool *success)
 
   /* TODO: Insert codes to evaluate the expression. */
   // TODO();
+print_token();
   clear_expr_once();//对表达式求出值后进行复位
   return 0;
 }
