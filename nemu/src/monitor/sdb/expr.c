@@ -35,10 +35,18 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
+//十进制整数
+// +, -, *, /
+// (, )
+// 空格串(一个或多个空格)
 
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+
+  {"-", '-'},
+  {"\\*", '*'},
+  {"/", '/'},
 };
 
 #define NR_REGEX ARRLEN(rules)
