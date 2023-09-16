@@ -161,6 +161,13 @@ static int cmd_x(char *args)
 
 static int cmd_p(char *args)
 {
+  bool success;
+  word_t res = expr(args, &success);
+  if (!success) {
+    printf("expression extract failed");
+  } else {
+    printf("%u\n", res);
+  }
   return 0;
 }
 static int cmd_w(char *args)
