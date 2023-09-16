@@ -123,13 +123,16 @@ static bool make_token(char *e)
               break;
             }
             case '+':
+            case '-':
+            case '*':
+            case '/':
+            case TK_NUM:
+            default:
             {
               strncpy(tokens[nr_token].str, substr_start, substr_len);
-              Log("====== + =====");
+              Log("====== default: + - * / =====");
               break;
             }
-            default:
-              break;
         }
         nr_token++;
         break;
