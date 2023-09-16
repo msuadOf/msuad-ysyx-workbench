@@ -125,7 +125,7 @@ static bool make_token(char *e)
             case '+':
             {
               strncpy(tokens[nr_token].str, substr_start, substr_len);
-              Log();
+              Log("====== + =====");
               break;
             }
             default:
