@@ -150,6 +150,7 @@ static void clear_expr_once(){
 }
 word_t expr(char *e, bool *success)
 {
+  *success = true;
   if (!make_token(e))
   {
     *success = false;
