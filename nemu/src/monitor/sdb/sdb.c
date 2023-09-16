@@ -164,7 +164,7 @@ static int cmd_p(char *args)
   bool success;
   word_t res = expr(args, &success);
   if (!success) {
-    printf("expression extract failed");
+    printf("expression extract failed\n");
   } else {
     printf("%u\n", res);
   }

@@ -113,18 +113,22 @@ static bool make_token(char *e)
          * of tokens, some extra actions should be performed.
          */
 
+        tokens[nr_token].type = rules[i].token_type;
         switch (rules[i].token_type)
         {
-        case '+':
-        {
-          printf("12");
-          break;
+            case TK_NOTYPE:
+            {
+              break;
+            }
+            case '+':
+            {
+              printf("12");
+              break;
+            }
+            default:
+              break;
         }
-        default:
-          break;
-        }
-
-        break;
+        nr_token++;
       }
     }
 
@@ -147,7 +151,7 @@ word_t expr(char *e, bool *success)
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  //TODO();
+  // TODO();
 
   return 0;
 }
