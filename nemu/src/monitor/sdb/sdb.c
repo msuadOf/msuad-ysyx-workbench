@@ -83,7 +83,8 @@ static int cmd_info(char *args)
 {
   args = strtok(NULL, " ");
 
-  if(args==NULL){
+  if (args == NULL)
+  {
     printf("Usage: info SUBCMD(r/w)\n");
     return 0;
   }
@@ -92,7 +93,7 @@ static int cmd_info(char *args)
   {
     isa_reg_display();
   }
-  else if (args[0] == 'r') //r1;r2...r31;r32
+  else if (args[0] == 'r') // r1;r2...r31;r32
   {
     char *new_args = args + 1;
     int i = atoi(new_args);
@@ -131,7 +132,7 @@ static int cmd_x(char *args)
   int N = 1;
   paddr_t addr = 0x80000000;
 
-  //paras
+  // paras
   char *arg1 = strtok(NULL, " ");
   if (arg1 == NULL)
   {
@@ -148,13 +149,26 @@ static int cmd_x(char *args)
   }
   addr = strtol(arg2, NULL, 0);
 
-//do with addr&N
+  // do with addr&N
 
   for (int i = 0; i < N; i++)
   {
     HALHook_displayMem(addr + i * 4);
   }
 
+  return 0;
+}
+
+static int cmd_p(char *args)
+{
+  return 0;
+}
+static int cmd_w(char *args)
+{
+  return 0;
+}
+static int cmd_d(char *args)
+{
   return 0;
 }
 
@@ -170,6 +184,9 @@ static struct
     {"si", "让程序单步执行N条指令后暂停执行,当N没有给出时, 缺省为1", cmd_si},
     {"x", "求出表达式EXPR的值, 将结果作为起始内存地址, 以十六进制形式输出连续的N个4字节", cmd_x},
     {"info", "	打印寄存器状态,打印监视点信息", cmd_info},
+    {"p", "求出表达式EXPR的值, EXPR支持的", cmd_p},
+    {"w", "当表达式EXPR的值发生变化时, 暂停程序执行", cmd_w},
+    {"d", "Exit NEMU删除序号为N的监视点", cmd_d},
     /* TODO: Add more commands */
 
 };
