@@ -26,6 +26,7 @@ enum
   TK_EQ,
 
   /* TODO: Add more token types */
+  TK_NUM,
 
 };
 
@@ -50,6 +51,7 @@ static struct rule
     {"-", '-'},
     {"\\*", '*'},
     {"/", '/'},
+    {"[0-9]+", TK_NUM},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -122,7 +124,8 @@ static bool make_token(char *e)
             }
             case '+':
             {
-              printf("12");
+              strncpy(tokens[nr_token].str, substr_start, substr_len);
+              Log();
               break;
             }
             default:
@@ -141,7 +144,9 @@ static bool make_token(char *e)
 
   return true;
 }
-
+static void clear_expr_once(){
+  nr_token=0;
+}
 word_t expr(char *e, bool *success)
 {
   if (!make_token(e))
@@ -152,6 +157,6 @@ word_t expr(char *e, bool *success)
 
   /* TODO: Insert codes to evaluate the expression. */
   // TODO();
-
+  clear_expr_once();//对表达式求出值后进行复位
   return 0;
 }
