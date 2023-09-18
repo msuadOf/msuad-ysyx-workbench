@@ -235,6 +235,8 @@ int get_majorIndex(int p, int q)
       }
     }
   }
+  if (par != 0)
+    return -1;
   return ret;
 }
 uint32_t eval(int p, int q, bool *sucess)
@@ -266,7 +268,14 @@ uint32_t eval(int p, int q, bool *sucess)
   }
   else
   {
-    /* We should do more things here. */
+    int major_index = get_majorIndex(p, q);
+    if (major_index < 0)
+    {
+      *sucess = false;
+      return 0;
+    }
+    Log("major_index=%d",major_index);
+
   }
 
   return -1;
