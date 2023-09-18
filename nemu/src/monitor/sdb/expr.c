@@ -119,23 +119,23 @@ static bool make_token(char *e)
         tokens[nr_token].type = rules[i].token_type;
         switch (rules[i].token_type)
         {
-            case TK_NOTYPE:
-            {
-              break;
-            }
-            case '+':
-            case '-':
-            case '*':
-            case '/':
-            case '(':
-            case ')':
-            case TK_NUM:
-            default:
-            {
-              strncpy(tokens[nr_token].str, substr_start, substr_len);
-              Log("====== default: + - * / =====");
-              break;
-            }
+        case TK_NOTYPE:
+        {
+          break;
+        }
+        case '+':
+        case '-':
+        case '*':
+        case '/':
+        case '(':
+        case ')':
+        case TK_NUM:
+        default:
+        {
+          strncpy(tokens[nr_token].str, substr_start, substr_len);
+          Log("====== default: + - * / =====");
+          break;
+        }
         }
         nr_token++;
         break;
@@ -151,39 +151,62 @@ static bool make_token(char *e)
 
   return true;
 }
-bool check_parentheses(int p, int q) {
-return false;
+bool check_parentheses(int p, int q)
+{
+  int stack_cnt=0;
+ if (tokens[p].type=='(' && tokens[q].type==')') {
+  for(int i=p;i<=q;i++){
+    if(tokens[i].type=='('){
+      stack_cnt++;
+    }else if (tokens[i].type==')')
+    {
+      stack_cnt--;
+    }
+  }
+  if(stack_cnt==0){
+    return true;
+  }
+ }
+  return false;
 }
 
-uint32_t eval(int p,int q,bool* sucess) {
-  if (p > q) {
+uint32_t eval(int p, int q, bool *sucess)
+{
+  if (p > q)
+  {
     /* Bad expression */
   }
-  else if (p == q) {
+  else if (p == q)
+  {
     /* Single token.
      * For now this token should be a number.
      * Return the value of the number.
      */
   }
-  else if (check_parentheses(p, q) == true) {
+  else if (check_parentheses(p, q) == true)
+  {
     /* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
      */
-    return eval(p + 1, q - 1,sucess);
+    return eval(p + 1, q - 1, sucess);
   }
-  else {
+  else
+  {
     /* We should do more things here. */
   }
 
   return -1;
 }
 
-static void clear_expr_once(){
-  nr_token=0;
+static void clear_expr_once()
+{
+  nr_token = 0;
 }
-static void print_token(){
-  for (int i=0;i<32;i++){
-    Log("%d: %s,type=%c",i,tokens[i].str,tokens[i].type);
+static void print_token()
+{
+  for (int i = 0; i < 32; i++)
+  {
+    Log("%d: %s,type=%c", i, tokens[i].str, tokens[i].type);
   }
 }
 word_t expr(char *e, bool *success)
@@ -197,8 +220,8 @@ word_t expr(char *e, bool *success)
 
   /* TODO: Insert codes to evaluate the expression. */
   // TODO();
-  uint32_t ret=eval(0, nr_token-1, success);
-print_token();
-  clear_expr_once();//对表达式求出值后进行复位
+  uint32_t ret = eval(0, nr_token - 1, success);
+  print_token();
+  clear_expr_once(); // 对表达式求出值后进行复位
   return ret;
 }
