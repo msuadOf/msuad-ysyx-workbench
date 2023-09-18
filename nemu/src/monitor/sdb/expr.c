@@ -276,6 +276,12 @@ uint32_t eval(int p, int q, bool *sucess)
     }
     Log("major_index=%d",major_index);
 
+
+    uint32_t val1 = eval(p, major_index-1, sucess);
+    uint32_t val2 = eval(major_index+1, q, sucess);
+    if (!*sucess) return -1;
+
+    printf("%d,%d\n",val1,val2);
   }
 
   return -1;
