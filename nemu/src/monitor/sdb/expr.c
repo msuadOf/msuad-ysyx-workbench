@@ -197,7 +197,8 @@ word_t expr(char *e, bool *success)
 
   /* TODO: Insert codes to evaluate the expression. */
   // TODO();
+  uint32_t ret=eval(0, nr_token-1, success);
 print_token();
   clear_expr_once();//对表达式求出值后进行复位
-  return 0;
+  return ret;
 }
