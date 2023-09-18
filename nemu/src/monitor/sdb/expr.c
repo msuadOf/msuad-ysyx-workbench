@@ -156,20 +156,25 @@ static bool make_token(char *e)
 }
 bool check_parentheses(int p, int q)
 {
-  int stack_cnt=0;
- if (tokens[p].type=='(' && tokens[q].type==')') {
-  for(int i=p;i<=q;i++){
-    if(tokens[i].type=='('){
-      stack_cnt++;
-    }else if (tokens[i].type==')')
+  int stack_cnt = 0;
+  if (tokens[p].type == '(' && tokens[q].type == ')')
+  {
+    for (int i = p; i <= q; i++)
     {
-      stack_cnt--;
+      if (tokens[i].type == '(')
+      {
+        stack_cnt++;
+      }
+      else if (tokens[i].type == ')')
+      {
+        stack_cnt--;
+      }
+    }
+    if (stack_cnt == 0)
+    {
+      return true;
     }
   }
-  if(stack_cnt==0){
-    return true;
-  }
- }
   return false;
 }
 
@@ -185,6 +190,12 @@ uint32_t eval(int p, int q, bool *sucess)
      * For now this token should be a number.
      * Return the value of the number.
      */
+    if (tokens[p].type != TK_NUM)
+    {
+      *sucess = false;
+      return 0;
+    }
+    return strtol(tokens[p].str, NULL, 10);
   }
   else if (check_parentheses(p, q) == true)
   {
