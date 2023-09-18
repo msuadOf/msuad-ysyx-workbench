@@ -177,7 +177,66 @@ bool check_parentheses(int p, int q)
   }
   return false;
 }
+/**
+ * @brief function: get_majorIndex() allow user get the index of major op
+ *
+ *
+ * @param p
+ * @param q
+ * @return >0 sucess and the value is index
+ *         -1 failed
+ */
 
+int get_majorIndex(int p, int q)
+{
+  int ret = -1, par = 0, op_type = 0;
+  for (int i = p; i <= q; i++)
+  {
+    if (tokens[i].type == TK_NUM)
+    {
+      continue;
+    }
+    if (tokens[i].type == '(')
+    {
+      par++;
+    }
+    else if (tokens[i].type == ')')
+    {
+      if (par == 0)
+      {
+        return -1;
+      }
+      par--;
+    }
+    else if (par > 0)
+    {
+      continue;
+    }
+    else
+    {
+      int tmp_type = 0;
+      switch (tokens[i].type)
+      {
+      case '*':
+      case '/':
+        tmp_type = 1;
+        break;
+      case '+':
+      case '-':
+        tmp_type = 2;
+        break;
+      default:
+        assert(0);
+      }
+      if (tmp_type >= op_type)
+      {
+        op_type = tmp_type;
+        ret = i;
+      }
+    }
+  }
+  return ret;
+}
 uint32_t eval(int p, int q, bool *sucess)
 {
   if (p > q)
@@ -193,7 +252,8 @@ uint32_t eval(int p, int q, bool *sucess)
     if (tokens[p].type != TK_NUM)
     {
       *sucess = false;
-      return 0;
+      printf("[Error]:What have you give me? where is number???");
+      return -1;
     }
     return strtol(tokens[p].str, NULL, 10);
   }
