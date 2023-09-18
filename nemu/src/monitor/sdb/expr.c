@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 #include <isa.h>
+#include <stdint.h>
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -150,6 +151,33 @@ static bool make_token(char *e)
 
   return true;
 }
+bool check_parentheses(int p, int q) {
+return false;
+}
+
+uint32_t eval(int p,int q,bool* sucess) {
+  if (p > q) {
+    /* Bad expression */
+  }
+  else if (p == q) {
+    /* Single token.
+     * For now this token should be a number.
+     * Return the value of the number.
+     */
+  }
+  else if (check_parentheses(p, q) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return eval(p + 1, q - 1,sucess);
+  }
+  else {
+    /* We should do more things here. */
+  }
+
+  return -1;
+}
+
 static void clear_expr_once(){
   nr_token=0;
 }
