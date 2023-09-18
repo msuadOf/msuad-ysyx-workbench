@@ -274,14 +274,31 @@ uint32_t eval(int p, int q, bool *sucess)
       *sucess = false;
       return 0;
     }
-    Log("major_index=%d",major_index);
+    Log("major_index=%d", major_index);
 
+    uint32_t val1 = eval(p, major_index - 1, sucess);
+    uint32_t val2 = eval(major_index + 1, q, sucess);
+    if (*sucess == false)
+      return -1;
 
-    uint32_t val1 = eval(p, major_index-1, sucess);
-    uint32_t val2 = eval(major_index+1, q, sucess);
-    if (!*sucess) return -1;
-
-    printf("%d,%d\n",val1,val2);
+    switch (tokens[major_index].type)
+    {
+    case '+':
+      return val1 + val2;
+    case '-':
+      return val1 - val2;
+    case '*':
+      return val1 * val2;
+    case '/':
+      if (val2 == 0)
+      {
+        *sucess = false;
+        return 0;
+      }
+      return (sword_t)val1 / (sword_t)val2; // e.g. -1/2, may not pass the expr test
+    default:
+      assert(0);
+    }
   }
 
   return -1;
