@@ -60,7 +60,7 @@ static struct rule
     {"-", '-'},
     {"\\*", '*'},
     {"/", '/'},
-    {"(0x)?[0-9]+", TK_NUM},
+    {"(0x)?([0-9]|[a-f]|[A-F])+", TK_NUM},
 
     {"\\(", '('},
     {"\\)", ')'},
@@ -360,7 +360,7 @@ uint32_t eval(int p, int q, bool *sucess)
         *sucess = false;
         return 0;
       }
-      return (sword_t)val1 / (sword_t)val2; // e.g. -1/2, may not pass the expr test
+      return (sword_t)val1 / (sword_t)val2; 
     default:
       assert(0);
     }
