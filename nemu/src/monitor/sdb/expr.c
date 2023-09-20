@@ -142,7 +142,13 @@ static bool make_token(char *e)
         case TK_NUM:
         default:
         {
-          strncpy(tokens[nr_token].str, substr_start, substr_len);
+          //bug: "p 12"->"1213" after "p 0x13"
+          //strncpy do not specify the string with '\0' in the end;
+          //      while substr_start just the part of a long cmd string ...
+          {
+            strncpy(tokens[nr_token].str, substr_start, substr_len);
+            tokens[nr_token].str[substr_len] = '\0';
+          }
           Log("====== default: + - * / =====");
           break;
         }
