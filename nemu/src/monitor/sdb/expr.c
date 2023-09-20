@@ -141,32 +141,32 @@ static bool make_token(char *e)
                 //          || (tokens[nr_token].type=='+')
                 //          || (tokens[nr_token].type=='-')
                 ) &&
-            ((nr_token > 0) ? (tokens[nr_token - 1].type *= TK_NUM) : (1)))
+            ((nr_token > 0) ? (tokens[nr_token - 1].type != TK_NUM) : (1)))
         {
 
+          {
+            strncpy(tokens[nr_token].str, substr_start, substr_len);
+            tokens[nr_token].str[substr_len] = '\0'; // added to fix bug
+          }
           switch (rules[i].token_type)
           {
-          case TK_NOTYPE:
-          {
-            break;
-          }
-          case '+':
+
           case '-':
+            tokens[nr_token].type = TK_NEG;
+            break;
+          case '+':
+            tokens[nr_token].type = TK_POS;
+            break;
           case '*':
-          case '/':
-          case '(':
-          case ')':
-          case TK_NUM:
+            tokens[nr_token].type = TK_DEREF;
+            break;
           default:
           {
             // bug: "p 12"->"1213" after "p 0x13"
             // strncpy do not specify the string with '\0' in the end;
             //       while substr_start just the part of a long cmd string ...
-            {
-              strncpy(tokens[nr_token].str, substr_start, substr_len);
-              tokens[nr_token].str[substr_len] = '\0'; // added to fix bug
-            }
-            Log("====== default: + - * / =====");
+
+            Log("====== default: warning here !!!! =====");
             break;
           }
           }
