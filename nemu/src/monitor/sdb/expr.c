@@ -28,6 +28,9 @@ enum
 
   /* TODO: Add more token types */
   TK_NUM,
+  TK_REG,
+  TK_VAR,
+  TK_AND
 
 };
 
@@ -56,6 +59,10 @@ static struct rule
 
     {"\\(", '('},
     {"\\)", ')'},
+
+    {"&&", TK_AND},
+
+    {"\\$\\w+", TK_REG},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -293,7 +300,7 @@ uint32_t eval(int p, int q, bool *sucess)
       if (val2 == 0)
       {
         *sucess = false;
-        return 0; 
+        return 0;
       }
       return (sword_t)val1 / (sword_t)val2; // e.g. -1/2, may not pass the expr test
     default:
