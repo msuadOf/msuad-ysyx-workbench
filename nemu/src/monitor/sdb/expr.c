@@ -30,7 +30,12 @@ enum
   TK_NUM,
   TK_REG,
   TK_VAR,
-  TK_AND
+  TK_AND,
+  TK_OR,
+
+  TK_POS,
+  TK_NEG,
+  TK_DEREF,
 
 };
 
@@ -55,7 +60,7 @@ static struct rule
     {"-", '-'},
     {"\\*", '*'},
     {"/", '/'},
-    {"[0-9]+", TK_NUM},
+    {"(0x)?[0-9]+", TK_NUM},
 
     {"\\(", '('},
     {"\\)", ')'},
@@ -125,28 +130,77 @@ static bool make_token(char *e)
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
+        if (rules[i].token_type == TK_NOTYPE)
+        {
+          break;
+        }
         tokens[nr_token].type = rules[i].token_type;
-        switch (rules[i].token_type)
+        if (
+            (
+                (tokens[nr_token].type == '*')
+                //          || (tokens[nr_token].type=='+')
+                //          || (tokens[nr_token].type=='-')
+                ) &&
+            ((nr_token > 0) ? (tokens[nr_token - 1].type != TK_NUM) : (1)))
         {
-        case TK_NOTYPE:
+
+          {
+            strncpy(tokens[nr_token].str, substr_start, substr_len);
+            tokens[nr_token].str[substr_len] = '\0'; // added to fix bug
+          }
+          switch (rules[i].token_type)
+          {
+
+          case '-':
+            tokens[nr_token].type = TK_NEG;
+            break;
+          case '+':
+            tokens[nr_token].type = TK_POS;
+            break;
+          case '*':
+            tokens[nr_token].type = TK_DEREF;
+            break;
+          default:
+          {
+            // bug: "p 12"->"1213" after "p 0x13"
+            // strncpy do not specify the string with '\0' in the end;
+            //       while substr_start just the part of a long cmd string ...
+
+            Log("====== default: warning here !!!! =====");
+            break;
+          }
+          }
+        }
+        else
         {
-          break;
+          switch (rules[i].token_type)
+          {
+          case TK_NOTYPE:
+          {
+            break;
+          }
+          case '+':
+          case '-':
+          case '*':
+          case '/':
+          case '(':
+          case ')':
+          case TK_NUM:
+          default:
+          {
+            // bug: "p 12"->"1213" after "p 0x13"
+            // strncpy do not specify the string with '\0' in the end;
+            //       while substr_start just the part of a long cmd string ...
+            {
+              strncpy(tokens[nr_token].str, substr_start, substr_len);
+              tokens[nr_token].str[substr_len] = '\0'; // added to fix bug
+            }
+            Log("====== default: + - * / =====");
+            break;
+          }
+          }
         }
-        case '+':
-        case '-':
-        case '*':
-        case '/':
-        case '(':
-        case ')':
-        case TK_NUM:
-        default:
-        {
-          strncpy(tokens[nr_token].str, substr_start, substr_len);
-          Log("====== default: + - * / =====");
-          break;
-        }
-        }
+
         nr_token++;
         break;
       }
@@ -199,9 +253,9 @@ int get_majorIndex(int p, int q)
   int ret = -1, par = 0, op_type = 0;
   for (int i = p; i <= q; i++)
   {
-    if (tokens[i].type == TK_NUM)
+    if (tokens[i].type == TK_NUM || tokens[i].type == TK_DEREF)
     {
-      continue;
+      continue; //ignore number '*'
     }
     if (tokens[i].type == '(')
     {
@@ -264,7 +318,7 @@ uint32_t eval(int p, int q, bool *sucess)
       printf("[Error]:What have you give me? where is number???");
       return -1;
     }
-    return strtol(tokens[p].str, NULL, 10);
+    return strtol(tokens[p].str, NULL, 0);
   }
   else if (check_parentheses(p, q) == true)
   {
@@ -330,11 +384,11 @@ word_t expr(char *e, bool *success)
     *success = false;
     return 0;
   }
-
+  print_token();
   /* TODO: Insert codes to evaluate the expression. */
   // TODO();
   uint32_t ret = eval(0, nr_token - 1, success);
-  print_token();
+
   clear_expr_once(); // 对表达式求出值后进行复位
   return ret;
 }
