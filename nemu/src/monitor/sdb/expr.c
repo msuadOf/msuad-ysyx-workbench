@@ -293,7 +293,7 @@ uint32_t eval(int p, int q, bool *sucess)
       if (val2 == 0)
       {
         *sucess = false;
-        return 0;
+        return 0; 
       }
       return (sword_t)val1 / (sword_t)val2; // e.g. -1/2, may not pass the expr test
     default:

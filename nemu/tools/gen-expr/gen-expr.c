@@ -31,38 +31,72 @@ static char *code_format =
     "  return 0; "
     "}";
 
-int gen_buf_index = 0;
-static void gen(char c)
+static char *buf_start = buf;
+static volatile char *buf_end = buf + (sizeof(buf) / sizeof(buf[0]));
+
+static int choose(int n)
 {
-  buf[gen_buf_index] = c;
-  buf[gen_buf_index + 1] = '\0';
-  gen_buf_index++;
+  return rand() % n;
 }
+
+static void gen_space()
+{
+  int size = choose(4);
+  if (buf_start < buf_end)
+  {
+    int n_writes = snprintf(buf_start, buf_end - buf_start, "%*s", size, "");
+    if (n_writes > 0)
+    {
+      buf_start += n_writes;
+    }
+  }
+}
+
 static void gen_num()
 {
-  char str_tmp[500];
-  sprintf(str_tmp,"%u",(uint32_t)((rand()/RAND_MAX)*65535));
-  strcat(buf,str_tmp);
+  int num = choose(INT8_MAX);
+  if (buf_start < buf_end)
+  {
+    int n_writes = snprintf(buf_start, buf_end - buf_start, "%d", num);
+    if (n_writes > 0)
+    {
+      buf_start += n_writes;
+    }
+  }
+  gen_space();
+}
 
+static void gen_char(char c)
+{
+  int n_writes = snprintf(buf_start, buf_end - buf_start, "%c", c);
+  if (buf_start < buf_end)
+  {
+    if (n_writes > 0)
+    {
+      buf_start += n_writes;
+    }
+  }
 }
-int choose(int n){
-  return (int)(rand()%n);
-}
-static void gen_rand_op(){
 
+static char ops[] = {'+', '-', '*', '/'};
+static void gen_rand_op()
+{
+  int op_index = choose(sizeof(ops));
+  char op = ops[op_index];
+  gen_char(op);
 }
+
 static void gen_rand_expr()
 {
-
   switch (choose(3))
   {
   case 0:
     gen_num();
     break;
   case 1:
-    gen('(');
+    gen_char('(');
     gen_rand_expr();
-    gen(')');
+    gen_char(')');
     break;
   default:
     gen_rand_expr();
@@ -72,11 +106,153 @@ static void gen_rand_expr()
   }
 }
 
+// int gen_buf_index = 0;
+// static void gen(char c)
+// {
+//   gen_buf_index=strlen(buf);
+
+//   buf[gen_buf_index] = c;
+//   buf[gen_buf_index + 1] = '\0';
+
+// }
+
+// void HAL_UART_Transmit(char* buffer,int length){
+//   for(int i=0;i<length;i++){
+//     gen(buffer[i]);
+//   }
+//   //strcat(buf,buffer);
+// }
+// #include "stdarg.h"
+// #include "stdio.h"
+// int gen_printf( const char *fmt, ...) {
+//     va_list ap;
+//     va_start(ap, fmt);
+//     int length;
+//     char buffer[128];
+//     length = vsnprintf(buffer, 128, fmt, ap);
+//     HAL_UART_Transmit( buffer, length);//HAL_MAX_DELAY
+// //    CDC_Transmit_FS((uint8_t*)buffer,length);
+//     va_end(ap);
+//     return length;
+// }
+
+// static void gen_num(){
+
+//   gen_printf( "%d", (int)((rand() / 31535) +1));
+
+// }
+// int choose(int n)
+// {
+//   return (int)(rand() % n);
+// }
+// static void gen_rand_op()
+// {
+//   char op[2];
+//   op[1]='\0';
+//   switch (choose(4))
+//   {
+//   case 0:
+//     op[0] = '+';
+//     break;
+//   case 1:
+//     op[0] = '-';
+//     break;
+//   case 2:
+//     op[0] = '*';
+//     break;
+//   case 3:
+//     op[0] = '/';
+//     break;
+
+//   default:
+//     op[0] = '+';
+//     break;
+//   }
+//   //op[0]='+';
+//   gen_printf("%c",op[0]);
+// }
+// static void gen_rand_expr()
+// {
+
+//   switch (choose(3))
+//   {
+//   case 0:
+//     gen_num();
+//     break;
+//   case 1:
+//     gen('(');
+//     gen_rand_expr();
+//     gen(')');
+//     break;
+//   default:
+//     gen_rand_expr();
+//     gen_rand_op();
+//     gen_rand_expr();
+//     break;
+//   }
+// }
+
+// static void gen_num(){
+//   char str_tmp[500];
+//   sprintf(str_tmp, "%d", (int)((rand() / 31535) +1));
+//   strcat(buf, str_tmp);
+// }
+// int choose(int n)
+// {
+//   return (int)(rand() % n);
+// }
+// static void gen_rand_op()
+// {
+//   char op[2];
+//   op[1]='\0';
+//   switch (choose(4))
+//   {
+//   case 0:
+//     op[0] = '+';
+//     break;
+//   case 1:
+//     op[0] = '-';
+//     break;
+//   case 2:
+//     op[0] = '*';
+//     break;
+//   case 3:
+//     op[0] = '/';
+//     break;
+
+//   default:
+//     op[0] = '+';
+//     break;
+//   }
+//   op[1]='\0';
+//   strcat(buf, op);
+// }
+// static void gen_rand_expr()
+// {
+
+//   switch (choose(3))
+//   {
+//   case 0:
+//     gen_num();
+//     break;
+//   case 1:
+//     gen('(');
+//     gen_rand_expr();
+//     gen(')');
+//     break;
+//   default:
+//     gen_rand_expr();
+//     gen_rand_op();
+//     gen_rand_expr();
+//     break;
+//   }
+// }
+
 int main(int argc, char *argv[])
 {
   int seed = time(0);
   srand(seed);
-   // printf("======\n   %d    \n==========\n",choose(3));
+  // printf("======\n   %d    \n==========\n",choose(3));
   int loop = 1;
   if (argc > 1)
   {
@@ -85,6 +261,7 @@ int main(int argc, char *argv[])
   int i;
   for (i = 0; i < loop; i++)
   {
+    buf_start = buf;
     gen_rand_expr();
 
     sprintf(code_buf, code_format, buf);
