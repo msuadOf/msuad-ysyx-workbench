@@ -253,7 +253,7 @@ int get_majorIndex(int p, int q)
   int ret = -1, par = 0, op_type = 0;
   for (int i = p; i <= q; i++)
   {
-    if (tokens[i].type == TK_NUM || tokens[i].type == TK_DEREF)
+    if (tokens[i].type == TK_NUM)
     {
       continue; //ignore number '*'
     }
@@ -278,13 +278,17 @@ int get_majorIndex(int p, int q)
       int tmp_type = 0;
       switch (tokens[i].type)
       {
+        case TK_DEREF:{
+          tmp_type = 1;
+          break;
+        }
       case '*':
       case '/':
-        tmp_type = 1;
+        tmp_type = 2;
         break;
       case '+':
       case '-':
-        tmp_type = 2;
+        tmp_type = 3;
         break;
       default:
         assert(0);
