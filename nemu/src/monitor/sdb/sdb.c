@@ -57,6 +57,7 @@ static int cmd_c(char *args)
 
 static int cmd_q(char *args)
 {
+  exit(0);
   return -1;
 }
 
@@ -83,7 +84,8 @@ static int cmd_info(char *args)
 {
   args = strtok(NULL, " ");
 
-  if(args==NULL){
+  if (args == NULL)
+  {
     printf("Usage: info SUBCMD(r/w)\n");
     return 0;
   }
@@ -92,7 +94,7 @@ static int cmd_info(char *args)
   {
     isa_reg_display();
   }
-  else if (args[0] == 'r') //r1;r2...r31;r32
+  else if (args[0] == 'r') // r1;r2...r31;r32
   {
     char *new_args = args + 1;
     int i = atoi(new_args);
@@ -131,7 +133,7 @@ static int cmd_x(char *args)
   int N = 1;
   paddr_t addr = 0x80000000;
 
-  //paras
+  // paras
   char *arg1 = strtok(NULL, " ");
   if (arg1 == NULL)
   {
@@ -148,7 +150,7 @@ static int cmd_x(char *args)
   }
   addr = strtol(arg2, NULL, 0);
 
-//do with addr&N
+  // do with addr&N
 
   for (int i = 0; i < N; i++)
   {
@@ -160,15 +162,22 @@ static int cmd_x(char *args)
 
 static int cmd_p(char *args)
 {
-
+  bool success;
+  word_t res = expr(args, &success);
+  if (!success) {
+    printf("expression extract failed\n");
+  } else {
+    printf("%u\n", res);
+  }
+  return 0;
 }
 static int cmd_w(char *args)
 {
-
+  return 0;
 }
 static int cmd_d(char *args)
 {
-  
+  return 0;
 }
 
 static struct
