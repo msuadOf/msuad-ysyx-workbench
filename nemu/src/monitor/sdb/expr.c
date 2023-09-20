@@ -142,12 +142,12 @@ static bool make_token(char *e)
         case TK_NUM:
         default:
         {
-          //bug: "p 12"->"1213" after "p 0x13"
-          //strncpy do not specify the string with '\0' in the end;
-          //      while substr_start just the part of a long cmd string ...
+          // bug: "p 12"->"1213" after "p 0x13"
+          // strncpy do not specify the string with '\0' in the end;
+          //       while substr_start just the part of a long cmd string ...
           {
             strncpy(tokens[nr_token].str, substr_start, substr_len);
-            tokens[nr_token].str[substr_len] = '\0';
+            tokens[nr_token].str[substr_len] = '\0'; // added to fix bug
           }
           Log("====== default: + - * / =====");
           break;
@@ -227,6 +227,18 @@ int get_majorIndex(int p, int q)
     }
     else
     {
+      if (tokens[i].type == '*')
+      {
+        if (i > 0)
+        {
+          if (tokens[i - 1].type != TK_NUM)
+          {
+            continue; // ignore '*' when there is no number in front of it ---- it is the pointer
+          }
+        }else{
+          continue; // '*' is the begin of string
+        }
+      }
       int tmp_type = 0;
       switch (tokens[i].type)
       {
