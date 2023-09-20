@@ -264,7 +264,7 @@ uint32_t eval(int p, int q, bool *sucess)
       printf("[Error]:What have you give me? where is number???");
       return -1;
     }
-    return strtol(tokens[p].str, NULL, 10);
+    return strtol(tokens[p].str, NULL, 0);
   }
   else if (check_parentheses(p, q) == true)
   {
