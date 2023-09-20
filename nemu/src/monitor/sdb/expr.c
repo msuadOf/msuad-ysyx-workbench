@@ -16,6 +16,7 @@
 #include <isa.h>
 #include <stdint.h>
 
+#include "memory/paddr.h"
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
  */
@@ -60,7 +61,7 @@ static struct rule
     {"-", '-'},
     {"\\*", '*'},
     {"/", '/'},
-    {"(0x)?[0-9]+", TK_NUM},
+    {"(0x)?([0-9]|[a-f]|[A-F])+", TK_NUM},
 
     {"\\(", '('},
     {"\\)", ')'},
@@ -253,9 +254,9 @@ int get_majorIndex(int p, int q)
   int ret = -1, par = 0, op_type = 0;
   for (int i = p; i <= q; i++)
   {
-    if (tokens[i].type == TK_NUM || tokens[i].type == TK_DEREF)
+    if (tokens[i].type == TK_NUM)
     {
-      continue; //ignore number '*'
+      continue; // ignore number '*'
     }
     if (tokens[i].type == '(')
     {
@@ -278,13 +279,18 @@ int get_majorIndex(int p, int q)
       int tmp_type = 0;
       switch (tokens[i].type)
       {
+      case TK_DEREF:
+      {
+        tmp_type = 1;
+        break;
+      }
       case '*':
       case '/':
-        tmp_type = 1;
+        tmp_type = 2;
         break;
       case '+':
       case '-':
-        tmp_type = 2;
+        tmp_type = 3;
         break;
       default:
         assert(0);
@@ -337,13 +343,15 @@ uint32_t eval(int p, int q, bool *sucess)
     }
     Log("major_index=%d", major_index);
 
-    uint32_t val1 = eval(p, major_index - 1, sucess);
+    uint32_t val1 = (tokens[major_index].type == TK_DEREF) ? (0) : eval(p, major_index - 1, sucess);
     uint32_t val2 = eval(major_index + 1, q, sucess);
     if (*sucess == false)
       return -1;
 
     switch (tokens[major_index].type)
     {
+      case TK_DEREF:
+      return paddr_read(val2,4);
     case '+':
       return val1 + val2;
     case '-':
@@ -356,7 +364,7 @@ uint32_t eval(int p, int q, bool *sucess)
         *sucess = false;
         return 0;
       }
-      return (sword_t)val1 / (sword_t)val2; // e.g. -1/2, may not pass the expr test
+      return (sword_t)val1 / (sword_t)val2;
     default:
       assert(0);
     }
