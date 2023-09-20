@@ -30,7 +30,12 @@ enum
   TK_NUM,
   TK_REG,
   TK_VAR,
-  TK_AND
+  TK_AND,
+  TK_OR,
+
+  TK_POS,
+  TK_NEG,
+  TK_DEREF,
 
 };
 
@@ -125,34 +130,77 @@ static bool make_token(char *e)
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
+        if (rules[i].token_type == TK_NOTYPE)
+        {
+          break;
+        }
         tokens[nr_token].type = rules[i].token_type;
-        switch (rules[i].token_type)
+        if (
+            (
+                (tokens[nr_token].type == '*')
+                //          || (tokens[nr_token].type=='+')
+                //          || (tokens[nr_token].type=='-')
+                ) &&
+            ((nr_token > 0) ? (tokens[nr_token - 1].type *= TK_NUM) : (1)))
         {
-        case TK_NOTYPE:
-        {
-          break;
-        }
-        case '+':
-        case '-':
-        case '*':
-        case '/':
-        case '(':
-        case ')':
-        case TK_NUM:
-        default:
-        {
-          // bug: "p 12"->"1213" after "p 0x13"
-          // strncpy do not specify the string with '\0' in the end;
-          //       while substr_start just the part of a long cmd string ...
+
+          switch (rules[i].token_type)
           {
-            strncpy(tokens[nr_token].str, substr_start, substr_len);
-            tokens[nr_token].str[substr_len] = '\0'; // added to fix bug
+          case TK_NOTYPE:
+          {
+            break;
           }
-          Log("====== default: + - * / =====");
-          break;
+          case '+':
+          case '-':
+          case '*':
+          case '/':
+          case '(':
+          case ')':
+          case TK_NUM:
+          default:
+          {
+            // bug: "p 12"->"1213" after "p 0x13"
+            // strncpy do not specify the string with '\0' in the end;
+            //       while substr_start just the part of a long cmd string ...
+            {
+              strncpy(tokens[nr_token].str, substr_start, substr_len);
+              tokens[nr_token].str[substr_len] = '\0'; // added to fix bug
+            }
+            Log("====== default: + - * / =====");
+            break;
+          }
+          }
         }
+        else
+        {
+          switch (rules[i].token_type)
+          {
+          case TK_NOTYPE:
+          {
+            break;
+          }
+          case '+':
+          case '-':
+          case '*':
+          case '/':
+          case '(':
+          case ')':
+          case TK_NUM:
+          default:
+          {
+            // bug: "p 12"->"1213" after "p 0x13"
+            // strncpy do not specify the string with '\0' in the end;
+            //       while substr_start just the part of a long cmd string ...
+            {
+              strncpy(tokens[nr_token].str, substr_start, substr_len);
+              tokens[nr_token].str[substr_len] = '\0'; // added to fix bug
+            }
+            Log("====== default: + - * / =====");
+            break;
+          }
+          }
         }
+
         nr_token++;
         break;
       }
@@ -227,18 +275,6 @@ int get_majorIndex(int p, int q)
     }
     else
     {
-      if (tokens[i].type == '*')
-      {
-        if (i > 0)
-        {
-          if (tokens[i - 1].type != TK_NUM)
-          {
-            continue; // ignore '*' when there is no number in front of it ---- it is the pointer
-          }
-        }else{
-          continue; // '*' is the begin of string
-        }
-      }
       int tmp_type = 0;
       switch (tokens[i].type)
       {
