@@ -187,7 +187,7 @@ static int cmd_w(char *args)
   if (!success) {
     puts("cmd w: invalid expression");
   } else {
-    printf("=====  =w= w %u   ======\n",res);
+    printf("watch point added: %s\nNow the value is (%u)\n",args,res);
   }
   return 0;
 }
