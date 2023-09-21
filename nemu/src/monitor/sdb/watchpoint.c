@@ -64,17 +64,16 @@ void free_wp(WP *wp)
   wp->next = free_;
   free_ = wp;
 }
-void wpList_read(int NO){
 
-}
-void wpList_write(int NO){
 
-}
 void wp_add(char *expr, word_t res){
   WP* wp = new_wp();
   strcpy(wp->expr, expr);
   wp->val_last = res;
   printf("Watchpoint %d: %s (=%u)\n", wp->NO, expr,res);
+}
+void wp_del(int no){
+  printf("del\n");
 }
 // void print_wp_node(WP *wp){
 //   printf("[node:%d](val:%d)",wp,wp->NO);

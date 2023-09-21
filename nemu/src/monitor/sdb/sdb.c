@@ -184,16 +184,27 @@ static int cmd_w(char *args)
 
   bool success;
   uint32_t res = expr(args, &success);
-  if (!success) {
+  if (!success)
+  {
     puts("cmd w: invalid expression");
-  } else {
-    printf("watch point added: (%s) = (%u)\n",args,res);
+  }
+  else
+  {
+    printf("watch point added: (%s) = (%u)\n", args, res);
     wp_add(args, res);
   }
   return 0;
 }
 static int cmd_d(char *args)
 {
+  char *arg = strtok(NULL, "");
+  if (!arg)
+  {
+    printf("Usage: d N\n");
+    return 0;
+  }
+  int no = strtol(arg, NULL, 10);
+  wp_del(no);
   return 0;
 }
 

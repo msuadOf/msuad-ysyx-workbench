@@ -20,5 +20,6 @@
 
 word_t expr(char *e, bool *success);
 void wp_add(char *expr, word_t res);
+void wp_del(int no);
 
 #endif
