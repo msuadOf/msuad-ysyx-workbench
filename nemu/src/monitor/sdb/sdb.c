@@ -187,9 +187,9 @@ static int cmd_w(char *args)
   if (!success) {
     puts("cmd w: invalid expression");
   } else {
-    puts("=====  =w=   ======");
+    printf("=====  =w= w %u   ======\n",res);
   }
-  return res;
+  return 0;
 }
 static int cmd_d(char *args)
 {
