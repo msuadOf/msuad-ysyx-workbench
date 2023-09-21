@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 #include "sdb.h"
+#include "utils.h"
 
 #define NR_WP 32
 
@@ -124,6 +125,22 @@ void wp_display()
     printf("%-8d%-8s\n", p->NO, p->expr);
     p = p->next;
   }
+}
+void wp_difftest(){
+  WP* p = head;
+  while (p) {
+    bool sucess;
+    p->val_now = expr(p->expr, &sucess);
+    if (p->val_last != p->val_now) {
+      printf("Watchpoint %d: %s\n"
+        "Old value = %d\n"
+        "New value = %d\n"
+        , p->NO, p->expr, p->val_last, p->val_now);
+      p->val_last = p->val_now;
+    }
+    p = p->next;
+  }
+  //nemu_state.state=NEMU_STOP; //TODO:简单使用后会造成指令（ebreak）执行完不能正常停止
 }
 // void print_wp_node(WP *wp){
 //   printf("[node:%d](val:%d)",wp,wp->NO);

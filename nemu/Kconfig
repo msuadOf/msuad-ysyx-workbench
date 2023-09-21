@@ -1,5 +1,11 @@
 mainmenu "NEMU Configuration Menu"
 
+
+config WATCHPOINT
+    bool "WATCHPOINT"
+    default y      
+
+
 choice
   prompt "Base ISA"
   default ISA_riscv
