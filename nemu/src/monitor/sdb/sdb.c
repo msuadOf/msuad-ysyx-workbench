@@ -101,6 +101,10 @@ static int cmd_info(char *args)
     printf("r%-2d: ", i);
     isa_reg_displayByIndex(i);
   }
+    if (strcmp(args, "w") == 0)
+  {
+    wp_display();
+  }
 
   return 0;
 }
@@ -164,19 +168,47 @@ static int cmd_p(char *args)
 {
   bool success;
   word_t res = expr(args, &success);
-  if (!success) {
+  if (!success)
+  {
     printf("expression extract failed\n");
-  } else {
+  }
+  else
+  {
     printf("%u\n", res);
   }
   return 0;
 }
 static int cmd_w(char *args)
 {
+  if (!args)
+  {
+    printf("Usage: w EXPR\n");
+    return 0;
+  }
+
+  bool success;
+  uint32_t res = expr(args, &success);
+  if (!success)
+  {
+    puts("cmd w: invalid expression");
+  }
+  else
+  {
+    printf("watch point added: (%s) = (%u)\n", args, res);
+    wp_add(args, res);
+  }
   return 0;
 }
 static int cmd_d(char *args)
 {
+  char *arg = strtok(NULL, "");
+  if (!arg)
+  {
+    printf("Usage: d N\n");
+    return 0;
+  }
+  int no = strtol(arg, NULL, 10);
+  wp_del(no);
   return 0;
 }
 
@@ -191,10 +223,10 @@ static struct
     {"q", "Exit NEMU", cmd_q},
     {"si", "让程序单步执行N条指令后暂停执行,当N没有给出时, 缺省为1", cmd_si},
     {"x", "求出表达式EXPR的值, 将结果作为起始内存地址, 以十六进制形式输出连续的N个4字节", cmd_x},
-    {"info", "	打印寄存器状态,打印监视点信息", cmd_info},
+    {"info", "打印寄存器状态,打印监视点信息", cmd_info},
     {"p", "求出表达式EXPR的值, EXPR支持的", cmd_p},
-    {"w", "当表达式EXPR的值发生变化时, 暂停程序执行", cmd_w},
-    {"d", "Exit NEMU删除序号为N的监视点", cmd_d},
+    {"w", "w EXPR: 当表达式EXPR的值发生变化时, 暂停程序执行", cmd_w},
+    {"d", "d N: Exit NEMU删除序号为N的监视点", cmd_d},
     /* TODO: Add more commands */
 
 };
