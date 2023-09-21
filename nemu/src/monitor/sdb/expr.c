@@ -294,6 +294,15 @@ int get_majorIndex(int p, int q)
       case '-':
         tmp_type = 3;
         break;
+      case TK_EQ:
+        tmp_type = 4;
+        break;
+      case TK_AND:
+        tmp_type = 5;
+        break;
+      case TK_OR:
+        tmp_type = 6;
+        break;
       default:
         assert(0);
       }
@@ -329,7 +338,7 @@ uint32_t eval(int p, int q, bool *sucess)
     case TK_REG:
     {
 
-      return (tokens[p].str[1]>'0'&&tokens[p].str[1]<'9')?(isa_reg_getValueByIndex(strtol(tokens[p].str+1, NULL, 0))):(isa_reg_str2val(tokens[p].str+1,sucess));
+      return (tokens[p].str[1] > '0' && tokens[p].str[1] < '9') ? (isa_reg_getValueByIndex(strtol(tokens[p].str + 1, NULL, 0))) : (isa_reg_str2val(tokens[p].str + 1, sucess));
     }
     default:
     {
@@ -366,6 +375,12 @@ uint32_t eval(int p, int q, bool *sucess)
     {
     case TK_DEREF:
       return paddr_read(val2, 4);
+    case TK_AND:
+      return val1 && val2;
+    case TK_OR:
+      return val1 || val2;
+    case TK_EQ:
+      return val1 == val2;
     case '+':
       return val1 + val2;
     case '-':
