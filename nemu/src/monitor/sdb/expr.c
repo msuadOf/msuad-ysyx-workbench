@@ -17,6 +17,7 @@
 #include <stdint.h>
 
 #include "memory/paddr.h"
+extern int isa_reg_getValueByIndex(int i);
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
  */
@@ -67,6 +68,7 @@ static struct rule
     {"\\)", ')'},
 
     {"&&", TK_AND},
+    {"\\|\\|", TK_OR},
 
     {"\\$\\w+", TK_REG},
 };
@@ -254,7 +256,7 @@ int get_majorIndex(int p, int q)
   int ret = -1, par = 0, op_type = 0;
   for (int i = p; i <= q; i++)
   {
-    if (tokens[i].type == TK_NUM)
+    if (tokens[i].type == TK_NUM || tokens[i].type == TK_REG)
     {
       continue; // ignore number '*'
     }
@@ -292,6 +294,15 @@ int get_majorIndex(int p, int q)
       case '-':
         tmp_type = 3;
         break;
+      case TK_EQ:
+        tmp_type = 4;
+        break;
+      case TK_AND:
+        tmp_type = 5;
+        break;
+      case TK_OR:
+        tmp_type = 6;
+        break;
       default:
         assert(0);
       }
@@ -318,13 +329,25 @@ uint32_t eval(int p, int q, bool *sucess)
      * For now this token should be a number.
      * Return the value of the number.
      */
-    if (tokens[p].type != TK_NUM)
+
+    switch (tokens[p].type)
+    {
+    case TK_NUM:
+      return strtol(tokens[p].str, NULL, 0);
+      break;
+    case TK_REG:
+    {
+
+      return (tokens[p].str[1] > '0' && tokens[p].str[1] < '9') ? (isa_reg_getValueByIndex(strtol(tokens[p].str + 1, NULL, 0))) : (isa_reg_str2val(tokens[p].str + 1, sucess));
+    }
+    default:
     {
       *sucess = false;
       printf("[Error]:What have you give me? where is number???");
       return -1;
     }
-    return strtol(tokens[p].str, NULL, 0);
+    break;
+    }
   }
   else if (check_parentheses(p, q) == true)
   {
@@ -343,15 +366,21 @@ uint32_t eval(int p, int q, bool *sucess)
     }
     Log("major_index=%d", major_index);
 
-    uint32_t val1 = (tokens[major_index].type == TK_DEREF) ? (0) : eval(p, major_index - 1, sucess);
+    uint32_t val1 = ((tokens[major_index].type == TK_DEREF) || (tokens[major_index].type == TK_DEREF)) ? (0) : eval(p, major_index - 1, sucess);
     uint32_t val2 = eval(major_index + 1, q, sucess);
     if (*sucess == false)
       return -1;
 
     switch (tokens[major_index].type)
     {
-      case TK_DEREF:
-      return paddr_read(val2,4);
+    case TK_DEREF:
+      return paddr_read(val2, 4);
+    case TK_AND:
+      return val1 && val2;
+    case TK_OR:
+      return val1 || val2;
+    case TK_EQ:
+      return val1 == val2;
     case '+':
       return val1 + val2;
     case '-':

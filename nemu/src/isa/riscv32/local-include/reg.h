@@ -30,4 +30,6 @@ static inline const char* reg_name(int idx) {
   return regs[check_reg_idx(idx)];
 }
 
+int isa_reg_getValueByIndex(int i);
+
 #endif
