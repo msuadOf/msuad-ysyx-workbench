@@ -102,12 +102,27 @@ void wp_del(int no)
   WP *wp = wp_getByNO(no);
   if (wp == NULL)
   {
-    printf("[Error](wp_getByNO():watchpoint=%d):did not find it\n", no);
+    printf("[Error](watchpoint=%d):did not find it\n", no);
   }
   else
   {
     free_wp(wp);
     printf("Delete watchpoint %d: %s\n", wp->NO, wp->expr);
+  }
+}
+void wp_display()
+{
+  WP *p = head;
+  if (!p)
+  {
+    printf("No watchpoints\n");
+    return;
+  }
+  printf("%-8s%-8s\n", "Num", "What");
+  while (p)
+  {
+    printf("%-8d%-8s\n", p->NO, p->expr);
+    p = p->next;
   }
 }
 // void print_wp_node(WP *wp){
