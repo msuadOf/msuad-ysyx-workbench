@@ -101,6 +101,10 @@ static int cmd_info(char *args)
     printf("r%-2d: ", i);
     isa_reg_displayByIndex(i);
   }
+    if (strcmp(args, "w") == 0)
+  {
+    wp_display();
+  }
 
   return 0;
 }
