@@ -64,7 +64,15 @@ void free_wp(WP *wp)
   wp->next = free_;
   free_ = wp;
 }
+WP* wp_getByNO(int no){
 
+  for(int i=0;i<NR_WP;i++){
+    if(wp_pool[i].NO==no){
+      return &(wp_pool[i]);
+    }
+  }
+  assert(0);
+}
 
 void wp_add(char *expr, word_t res){
   WP* wp = new_wp();
@@ -77,7 +85,9 @@ void wp_del(int no){
     printf("[Error](d N): N(=%d) should be [0-%d]\n",no,NR_WP-1);
     return;
   }
-  printf("del %d\n",no);
+  WP* wp=wp_getByNO(no);
+  free_wp(wp);
+  printf("Delete watchpoint %d: %s\n", wp->NO, wp->expr);
 }
 // void print_wp_node(WP *wp){
 //   printf("[node:%d](val:%d)",wp,wp->NO);
