@@ -23,7 +23,8 @@ typedef struct watchpoint
   struct watchpoint *next;
 
   char expr[200];//possible bug...
-
+  word_t val_now;
+  word_t val_last;
 } WP;
 
 static WP wp_pool[NR_WP] = {};
@@ -69,7 +70,12 @@ void wpList_read(int NO){
 void wpList_write(int NO){
 
 }
-
+void wp_add(char *expr, word_t res){
+  WP* wp = new_wp();
+  strcpy(wp->expr, expr);
+  wp->val_last = res;
+  printf("Watchpoint %d: %s (=%u)\n", wp->NO, expr,res);
+}
 // void print_wp_node(WP *wp){
 //   printf("[node:%d](val:%d)",wp,wp->NO);
 // }

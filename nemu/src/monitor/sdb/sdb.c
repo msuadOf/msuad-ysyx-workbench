@@ -188,6 +188,7 @@ static int cmd_w(char *args)
     puts("cmd w: invalid expression");
   } else {
     printf("watch point added: (%s) = (%u)\n",args,res);
+    wp_add(args, res);
   }
   return 0;
 }
