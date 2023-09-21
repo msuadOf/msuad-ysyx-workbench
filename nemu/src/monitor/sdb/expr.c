@@ -329,7 +329,7 @@ uint32_t eval(int p, int q, bool *sucess)
     case TK_REG:
     {
 
-      return (tokens[p].str[0]=='$')?(isa_reg_getValueByIndex(strtol(tokens[p].str+1, NULL, 0))):(isa_reg_str2val(tokens[p].str,sucess));
+      return (tokens[p].str[1]>'0'&&tokens[p].str[1]<'9')?(isa_reg_getValueByIndex(strtol(tokens[p].str+1, NULL, 0))):(isa_reg_str2val(tokens[p].str+1,sucess));
     }
     default:
     {
