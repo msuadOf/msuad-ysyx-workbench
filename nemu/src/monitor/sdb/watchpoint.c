@@ -73,7 +73,7 @@ void wp_add(char *expr, word_t res){
   printf("Watchpoint %d: %s (=%u)\n", wp->NO, expr,res);
 }
 void wp_del(int no){
-  printf("del\n");
+  printf("del %d\n",no);
 }
 // void print_wp_node(WP *wp){
 //   printf("[node:%d](val:%d)",wp,wp->NO);
