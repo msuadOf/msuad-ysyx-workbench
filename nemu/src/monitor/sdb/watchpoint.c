@@ -81,7 +81,7 @@ WP *wp_getByNO(int no)
       return p;
     }
     p = p->next;
-  } while (p->next != NULL);
+  } while (p != NULL);
   return NULL;
 }
 
