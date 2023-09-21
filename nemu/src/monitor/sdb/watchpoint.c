@@ -74,14 +74,14 @@ WP *wp_getByNO(int no)
   {
     return NULL;
   }
-  while (p->next != NULL)
+  do
   {
     if (p->NO == no)
     {
       return p;
     }
     p = p->next;
-  }
+  } while (p->next != NULL);
   return NULL;
 }
 
