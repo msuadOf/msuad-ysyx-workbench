@@ -70,6 +70,9 @@ void free_wp(WP *wp)
 WP *wp_getByNO(int no)
 {
   WP *p = head;
+  if(p==NULL){
+    return NULL;
+  }
   while (p->next != NULL)
   {
     if (p->NO == no)
@@ -78,7 +81,6 @@ WP *wp_getByNO(int no)
     }
     p = p->next;
   }
-  printf("[Error](wp_getByNO():watchpoint=%d):did not find it\n", no);
   return NULL;
 }
 
@@ -97,6 +99,9 @@ void wp_del(int no)
     return;
   }
   WP *wp = wp_getByNO(no);
+  if(wp==NULL){
+      printf("[Error](wp_getByNO():watchpoint=%d):did not find it\n", no);
+  }
   free_wp(wp);
   printf("Delete watchpoint %d: %s\n", wp->NO, wp->expr);
 }
