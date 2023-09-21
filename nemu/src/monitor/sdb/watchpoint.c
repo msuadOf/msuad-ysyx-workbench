@@ -22,7 +22,7 @@ typedef struct watchpoint
   int NO;
   struct watchpoint *next;
 
-  char expr[200];//possible bug...
+  char expr[200]; // possible bug...
   word_t val_now;
   word_t val_last;
 } WP;
@@ -54,38 +54,49 @@ WP *new_wp()
 }
 void free_wp(WP *wp)
 {
-  WP* p = head;
-  if (p == wp) head = head->next;
-  else {
-    while (p && p->next != wp) p = p->next;
+  WP *p = head;
+  if (p == wp)
+    head = head->next;
+  else
+  {
+    while (p && p->next != wp)
+      p = p->next;
     assert(p);
     p->next = wp->next;
   }
   wp->next = free_;
   free_ = wp;
 }
-WP* wp_getByNO(int no){
-
-  for(int i=0;i<NR_WP;i++){
-    if(wp_pool[i].NO==no){
-      return &(wp_pool[i]);
+WP *wp_getByNO(int no)
+{
+  WP *p = head;
+  while (p->next != NULL)
+  {
+    if (p->NO == no)
+    {
+      return p;
     }
+    p = p->next;
   }
-  assert(0);
+  printf("[Error](wp_getByNO():watchpoint=%d):did not find it\n", no);
+  return NULL;
 }
 
-void wp_add(char *expr, word_t res){
-  WP* wp = new_wp();
+void wp_add(char *expr, word_t res)
+{
+  WP *wp = new_wp();
   strcpy(wp->expr, expr);
   wp->val_last = res;
-  printf("Watchpoint %d: %s (=%u)\n", wp->NO, expr,res);
+  printf("Watchpoint %d: %s (=%u)\n", wp->NO, expr, res);
 }
-void wp_del(int no){
-  if(no >= NR_WP){
-    printf("[Error](d N): N(=%d) should be [0-%d]\n",no,NR_WP-1);
+void wp_del(int no)
+{
+  if (no >= NR_WP)
+  {
+    printf("[Error](d N): N(=%d) should be [0-%d]\n", no, NR_WP - 1);
     return;
   }
-  WP* wp=wp_getByNO(no);
+  WP *wp = wp_getByNO(no);
   free_wp(wp);
   printf("Delete watchpoint %d: %s\n", wp->NO, wp->expr);
 }
