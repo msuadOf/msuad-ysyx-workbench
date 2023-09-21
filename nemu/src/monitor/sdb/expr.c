@@ -17,7 +17,7 @@
 #include <stdint.h>
 
 #include "memory/paddr.h"
-int isa_reg_getValueByIndex(int i);
+extern int isa_reg_getValueByIndex(int i);
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
  */
