@@ -74,7 +74,8 @@ void wp_add(char *expr, word_t res){
 }
 void wp_del(int no){
   if(no >= NR_WP){
-    printf("[Error](d N): N should be [0-%d]",NR_WP-1);
+    printf("[Error](d N): N should be [0-%d]\n",NR_WP-1);
+    return;
   }
   printf("del %d\n",no);
 }
