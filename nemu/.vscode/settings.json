@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "isa.h": "c",
+        "reg.h": "c",
+        "common.h": "c",
+        "cpu.h": "c",
+        "sdb.h": "c",
+        "readline.h": "c",
+        "history.h": "c",
+        "stdlib.h": "c",
+        "paddr.h": "c",
+        "type_traits": "c",
+        "isa-def.h": "c",
+        "locale.h": "c",
+        "difftest.h": "c"
+    },
+    "C_Cpp.default.compilerPath": "",
+    "C_Cpp.errorSquiggles": "disabled"
+}
