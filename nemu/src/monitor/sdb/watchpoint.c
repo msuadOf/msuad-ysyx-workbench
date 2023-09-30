@@ -140,7 +140,7 @@ void wp_difftest(){
     }
     p = p->next;
   }
-  //nemu_state.state=NEMU_STOP; //简单使用后会造成指令（ebreak）执行完不能正常停止
+  //nemu_state.state=NEMU_STOP; //TODO:简单使用后会造成指令（ebreak）执行完不能正常停止
 }
 // void print_wp_node(WP *wp){
 //   printf("[node:%d](val:%d)",wp,wp->NO);

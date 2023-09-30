@@ -4,10 +4,11 @@
 !Makefile
 !*.mk
 !*.[cSh]
+!*.v
 !*.cc
+!*.cpp
 !.gitignore
 !README.md
-!Kconfig
-include/config
-include/generated
-!.vscode/*
+build/
+!*.vc
+!*.nxdc
