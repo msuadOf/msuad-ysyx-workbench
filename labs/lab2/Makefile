@@ -1,4 +1,4 @@
-TOPNAME = light
+TOPNAME = top
 NXDC_FILES = vsrc/pin.nxdc
 INC_PATH ?=
 
