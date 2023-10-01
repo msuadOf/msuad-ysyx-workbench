@@ -13,4 +13,4 @@
 /utils
 /fceux-am
 /nvboard
-!/labs/*
+!/labs/**
