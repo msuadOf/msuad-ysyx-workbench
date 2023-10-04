@@ -161,22 +161,22 @@ module top (
 
   //segs
   wire [7:0] segs_lut[15:0];
-  assign segs_lut[0]  = 8'b11111101;
-  assign segs_lut[1]  = 8'b01100000;
-  assign segs_lut[2]  = 8'b11011010;
-  assign segs_lut[3]  = 8'b11110010;
-  assign segs_lut[4]  = 8'b01100110;
-  assign segs_lut[5]  = 8'b10110110;
-  assign segs_lut[6]  = 8'b10111110;
-  assign segs_lut[7]  = 8'b11100000;
-  assign segs_lut[8]  = 8'b11111111;
-  assign segs_lut[9]  = 8'b11110111;
-  assign segs_lut[10] = 8'b1110_1111;
-  assign segs_lut[11] = 8'b0011_1111;
-  assign segs_lut[12] = 8'b1001_1101;
-  assign segs_lut[13] = 8'b0111_1011;
-  assign segs_lut[14] = 8'b1001_1111;
-  assign segs_lut[15] = 8'b1000_1111;
+  assign segs_lut[0]  = 8'b1111_1100;
+  assign segs_lut[1]  = 8'b0110_0000;
+  assign segs_lut[2]  = 8'b1101_1010;
+  assign segs_lut[3]  = 8'b1111_0010;
+  assign segs_lut[4]  = 8'b0110_0110;
+  assign segs_lut[5]  = 8'b1011_0110;
+  assign segs_lut[6]  = 8'b1011_1110;
+  assign segs_lut[7]  = 8'b1110_0000;
+  assign segs_lut[8]  = 8'b1111_1110;
+  assign segs_lut[9]  = 8'b1111_0110;
+  assign segs_lut[10] = 8'b1110_1110;
+  assign segs_lut[11] = 8'b0011_1110;
+  assign segs_lut[12] = 8'b1001_1100;
+  assign segs_lut[13] = 8'b0111_1010;
+  assign segs_lut[14] = 8'b1001_1110;
+  assign segs_lut[15] = 8'b1000_1110;
 
   assign o_seg0       = ~segs_lut[ps_val[3:0]];//
   assign o_seg1       = ~segs_lut[ps_val[7:4]];
