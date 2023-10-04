@@ -22,7 +22,7 @@ module top (
   //ps_val 2 ASCII LUT
   wire [7:0] ps2_val2ascii_lut[255:0];
   assign ps2_val2ascii_lut[8'h1c] = "A";
-  assign ps2_val2ascii_lut[8'h1B] = "B";
+  assign ps2_val2ascii_lut[8'h32] = "B";
   assign ps2_val2ascii_lut[8'h21] = "C";
   assign ps2_val2ascii_lut[8'h23] = "D";
   assign ps2_val2ascii_lut[8'h24] = "E";
