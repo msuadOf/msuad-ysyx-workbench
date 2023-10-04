@@ -132,6 +132,7 @@ module top (
   reg [7:0] ps2_now_click;
   reg       ps2_now_click_en = 0;
 
+reg [31:0] ps_press_cnt=0;
   always @(posedge clk) begin
     if (rst) begin
       ps2_data_buffer[0] <= 0;
@@ -140,6 +141,8 @@ module top (
 
       ps2_now_click      <= 0;
       ps2_now_click_en   <= 0;
+
+      ps_press_cnt<=0;
     end else begin
       if (ps2_single_pulse) begin
         $display("==ps2_single_pulse==");
@@ -148,12 +151,12 @@ module top (
         ps2_data_buffer[2] <= ps2_data_buffer[1];
         if (ps2_data_buffer[0] == 8'hF0 && ps2_data_buffer[1] == ps_val) begin
           ps2_now_click_en <= 0;
-
-          $display("==%s==", ps_ascii);
+          ps_press_cnt<=ps_press_cnt+1;
+          $display("==%s:%d==", ps_ascii,ps_press_cnt);//按下按键触发一次
+          
         end else begin
           ps2_now_click_en <= 1;
           ps2_now_click    <= ps_val;
-
         end
 
       end
