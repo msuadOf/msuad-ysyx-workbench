@@ -184,7 +184,7 @@ module top (
   assign o_seg3       = ~segs_lut[ps_ascii[7:4]];
   assign o_seg4       = ~segs_lut[0];
   assign o_seg5       = ~segs_lut[0];
-  assign o_seg6       = ~segs_lut[0];
-  assign o_seg7       = ~segs_lut[0];
+  assign o_seg6       = ~segs_lut[ps_press_cnt[3:0]];
+  assign o_seg7       = ~segs_lut[ps_press_cnt[7:4]];
 
 endmodule
