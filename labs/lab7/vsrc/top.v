@@ -28,6 +28,7 @@ module top (
   assign ps2_val2ascii_lut[8'h24] = "E";
   assign ps2_val2ascii_lut[8'h2B] = "F";
   assign ps2_val2ascii_lut[8'h34] = "G";
+  assign ps2_val2ascii_lut[8'h33] = "H";
   assign ps2_val2ascii_lut[8'h43] = "I";
   assign ps2_val2ascii_lut[8'h3B] = "J";
   assign ps2_val2ascii_lut[8'h42] = "K";
@@ -37,11 +38,6 @@ module top (
   assign ps2_val2ascii_lut[8'h44] = "O";
   assign ps2_val2ascii_lut[8'h4D] = "P";
   assign ps2_val2ascii_lut[8'h15] = "Q";
-  assign ps2_val2ascii_lut[8'h2D] = "R";
-  assign ps2_val2ascii_lut[8'h1B] = "S";
-  assign ps2_val2ascii_lut[8'h2C] = "T";
-  assign ps2_val2ascii_lut[8'h3C] = "U";
-  assign ps2_val2ascii_lut[8'h2A] = "V";
   assign ps2_val2ascii_lut[8'h2D] = "R";
   assign ps2_val2ascii_lut[8'h1B] = "S";
   assign ps2_val2ascii_lut[8'h2C] = "T";
