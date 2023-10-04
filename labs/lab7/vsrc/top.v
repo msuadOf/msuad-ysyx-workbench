@@ -124,11 +124,11 @@ module top (
   end
   assign ps2_single_pulse = ps2_single_ready & ~ps2_single_ready_pipe;
 
-  reg [7:0] ps2_data_buffer      [2:0];
-  reg [7:0] ps2_now_click;
-  reg       ps2_now_click_en = 0;
+  reg [ 7:0] ps2_data_buffer      [2:0];
+  reg [ 7:0] ps2_now_click;
+  reg        ps2_now_click_en = 0;
 
-reg [31:0] ps_press_cnt=0;
+  reg [31:0] ps_press_cnt = 0;
   always @(posedge clk) begin
     if (rst) begin
       ps2_data_buffer[0] <= 0;
@@ -138,7 +138,7 @@ reg [31:0] ps_press_cnt=0;
       ps2_now_click      <= 0;
       ps2_now_click_en   <= 0;
 
-      ps_press_cnt<=0;
+      ps_press_cnt       <= 0;
     end else begin
       if (ps2_single_pulse) begin
         $display("==ps2_single_pulse==");
@@ -147,9 +147,8 @@ reg [31:0] ps_press_cnt=0;
         ps2_data_buffer[2] <= ps2_data_buffer[1];
         if (ps2_data_buffer[0] == 8'hF0 && ps2_data_buffer[1] == ps_val) begin
           ps2_now_click_en <= 0;
-          ps_press_cnt<=ps_press_cnt+1;
-          $display("==%s:%d==", ps_ascii,ps_press_cnt);//按下按键触发一次
-          
+          ps_press_cnt     <= ps_press_cnt + 1;
+          $display("==%s:%d==", ps_ascii, ps_press_cnt);  //按下按键触发一次
         end else begin
           ps2_now_click_en <= 1;
           ps2_now_click    <= ps_val;
@@ -161,23 +160,31 @@ reg [31:0] ps_press_cnt=0;
 
 
   //segs
-  wire [7:0] segs_lut[7:0];
-  assign segs_lut[0] = 8'b11111101;
-  assign segs_lut[1] = 8'b01100000;
-  assign segs_lut[2] = 8'b11011010;
-  assign segs_lut[3] = 8'b11110010;
-  assign segs_lut[4] = 8'b01100110;
-  assign segs_lut[5] = 8'b10110110;
-  assign segs_lut[6] = 8'b10111110;
-  assign segs_lut[7] = 8'b11100000;
+  wire [7:0] segs_lut[15:0];
+  assign segs_lut[0]  = 8'b11111101;
+  assign segs_lut[1]  = 8'b01100000;
+  assign segs_lut[2]  = 8'b11011010;
+  assign segs_lut[3]  = 8'b11110010;
+  assign segs_lut[4]  = 8'b01100110;
+  assign segs_lut[5]  = 8'b10110110;
+  assign segs_lut[6]  = 8'b10111110;
+  assign segs_lut[7]  = 8'b11100000;
+  assign segs_lut[8]  = 8'b11111111;
+  assign segs_lut[9]  = 8'b11110111;
+  assign segs_lut[10] = 8'b1110_1111;
+  assign segs_lut[11] = 8'b0011_1111;
+  assign segs_lut[12] = 8'b1001_1101;
+  assign segs_lut[13] = 8'b0111_1011;
+  assign segs_lut[14] = 8'b1001_1111;
+  assign segs_lut[15] = 8'b1000_1111;
 
-  assign o_seg0      = ~segs_lut[0];
-  assign o_seg1      = ~segs_lut[0];
-  assign o_seg2      = ~segs_lut[0];
-  assign o_seg3      = ~segs_lut[0];
-  assign o_seg4      = ~segs_lut[0];
-  assign o_seg5      = ~segs_lut[0];
-  assign o_seg6      = ~segs_lut[0];
-  assign o_seg7      = ~segs_lut[0];
+  assign o_seg0       = ~segs_lut[ps_val[3:0]];//
+  assign o_seg1       = ~segs_lut[ps_val[7:4]];
+  assign o_seg2       = ~segs_lut[0];
+  assign o_seg3       = ~segs_lut[0];
+  assign o_seg4       = ~segs_lut[0];
+  assign o_seg5       = ~segs_lut[0];
+  assign o_seg6       = ~segs_lut[0];
+  assign o_seg7       = ~segs_lut[0];
 
 endmodule
