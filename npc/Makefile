@@ -7,8 +7,9 @@ test:
 
 verilog:
 	$(call git_commit, "generate verilog")
-	mkdir -p $(BUILD_DIR)
-	mill -i __.test.runMain Elaborate -td $(BUILD_DIR)
+	# mkdir -p $(BUILD_DIR)
+	# mill -i __.test.runMain Elaborate -td $(BUILD_DIR)
+	mill -i __.test.runMain Elaborate
 
 help:
 	mill -i __.test.runMain Elaborate --help
@@ -30,8 +31,10 @@ clean:
 
 .PHONY: test verilog help compile bsp reformat checkformat clean
 
-sim:
+sim:verilog
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	@echo "Write this Makefile by yourself."
+	make run-nvboard
+	
 
 -include ../Makefile
+-include ./scripts/nvboard.mk
