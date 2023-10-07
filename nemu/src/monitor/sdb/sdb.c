@@ -101,7 +101,7 @@ static int cmd_info(char *args)
     printf("r%-2d: ", i);
     isa_reg_displayByIndex(i);
   }
-    if (strcmp(args, "w") == 0)
+  if (strcmp(args, "w") == 0)
   {
     wp_display();
   }
@@ -120,7 +120,7 @@ void print_byte_without_0x(uint8_t n)
 {
   char s[20];
   sprintf(s, "%#04x ", n);
-  printf(s + 2);
+  puts(s + 2);
 }
 void HALHook_displayMem(paddr_t addr)
 {
