@@ -178,10 +178,10 @@ module top (
   assign segs_lut[14] = 8'b1001_1110;
   assign segs_lut[15] = 8'b1000_1110;
 
-  assign o_seg0       = ~segs_lut[(ps2_now_click_en)?ps_val[3:0]:0];//
-  assign o_seg1       = ~segs_lut[(ps2_now_click_en)?ps_val[7:4]:0];
-  assign o_seg2       = ~segs_lut[(ps2_now_click_en)?ps_ascii[3:0]:0];
-  assign o_seg3       = ~segs_lut[(ps2_now_click_en)?ps_ascii[7:4]:0];
+  assign o_seg0       = ~segs_lut[(ps2_now_click_en)?ps_val[3:0] : 0];  //
+  assign o_seg1       = ~segs_lut[(ps2_now_click_en)?ps_val[7:4] : 0];
+  assign o_seg2       = ~segs_lut[(ps2_now_click_en)?ps_ascii[3:0] : 0];
+  assign o_seg3       = ~segs_lut[(ps2_now_click_en)?ps_ascii[7:4] : 0];
   assign o_seg4       = ~segs_lut[0];
   assign o_seg5       = ~segs_lut[0];
   assign o_seg6       = ~segs_lut[ps_press_cnt[3:0]];
