@@ -120,7 +120,7 @@ void print_byte_without_0x(uint8_t n)
 {
   char s[20];
   sprintf(s, "%#04x ", n);
-  puts(s + 2);
+  printf("%s",s + 2);
 }
 void HALHook_displayMem(paddr_t addr)
 {
