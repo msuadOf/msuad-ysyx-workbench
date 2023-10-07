@@ -185,8 +185,7 @@ static int cmd_p(char *args)
   }
   else
   {
-    printf("%u\n", res);
-    printf("0x%x\n", res);
+    printf("%s=%u(0x%x)\n",args, res,res);
   }
   return 0;
 }
