@@ -153,7 +153,7 @@ static int cmd_x(char *args)
     return 0;
   }
   bool success;
-  word_t res = expr(args, &success);
+  word_t res = expr(arg2, &success);
   if (!success)
   {
     printf("expression extract failed\n");
