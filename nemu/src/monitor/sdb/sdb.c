@@ -101,7 +101,7 @@ static int cmd_info(char *args)
     printf("r%-2d: ", i);
     isa_reg_displayByIndex(i);
   }
-    if (strcmp(args, "w") == 0)
+  if (strcmp(args, "w") == 0)
   {
     wp_display();
   }
@@ -120,7 +120,7 @@ void print_byte_without_0x(uint8_t n)
 {
   char s[20];
   sprintf(s, "%#04x ", n);
-  printf(s + 2);
+  printf("%s",s + 2);
 }
 void HALHook_displayMem(paddr_t addr)
 {
@@ -152,7 +152,18 @@ static int cmd_x(char *args)
     printf("Usage: x N EXPR\n");
     return 0;
   }
-  addr = strtol(arg2, NULL, 0);
+  bool success;
+  word_t res = expr(arg2, &success);
+  if (!success)
+  {
+    printf("expression extract failed\n");
+  }
+  else
+  {
+    printf("x %d %u\n",N, res);
+    addr = res;
+  }
+  //addr = strtol(arg2, NULL, 0);
 
   // do with addr&N
 
@@ -174,7 +185,7 @@ static int cmd_p(char *args)
   }
   else
   {
-    printf("%u\n", res);
+    printf("%s=%u(0x%x)\n",args, res,res);
   }
   return 0;
 }

@@ -70,7 +70,7 @@ static struct rule
     {"&&", TK_AND},
     {"\\|\\|", TK_OR},
 
-    {"\\$\\w+", TK_REG},
+    {"[\\$r]+\\w+", TK_REG},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -124,9 +124,9 @@ static bool make_token(char *e)
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+        /* Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
-
+ */
         position += substr_len;
 
         /* TODO: Now a new token is recognized with rules[i]. Add codes
@@ -198,7 +198,7 @@ static bool make_token(char *e)
               strncpy(tokens[nr_token].str, substr_start, substr_len);
               tokens[nr_token].str[substr_len] = '\0'; // added to fix bug
             }
-            Log("====== default: + - * / =====");
+           /*  Log("====== default: + - * / ====="); */
             break;
           }
           }
@@ -364,8 +364,8 @@ uint32_t eval(int p, int q, bool *sucess)
       *sucess = false;
       return 0;
     }
-    Log("major_index=%d", major_index);
-
+    /* Log("major_index=%d", major_index);
+ */
     uint32_t val1 = ((tokens[major_index].type == TK_DEREF) || (tokens[major_index].type == TK_DEREF)) ? (0) : eval(p, major_index - 1, sucess);
     uint32_t val2 = eval(major_index + 1, q, sucess);
     if (*sucess == false)
@@ -410,7 +410,7 @@ static void print_token()
 {
   for (int i = 0; i < 32; i++)
   {
-    Log("%d: %s,type=%c", i, tokens[i].str, tokens[i].type);
+   /*  Log("%d: %s,type=%c", i, tokens[i].str, tokens[i].type); */
   }
 }
 word_t expr(char *e, bool *success)
