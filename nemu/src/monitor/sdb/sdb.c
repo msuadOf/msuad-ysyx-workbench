@@ -152,7 +152,18 @@ static int cmd_x(char *args)
     printf("Usage: x N EXPR\n");
     return 0;
   }
-  addr = strtol(arg2, NULL, 0);
+  bool success;
+  word_t res = expr(args, &success);
+  if (!success)
+  {
+    printf("expression extract failed\n");
+  }
+  else
+  {
+    printf("x %d %u\n",N, res);
+    addr = res;
+  }
+  //addr = strtol(arg2, NULL, 0);
 
   // do with addr&N
 
