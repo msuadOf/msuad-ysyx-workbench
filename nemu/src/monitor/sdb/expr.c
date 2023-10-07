@@ -70,7 +70,7 @@ static struct rule
     {"&&", TK_AND},
     {"\\|\\|", TK_OR},
 
-    {"\\$\\w+", TK_REG},
+    {"\\$+\\w+", TK_REG},
 };
 
 #define NR_REGEX ARRLEN(rules)
