@@ -364,8 +364,8 @@ uint32_t eval(int p, int q, bool *sucess)
       *sucess = false;
       return 0;
     }
-    Log("major_index=%d", major_index);
-
+    /* Log("major_index=%d", major_index);
+ */
     uint32_t val1 = ((tokens[major_index].type == TK_DEREF) || (tokens[major_index].type == TK_DEREF)) ? (0) : eval(p, major_index - 1, sucess);
     uint32_t val2 = eval(major_index + 1, q, sucess);
     if (*sucess == false)
@@ -410,7 +410,7 @@ static void print_token()
 {
   for (int i = 0; i < 32; i++)
   {
-    Log("%d: %s,type=%c", i, tokens[i].str, tokens[i].type);
+   /*  Log("%d: %s,type=%c", i, tokens[i].str, tokens[i].type); */
   }
 }
 word_t expr(char *e, bool *success)
