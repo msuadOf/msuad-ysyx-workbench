@@ -12,8 +12,12 @@
         "type_traits": "c",
         "isa-def.h": "c",
         "locale.h": "c",
-        "difftest.h": "c"
+        "difftest.h": "c",
+        "locale": "c"
     },
     "C_Cpp.default.compilerPath": "",
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.watcherExclude": {
+        "**/target": true
+    }
 }
