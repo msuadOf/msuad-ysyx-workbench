@@ -34,7 +34,7 @@ $(OBJ_DIR)/%.i: %.c
 	$(CC) -fPIE $(CFLAGS) -E -o $@ $<
 	$(call call_fixdep, $(@:.o=.d), $@)
 
-$(OBJ_DIR)/%.o: %.c
+$(OBJ_DIR)/%.o: %.c $(OBJ_DIR)/%.i
 	@echo + CC $<
 	@mkdir -p $(dir $@)
 	@$(CC) -fPIE $(CFLAGS) -c -o $@ $<
