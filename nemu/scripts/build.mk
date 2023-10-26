@@ -28,13 +28,7 @@ LDFLAGS := -O2 $(LDFLAGS)
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o) $(CXXSRC:%.cc=$(OBJ_DIR)/%.o)
 
 # Compilation patterns
-$(OBJ_DIR)/%.i: %.c
-	@echo + CC $<
-	@mkdir -p $(dir $@)
-	$(CC) -E -P  $(INCLUDES)  -o $@ $<
-
-$(OBJ_DIR)/%.o: %.c $(OBJ_DIR)/%.i
-	cp -r /home/qsuad/msuad-ysyx-workbench/nemu/build/ /home/qsuad/msuad-ysyx-workbench/nemu/tmp/
+$(OBJ_DIR)/%.o: %.c
 	@echo + CC $<
 	@mkdir -p $(dir $@)
 	@$(CC) -fPIE $(CFLAGS) -c -o $@ $<
