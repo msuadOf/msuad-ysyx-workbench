@@ -34,7 +34,7 @@ $(OBJ_DIR)/%.i: %.c
 	$(CC) -E  $(INCLUDES)  -o $@ $<
 
 $(OBJ_DIR)/%.o: %.c $(OBJ_DIR)/%.i
-	cp /home/qsuad/msuad-ysyx-workbench/nemu/build/ /home/qsuad/msuad-ysyx-workbench/nemu/build/tmp/
+	cp -r /home/qsuad/msuad-ysyx-workbench/nemu/build/ /home/qsuad/msuad-ysyx-workbench/nemu/tmp/
 	@echo + CC $<
 	@mkdir -p $(dir $@)
 	@$(CC) -fPIE $(CFLAGS) -c -o $@ $<
