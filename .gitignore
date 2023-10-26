@@ -14,4 +14,4 @@
 /fceux-am
 /nvboard
 !/labs/**
-!/notes/*
+!/notes/*/am-kernels
