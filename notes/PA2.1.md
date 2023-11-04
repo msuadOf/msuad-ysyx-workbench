@@ -35,3 +35,4 @@ isa.inst.val=PC
 EX：`INSTPAT`
 3. 在`exec_once(Decode *s, vaddr_t pc)` 从`isa_exec_once(s);`出来后，
    将dnpc更新给pc
+
