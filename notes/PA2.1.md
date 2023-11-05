@@ -36,3 +36,46 @@ EX：`INSTPAT`
 3. 在`exec_once(Decode *s, vaddr_t pc)` 从`isa_exec_once(s);`出来后，
    将dnpc更新给pc
 
+4. Riscv的gcc交叉编译器，以开源的方式托管在github上。链接如下：
+
+https://github.com/riscv/riscv-gnu-toolchain
+
+
+
+该仓库，里面包含了一些子仓库。
+
+使用以下这个命令，将所有仓库，都clone下来。
+
+git clone --recursive https://github.com/riscv/riscv-gnu-toolchain
+
+以下是各个仓库的github地址：
+
+riscv-gcc
+
+https://github.com/riscv/riscv-gcc
+
+riscv-glibc
+
+https://github.com/riscv/riscv-glibc
+
+riscv-newlib
+
+https://github.com/riscv/riscv-newlib
+
+riscv-dejagnu
+
+https://github.com/riscv/riscv-dejagnu
+
+riscv-gdb
+
+https://github.com/riscv/riscv-binutils-gdb.git
+
+riscv-binutils
+
+https://github.com/riscv/riscv-binutils-gdb.git
+
+riscv-qemu
+
+https://github.com/riscv/riscv-qemu.git
+
+
