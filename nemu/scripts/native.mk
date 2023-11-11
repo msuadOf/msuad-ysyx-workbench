@@ -34,7 +34,6 @@ run-env: $(BINARY) $(DIFF_REF_SO)
 
 run: run-env
 	$(call git_commit, "run NEMU")
-	$(echo $(IMG) > args.fl)
 	$(echo $(IMG))
 	$(NEMU_EXEC)
 
