@@ -28,3 +28,6 @@ run: image
 
 gdb: image
 	$(MAKE) -C $(NEMU_HOME) ISA=$(ISA) gdb ARGS="$(NEMUFLAGS)" IMG=$(IMAGE).bin
+
+gdbserver: image
+	$(MAKE) -C $(NEMU_HOME) ISA=$(ISA) gdbserver ARGS="$(NEMUFLAGS)" IMG=$(IMAGE).bin
