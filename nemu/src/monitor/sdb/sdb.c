@@ -244,7 +244,6 @@ static struct
 
 #define NR_CMD ARRLEN(cmd_table)
 
-extern void assert_fail_msg();
 static int cmd_help(char *args)
 {
   /* extract the first argument */
@@ -271,9 +270,6 @@ static int cmd_help(char *args)
     }
     printf("Unknown command '%s'\n", arg);
   }
-
-assert_fail_msg();
-
   return 0;
 }
 
