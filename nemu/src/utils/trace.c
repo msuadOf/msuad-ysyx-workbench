@@ -26,7 +26,7 @@ void display_inst() {
 
   char buf[128]; // 128 should be enough!
   char *p;
-  //Statement("Most recently executed instructions");
+  //printf("Most recently executed instructions\n");
   do {
     p = buf;
     p += sprintf(buf, "%s" FMT_WORD ": %08x ", (i+1)%MAX_IRINGBUF==end?" --> ":"     ", iringbuf[i].pc, iringbuf[i].inst);
