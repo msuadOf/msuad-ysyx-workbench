@@ -28,7 +28,7 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
     }
   }
   if (ref_r->pc != cpu.pc) {
-    printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"pc\" is diffrent: (nemu-false)= %08x ,(qemu-yes)= %08x .\n",cpu.pc,ref_r->pc);
+    printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"pc\" is diffrent: (nemu-false)= %08x ,(qemu-yes)= %08x.\n",cpu.pc,ref_r->pc);
     state=false;
     //return false;
   }
