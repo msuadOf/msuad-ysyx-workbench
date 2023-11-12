@@ -21,10 +21,12 @@ bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
   int reg_num = ARRLEN(cpu.gpr);
   for (int i = 0; i < reg_num; i++) {
     if (ref_r->gpr[i] != cpu.gpr[i]) {
+      printf(ANSI_FG_RED "[Error] \"%s\" is diffrent: (nemu-false)= %08x ,(qemu-yes)= %08x .\n",reg_name(i),cpu.gpr[i],ref_r->gpr[i]);
       return false;
     }
   }
   if (ref_r->pc != cpu.pc) {
+    printf(ANSI_FG_RED "[Error] \"pc\" is diffrent: (nemu-false)= %08x ,(qemu-yes)= %08x .\n",cpu.pc,ref_r->pc);
     return false;
   }
   return true;
