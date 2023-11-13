@@ -14,7 +14,7 @@ class Core extends Module {
     //val memReadData     = Input(UInt(32.W))
   })
     object RegFile{
-        val regs=RegInit(Vec(32,UInt(32.W)))
+        val regs=Reg(Vec(32,UInt(32.W)))
         def apply(idx:Int):UInt={
             regs(idx)
         }
