@@ -9,16 +9,16 @@ object RegFile{
 
 class Core extends Module {
   val io = IO(new Bundle {
-    val instData        = Input(UInt(16.W))
-    val instAddress        = Output(UInt(16.W)) //pc
+    val instData        = Input(UInt(32.W))
+    val instAddress        = Output(UInt(32.W)) //pc
 
-    val memWriteAddress        = Output(UInt(16.W))
-    val memWriteData = Output(Bool())
+    val memWriteAddress        = Output(UInt(32.W))
+    val memWriteData = Output(UInt(32.W))
     
-    val memReadAddress        = Output(UInt(16.W))
-    val memReadData     = Input(UInt(16.W))
+    val memReadAddress        = Output(UInt(32.W))
+    val memReadData     = Input(UInt(32.W))
   })
 
-  io.memReadAddress:=RegFile(1)
+  io.memReadAddress := RegFile(1)
 
 }
