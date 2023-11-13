@@ -32,6 +32,7 @@ static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
 void device_update();
+void assert_fail_msg();
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
@@ -40,6 +41,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   IFDEF(CONFIG_WATCHPOINT, wp_difftest());
+  IFDEF(CONFIG_DIFFTEST,  if(nemu_state.state==NEMU_ABORT) assert_fail_msg(););
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
@@ -93,7 +95,9 @@ static void statistic() {
   else Log("Finish running in less than 1 us and can not calculate the simulation frequency");
 }
 
+extern void  display_inst();
 void assert_fail_msg() {
+  display_inst();
   isa_reg_display();
   statistic();
 }

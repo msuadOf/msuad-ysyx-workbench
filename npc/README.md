@@ -1,20 +1,63 @@
 Chisel Project Template
 =======================
 
-Another version of the [Chisel template](https://github.com/ucb-bar/chisel-template) supporting mill.
-mill is another Scala/Java build tool without obscure DSL like SBT. It is much faster than SBT.
+## Setup (Ubuntu Linux)
 
-Contents at a glance:
+1.  Install the JVM
+    ```bash
+    sudo apt-get install default-jdk
+    ```
 
-* `.gitignore` - helps Git ignore junk like generated files, build products, and temporary files.
-* `build.sc` - instructs mill to build the Chisel project
-* `Makefile` - rules to call mill
-* `playground/src/GCD.scala` - GCD source file
-* `playground/src/DecoupledGCD.scala` - another GCD source file
-* `playground/src/Elaborate.scala` - wrapper file to call chisel command with the GCD module
-* `playground/test/src/GCDSpec.scala` - GCD tester
+1.  Install sbt according to the instructions from [sbt download](https://www.scala-sbt.org/download.html).
+   or mill(recommand in `/usr/local/bin/`):
+    ```shell
+    curl -L https://raw.githubusercontent.com/lefou/millw/0.4.10/millw > mill && chmod +x mill
+    ```
 
-Feel free to rename or delete files under `playground/` or use them as a reference/template.
+2.  Install Firtool
+
+    Choose whatever version is being [used in continuous integration](.github/workflows/install-circt/action.yml)
+    ```bash
+    wget -q -O - https://github.com/llvm/circt/releases/download/firtool-1.38.0/firrtl-bin-ubuntu-20.04.tar.gz | tar -zx
+    ```
+    This will give you a directory called `firtool-1.38.0` containing the firtool binary, add this to your PATH as appropriate.
+    ```bash
+    export PATH=$PATH:$PWD/firtool-1.38.0/bin
+    ```
+    Alternatively, you can install the binary to a standard location by simply moving the binary (if you have root access).
+    ```bash
+    mv firtool-1.38.0/bin/firtool /usr/local/bin/
+    ```
+
+
+2.  Install Verilator.
+    We currently recommend Verilator version v4.226.
+    Follow these instructions to compile it from source.
+
+    1.  Install prerequisites (if not installed already):
+        ```bash
+        sudo apt-get install git make autoconf g++ flex bison
+        ```
+
+    2.  Clone the Verilator repository:
+        ```bash
+        git clone https://github.com/verilator/verilator
+        ```
+
+    3.  In the Verilator repository directory, check out a known good version:
+        ```bash
+        git pull
+        git checkout v4.226
+        ```
+
+    4.  In the Verilator repository directory, build and install:
+        ```bash
+        unset VERILATOR_ROOT # For bash, unsetenv for csh
+        autoconf # Create ./configure script
+        ./configure
+        make
+        sudo make install
+        ```
 
 ## Getting Started
 
