@@ -1,11 +1,6 @@
 import chisel3._
 
-object RegFile{
-    val regs=Vec(32,RegInit(0.U(32.W)))
-    def apply(idx:Int):UInt={
-        regs(idx)
-    }
-}
+
 
 class Core extends Module {
   val io = IO(new Bundle {
@@ -18,7 +13,12 @@ class Core extends Module {
     val memReadAddress        = Output(UInt(32.W))
     //val memReadData     = Input(UInt(32.W))
   })
-
+    object RegFile{
+        val regs=Vec(32,RegInit(0.U(32.W)))
+        def apply(idx:Int):UInt={
+            regs(idx)
+        }
+    }
   io.memReadAddress := RegFile(1)
 
 }
