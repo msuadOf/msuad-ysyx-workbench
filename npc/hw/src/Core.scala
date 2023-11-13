@@ -14,11 +14,13 @@ class Core extends Module {
     //val memReadData     = Input(UInt(32.W))
   })
     object RegFile{
-        val regs=Reg(Vec(32,UInt(32.W)))
+        
         def apply(idx:Int):UInt={
+            val regs=Reg(Vec(32,UInt(32.W)))
             regs(idx)
         }
     }
+    
   io.memReadAddress := RegFile(1)
 
 }
