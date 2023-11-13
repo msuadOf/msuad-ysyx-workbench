@@ -19,7 +19,7 @@ class Core extends Module {
             regs(idx)
         }
     }
-    val regFile=RegFile()
+    val regFile=new RegFile()
   io.memReadAddress := regFile(1)
 
 }
