@@ -19,4 +19,6 @@ out/
 .bsp/
 .idea/
 .idea_modules/
+.vscode/
+.metals/
 test_run_dir/

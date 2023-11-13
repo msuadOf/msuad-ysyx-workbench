@@ -2,14 +2,15 @@ BUILD_DIR = ./build
 
 export PATH := $(PATH):$(abspath ./utils)
 
+all: test verilog compile bsp reformat checkformat
+
 test:
 	mill -i __.test
 
 verilog:
 	$(call git_commit, "generate verilog")
-	# mkdir -p $(BUILD_DIR)
-	# mill -i __.test.runMain Elaborate -td $(BUILD_DIR)
-	mill -i __.test.runMain Elaborate
+	mkdir -p $(BUILD_DIR)
+	mill -i __.runMain Elaborate -td $(BUILD_DIR)
 
 help:
 	mill -i __.test.runMain Elaborate --help
@@ -31,10 +32,8 @@ clean:
 
 .PHONY: test verilog help compile bsp reformat checkformat clean
 
-sim:verilog
+sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	make run-nvboard
-	
+	@echo "Write this Makefile by yourself."
 
 -include ../Makefile
--include ./scripts/nvboard.mk
