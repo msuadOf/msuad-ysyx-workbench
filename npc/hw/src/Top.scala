@@ -11,7 +11,7 @@ class Top extends Module {
   })
 
 
-val reg=RegInit(VecInit(Seq.tabulate(32)(i => 0)))
+val reg=RegInit(VecInit(Seq.tabulate(32)(i => 0.U(32.W))))
 reg(0):=io.a
 reg(1):=io.a
 reg(2):=io.a
