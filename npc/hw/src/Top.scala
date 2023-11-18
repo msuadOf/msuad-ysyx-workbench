@@ -6,8 +6,8 @@ import chisel3._
 
 class Top extends Module {
   val io = IO(new Bundle {
-    val a        = Input(UInt(16.W))
-    val b        = Output(UInt(16.W))
+    val a        = Input(UInt(32.W))
+    val b        = Output(UInt(32.W))
   })
 
 
