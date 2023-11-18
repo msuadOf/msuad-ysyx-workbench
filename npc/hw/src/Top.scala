@@ -23,10 +23,13 @@ class Top extends Module {
     val reg=new RegFile(32)
   // io.a:=regfile(2)
 // val reg=RegInit(VecInit(Seq.tabulate(32)(i => 0.U(32.W))))
-reg(0):=io.a
-reg(1):=io.a
-reg(2):=io.a
-reg(31):=io.a
+for(i <- 0 to 31){
+      reg(i):=io.a
+}
+// reg(0):=io.a
+// reg(1):=io.a
+// reg(2):=io.a
+// reg(31):=io.a
 io.b:=reg(0)+reg(1)+reg(2)+reg(31)
 
 }
