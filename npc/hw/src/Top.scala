@@ -30,6 +30,6 @@ for(i <- 0 to 31){
 // reg(1):=io.a
 // reg(2):=io.a
 // reg(31):=io.a
-io.b:=reg(0)+reg(1)+reg(2)+reg(31)
+io.b:=reg.reg.reduce((a,b)=>a+b)
 
 }
