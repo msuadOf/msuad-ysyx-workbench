@@ -5,7 +5,7 @@ class RegFile(val ISet:String){
     case "RISCV32E" => 16
     case "RISCV32" => 32
     case "RISCV64" => 64
-    case _: String => assert(0.U.asBool,""); 2
+    case _: String => assert(0.U.asBool,""); 64
   }
   val reg=RegInit(VecInit(Seq.tabulate(regNum)(i => 0.U(32.W))))
   def apply(idx:Int): UInt ={
