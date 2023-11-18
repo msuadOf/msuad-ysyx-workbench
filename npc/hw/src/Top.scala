@@ -1,7 +1,12 @@
 import chisel3._
 
 class RegFile(val ISet:String){
-  val regNum=
+  val regNum=ISet match{
+    case "RISCV32E" => 16
+    case "RISCV32" => 32
+    case "RISCV64" => 64
+    case _: String => assert(0.U.asBool,""); 0
+  }
   val reg=RegInit(VecInit(Seq.tabulate(regNum)(i => 0.U(32.W))))
   def apply(idx:Int): UInt ={
     reg(idx)
@@ -19,7 +24,7 @@ class Top extends Module {
   })
 
 
-    val reg=new RegFile(32)
+    val reg=new RegFile("32")
   // io.a:=regfile(2)
 // val reg=RegInit(VecInit(Seq.tabulate(32)(i => 0.U(32.W))))
 for(i <- 0 to 31){
