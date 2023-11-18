@@ -11,7 +11,7 @@ class Top extends Module {
   })
 
 
-val reg=RegInit(VecInit(0.U(8.W),1.U(8.W)))
+val reg=RegInit(VecInit(0.U(8.W),2.U(8.W)))
 reg(0):=io.a
 reg(1):=io.a
 reg(2):=io.a
