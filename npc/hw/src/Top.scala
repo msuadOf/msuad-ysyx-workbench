@@ -1,14 +1,18 @@
 import chisel3._
+import chisel3.util._
 
 class RegFile(val ISet:String){
   val regNum=ISet match{
     case "RISCV32E" => 16
     case "RISCV32" => 32
     case "RISCV64" => 64
-    case _: String => throw new IllegalArgumentException("RegFile args should be [RISCV32E] [RISCV32] [RISCV64]")
+    case _: String => throw new IllegalArgumentException("RegFile() args should be [RISCV32E] [RISCV32] [RISCV64]")
   }
   val reg=RegInit(VecInit(Seq.tabulate(regNum)(i => 0.U(32.W))))
   def apply(idx:Int): UInt ={
+    reg(idx)
+  }
+    def apply(idx:UInt): UInt ={
     reg(idx)
   }
   import chisel3.experimental.{prefix,SourceInfo}
@@ -19,21 +23,26 @@ class RegFile(val ISet:String){
 
 class Top extends Module {
   val io = IO(new Bundle {
-    val a        = Input(UInt(32.W))
-    val b        = Output(UInt(32.W))
+    val IMem        = new Bundle {
+      val readAddr=Output(UInt(32.W))
+      val readData=Input(UInt(32.W))
+    }
+      
+    val DMem = new Bundle {
+      val readAddr=Output(UInt(32.W))
+      val readData=Input(UInt(32.W))
+      val writeAddr=Output(UInt(32.W))
+      val writeData=Output(UInt(32.W))
+    }
   })
 
-
-    val reg=new RegFile("32")
-  // io.a:=regfile(2)
-// val reg=RegInit(VecInit(Seq.tabulate(32)(i => 0.U(32.W))))
-for(i <- 0 to 31){
-      reg(i):=io.a
-}
-// reg(0):=io.a
-// reg(1):=io.a
-// reg(2):=io.a
-// reg(31):=io.a
-io.b:=reg.reg.reduce((a,b)=>a+b)
+    val reg=new RegFile("RISCV32E")
+    val pc=RegInit(0.U(32.W))
+    io.IMem.readAddr:=pc
+    val inst=io.IMem.readData
+    inst match {
+      case BitPat("b????????????????????_?????_0010111") => println("12")  
+    } 
+    
 
 }
