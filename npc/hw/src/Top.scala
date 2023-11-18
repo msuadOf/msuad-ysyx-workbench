@@ -15,7 +15,8 @@ val reg=RegInit(VecInit(Seq.tabulate(32)(i => 0.U(32.W))))
 reg(0):=io.a
 reg(1):=io.a
 reg(2):=io.a
-io.b:=reg(0)+reg(1)+reg(2)
+reg(3):=io.a
+io.b:=reg(0)+reg(1)+reg(2)+reg(32)
   // val regfile=new RegFile(32)
   // io.a:=regfile(2)
 }
