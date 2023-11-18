@@ -6,11 +6,11 @@ class RegFile(val width:Int){
     reg(idx)
   }
   import chisel3.experimental.{prefix,SourceInfo}
-  final def :=(that: => Data)(implicit sourceInfo: SourceInfo): Unit = {
+  // final def :=(that: => Data)(implicit sourceInfo: SourceInfo): Unit = {
     
-      this.:=(that)(sourceInfo)
+  //     this.:=(that)(sourceInfo)
     
-  }
+  // }
 }
 
 class Top extends Module {
