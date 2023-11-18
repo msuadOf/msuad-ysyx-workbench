@@ -1,15 +1,14 @@
 import chisel3._
 
-class RegFile(val width:Int){
-  val reg=RegInit(VecInit(Seq.tabulate(32)(i => 0.U(32.W))))
+class RegFile(val ISet:String){
+  val regNum=
+  val reg=RegInit(VecInit(Seq.tabulate(regNum)(i => 0.U(32.W))))
   def apply(idx:Int): UInt ={
     reg(idx)
   }
   import chisel3.experimental.{prefix,SourceInfo}
   // final def :=(that: => Data)(implicit sourceInfo: SourceInfo): Unit = {
-    
   //     this.:=(that)(sourceInfo)
-    
   // }
 }
 
