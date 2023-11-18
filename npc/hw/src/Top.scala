@@ -19,8 +19,7 @@ class Top extends Module {
     val b        = Output(UInt(32.W))
   })
 
-val a=Wire(3.U)
-io.b:=io.a
+
     val reg=new RegFile(32)
   // io.a:=regfile(2)
 // val reg=RegInit(VecInit(Seq.tabulate(32)(i => 0.U(32.W))))
