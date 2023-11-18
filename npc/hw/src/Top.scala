@@ -10,8 +10,6 @@ class Top extends Module {
     val b        = Output(UInt(16.W))
   })
 
-  val x = Reg(UInt())
-  val y = Reg(UInt())
 
 val reg=RegInit(VecInit(0.U(8.W),0.U(8.W)))
 
