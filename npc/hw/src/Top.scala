@@ -40,9 +40,12 @@ class Top extends Module {
     val pc=RegInit(0.U(32.W))
     io.IMem.readAddr:=pc
     val inst=io.IMem.readData
-    inst match {
-      case BitPat("b????????????????????_?????_0010111") => println("12")  
-    } 
+
+    RVIInstr.table.map(
+      (m)=>{
+        println(m._1,m._2)
+      }
+    )
     
 
 }
