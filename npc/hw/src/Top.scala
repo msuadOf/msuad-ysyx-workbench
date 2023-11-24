@@ -43,11 +43,15 @@ class Top extends Module {
 
   //fetch inst
   io.IMem.readAddr := pc
-  val inst = io.IMem.readData
+   val inst = Wire(UInt(32.W))
+   inst := io.IMem.readData
 
   //decode
   RVIInstr.table.map((m) => {
-    println(m._1, m._2)
+    when(m._1===inst){
+      io.DMem.readData:=m._2(1)
+    }
+
   })
   //exec
 
