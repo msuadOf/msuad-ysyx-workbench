@@ -72,5 +72,5 @@ class Top extends Module {
   println(src1)
 
   //addi exec
-  R(rd) = src1 + imm
+  R(rd) := src1 + imm
 }
