@@ -36,23 +36,35 @@ class Top extends Module {
     }
   })
 
-  io:= DontCare
+  io := DontCare
 
   val reg = new RegFile("RISCV32E")
   val pc  = RegInit(0.U(32.W))
 
   //fetch inst
   io.IMem.readAddr := pc
-   val inst = Wire(UInt(32.W))
-   inst := io.IMem.readData
+  val inst = Wire(UInt(32.W))
+  inst := io.IMem.readData
 
-  //decode
-  RVIInstr.table.map((m) => {
-    when(m._1===inst){
-      io.DMem.writeData:=m._2(2)
-    }
+  //  //(src1,src2,rd,imm,instType)
+  //  def instDivsion(inst:UInt):(UInt,UInt,UInt,UInt,UInt)={
 
-  })
-  //exec
+  //     (1.U,1.U,1.U,1.U,1.U)
+  //  }
 
+  //decode and exec
+  // RVIInstr.table.map((m) => {
+  //   when(m._1===inst){
+  //     io.DMem.writeData:=m._2(2)
+  //   }
+
+  // })
+
+  //first inst:addi
+  val rs1 = inst(19, 15)
+  val rs2 = inst(24, 20)
+  val src1R=reg(rs1)
+  val src2R=reg(rs2)
+  println(rs1)
+  println(src1R)
 }
