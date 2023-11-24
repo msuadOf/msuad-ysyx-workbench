@@ -36,6 +36,8 @@ class Top extends Module {
     }
   })
 
+  io:= DontCare
+
   val reg = new RegFile("RISCV32E")
   val pc  = RegInit(0.U(32.W))
 
