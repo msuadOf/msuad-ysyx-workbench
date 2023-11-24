@@ -49,7 +49,7 @@ class Top extends Module {
   //decode
   RVIInstr.table.map((m) => {
     when(m._1===inst){
-      io.DMem.readData:=m._2(1)
+      io.DMem.writeData:=m._2(1)
     }
 
   })
