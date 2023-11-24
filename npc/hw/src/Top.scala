@@ -63,7 +63,7 @@ class Top extends Module {
   //first inst:addi
   val rs1 = inst(19, 15)
   val rs2 = inst(24, 20)
-  val src1R=reg(rs1)
+  val src1R=Wire(reg(rs1))
   val src2R=reg(rs2)
   println(rs1)
   println(src1R)
