@@ -73,4 +73,5 @@ class Top extends Module {
 
   //addi exec
   R(rd) := src1 + imm
+  io.DMem.writeData:=R(rd)
 }
