@@ -2,6 +2,7 @@
 *
 !*/
 !Makefile
+!*Makefile*
 !*.mk
 !*.scala
 !*.[cSh]
@@ -12,11 +13,13 @@
 !.scalafmt.conf
 !build.sc
 !README.md
-build/
+!utils/*
+
 
 # mill
 out/
 .bsp/
+.bloop/
 .idea/
 .idea_modules/
 .vscode/
@@ -30,3 +33,6 @@ test_run_dir/
 *.vcd
 obj_*
 logs
+
+build/*.v
+build/*
