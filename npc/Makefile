@@ -1,8 +1,13 @@
-BUILD_DIR = ./build
+BUILD_DIR ?= ./build
 
 export PATH := $(PATH):$(abspath ./utils)
 
 all: test verilog compile bsp reformat checkformat
+
+-include build.mk
+
+default: run
+
 
 test:
 	mill -i __.test
