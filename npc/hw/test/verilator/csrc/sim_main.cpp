@@ -67,13 +67,13 @@ int main(int argc, char** argv) {
     const std::unique_ptr<Vtop> top{new Vtop{contextp.get(), "TOP"}};
 
     // Set Vtop's input signals
-    top->reset_l = !0;
-    top->clk = 0;
-    top->in_small = 1;
-    top->in_quad = 0x1234;
-    top->in_wide[0] = 0x11111111;
-    top->in_wide[1] = 0x22222222;
-    top->in_wide[2] = 0x3;
+    top->reset = !0;
+    top->clock = 0;
+    // top->in_small = 1;
+    // top->in_quad = 0x1234;
+    // top->in_wide[0] = 0x11111111;
+    // top->in_wide[1] = 0x22222222;
+    // top->in_wide[2] = 0x3;
 
     // Simulate until $finish
     while (!contextp->gotFinish()) {
@@ -91,20 +91,20 @@ int main(int argc, char** argv) {
         // new API, and sc_time_stamp() will no longer work.
 
         // Toggle a fast (time/2 period) clock
-        top->clk = !top->clk;
+        top->clock = !top->clock;
 
         // Toggle control signals on an edge that doesn't correspond
         // to where the controls are sampled; in this example we do
-        // this only on a negedge of clk, because we know
+        // this only on a negedge of clock, because we know
         // reset is not sampled there.
-        if (!top->clk) {
+        if (!top->clock) {
             if (contextp->time() > 1 && contextp->time() < 10) {
-                top->reset_l = !1;  // Assert reset
+                top->reset = !1;  // Assert reset
             } else {
-                top->reset_l = !0;  // Deassert reset
+                top->reset = !0;  // Deassert reset
             }
             // Assign some other inputs
-            top->in_quad += 0x12;
+            //top->in_quad += 0x12;
         }
 
         // Evaluate model
@@ -114,10 +114,10 @@ int main(int argc, char** argv) {
         top->eval();
 
         // Read outputs
-        VL_PRINTF("[%" PRId64 "] clk=%x rstl=%x iquad=%" PRIx64 " -> oquad=%" PRIx64
-                  " owide=%x_%08x_%08x\n",
-                  contextp->time(), top->clk, top->reset_l, top->in_quad, top->out_quad,
-                  top->out_wide[2], top->out_wide[1], top->out_wide[0]);
+        // VL_PRINTF("[%" PRId64 "] clock=%x rstl=%x iquad=%" PRIx64 " -> oquad=%" PRIx64
+        //           " owide=%x_%08x_%08x\n",
+        //           contextp->time(), top->clock, top->reset, top->in_quad, top->out_quad,
+        //           top->out_wide[2], top->out_wide[1], top->out_wide[0]);
     }
 
     // Final model cleanup

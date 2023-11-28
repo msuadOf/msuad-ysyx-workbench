@@ -6,19 +6,24 @@ include scripts/chisel.mk
 
 # Vtop call args
 VERI_RUNNING_ARGS+=--image $(IMAGE)
+CHISEL_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.scala) #search all hw/
+CHISEL_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.v) #search all hw/
 
-CHISEL_GEN_VERILOG_FILE=$(BUILD_DIR)/top.v
-verilog:
+CHISEL_GEN_VERILOG_FILE=$(BUILD_DIR)/top.v #build/top.v
+
+verilog:$(CHISEL_GEN_VERILOG_FILE)
+$(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
 	mill -i __.runMain Elaborate -td $(BUILD_DIR)
-
 
 #===================================
 #             verilator            =
 #===================================
 
 #input file
+
+
 VERILATOR_INPUT_FILE += $(WORK_DIR)/hw/test/verilator/input.vc $(WORK_DIR)/hw/test/verilator/csrc/sim_main.cpp
 #VERILATOR_INPUT_FILE += $(WORK_DIR)/hw/test/verilator/vsrc/top.v
 VERILATOR_INPUT_FILE += $(shell find $(WORK_DIR)/hw/test/verilator/vsrc/ -name *.v)
@@ -71,6 +76,7 @@ VERILATOR_INPUT_FILE +=
 VERILATOR_INPUT = -f $(VERILATOR_INPUT_FILE)
 
 VERILATOR_INPUT_FILE += $(CHISEL_GEN_VERILOG_FILE)
+
 verilator-run: verilog
 	@echo
 	@echo "-- Verilator tracing example"

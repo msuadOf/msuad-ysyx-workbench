@@ -38,7 +38,7 @@ class top extends Module {
       val writeData = Output(UInt(32.W))
     }
   })
-  io := DontCare
+  //io := DontCare
 
   val R = new RegFile("RISCV32E")
   val pc  = RegInit(0.U(32.W))
