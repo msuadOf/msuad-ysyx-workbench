@@ -4,7 +4,6 @@
 
 #input file
 
-
 VERILATOR_INPUT_FILE += $(WORK_DIR)/hw/test/verilator/input.vc $(WORK_DIR)/hw/test/verilator/csrc/sim_main.cpp
 #VERILATOR_INPUT_FILE += $(WORK_DIR)/hw/test/verilator/vsrc/top.v
 VERILATOR_INPUT_FILE += $(shell find $(WORK_DIR)/hw/test/verilator/vsrc/ -name *.v)
@@ -52,17 +51,8 @@ VERILATOR_FLAGS += --coverage
 # Add this trace to get a backtrace in gdb
 #VERILATOR_FLAGS += --gdbbt
 
-# Input files for Verilator
-VERILATOR_INPUT_FILE += 
-VERILATOR_INPUT = -f $(VERILATOR_INPUT_FILE)
-
-VERILATOR_INPUT_FILE += $(CHISEL_GEN_VERILOG_FILE)
-
-######################################################################
 
 
-show-config:
-	$(VERILATOR) -V
 
-maintainer-copy::
+
 

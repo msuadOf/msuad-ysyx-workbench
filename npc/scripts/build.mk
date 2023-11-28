@@ -17,8 +17,11 @@ $(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
 	mkdir -p $(BUILD_DIR)
 	mill -i __.runMain Elaborate -td $(BUILD_DIR)
 
+# Input files for Verilator
+VERILATOR_INPUT_FILE += 
+VERILATOR_INPUT = -f $(VERILATOR_INPUT_FILE)
 
-
+VERILATOR_INPUT_FILE += $(CHISEL_GEN_VERILOG_FILE)
 verilator-run: verilog
 	@echo
 	@echo "-- Verilator tracing example"
