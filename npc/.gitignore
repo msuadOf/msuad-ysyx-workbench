@@ -22,3 +22,11 @@ out/
 .vscode/
 .metals/
 test_run_dir/
+
+# verilator
+*.dmp
+*.log
+*.csrc
+*.vcd
+obj_*
+logs

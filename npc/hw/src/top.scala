@@ -1,6 +1,8 @@
 import chisel3._
 import chisel3.util._
 
+import chisel3.util.experimental._
+
 class RegFile(val ISet: String) {
   val regNum = ISet match {
     case "RISCV32E" => 16
@@ -21,7 +23,8 @@ class RegFile(val ISet: String) {
   // }
 }
 
-class Top extends Module {
+class top extends Module {
+
   val io = IO(new Bundle {
     val IMem = new Bundle {
       val readAddr = Output(UInt(32.W))
@@ -35,11 +38,11 @@ class Top extends Module {
       val writeData = Output(UInt(32.W))
     }
   })
+  io.DMem.readAddr  := 0.U
+  io.DMem.writeAddr := 0.U
 
-  io := DontCare
-
-  val R = new RegFile("RISCV32E")
-  val pc  = RegInit(0.U(32.W))
+  val R  = new RegFile("RISCV32E")
+  val pc = RegInit(0.U(32.W))
 
   //fetch inst
   io.IMem.readAddr := pc
@@ -61,17 +64,17 @@ class Top extends Module {
   // })
 
   //first inst:addi
-  val rs1,rs2,rd,src1,src2,imm=Wire(UInt())
-  rs1 := inst(19, 15)
-  rs2 := inst(24, 20)
-  imm:=inst(31,20)
-  rd:=inst(11,7)
-  src1:=R(rs1)
-  src2:=R(rs2)
+  val rs1, rs2, rd, src1, src2, imm = Wire(UInt())
+  rs1  := inst(19, 15)
+  rs2  := inst(24, 20)
+  imm  := inst(31, 20)
+  rd   := inst(11, 7)
+  src1 := R(rs1)
+  src2 := R(rs2)
   println(rs1)
   println(src1)
 
   //addi exec
-  R(rd) := src1 + imm
-  io.DMem.writeData:=R(rd)
+  R(rd)             := src1 + imm
+  io.DMem.writeData := R(rd)
 }

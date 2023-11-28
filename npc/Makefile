@@ -1,39 +1,19 @@
-BUILD_DIR = ./build
+BUILD_DIR ?= ./build
 
 export PATH := $(PATH):$(abspath ./utils)
 
-all: test verilog compile bsp reformat checkformat
+default: all
 
-test:
-	mill -i __.test
+all: verilog compile bsp reformat checkformat
 
-verilog:
-	$(call git_commit, "generate verilog")
-	mkdir -p $(BUILD_DIR)
-	mill -i __.runMain Elaborate -td $(BUILD_DIR)
+include scripts/build.mk
 
-help:
-	mill -i __.test.runMain Elaborate --help
-
-compile:
-	mill -i __.compile
-
-bsp:
-	mill -i mill.bsp.BSP/install
-
-reformat:
-	mill -i __.reformat
-
-checkformat:
-	mill -i __.checkFormat
-
-clean:
-	-rm -rf $(BUILD_DIR)
-
-.PHONY: test verilog help compile bsp reformat checkformat clean
+run: verilator-run
 
 sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "Write this Makefile by yourself."
 
 -include ../Makefile
+clean:
+	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat build
