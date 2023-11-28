@@ -22,7 +22,7 @@ class RegFile(val ISet: String) {
 }
 
 class top extends Module {
-  clock.suggestName("clk")
+  util.experimental.forceName(this,"clk")
   val io = IO(new Bundle {
     val IMem = new Bundle {
       val readAddr = Output(UInt(32.W))
