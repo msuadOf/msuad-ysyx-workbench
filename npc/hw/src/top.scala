@@ -38,7 +38,8 @@ class top extends Module {
       val writeData = Output(UInt(32.W))
     }
   })
-  //io := 0.U
+  io.DMem.readAddr := 0.U
+  io.DMem.writeAddr:=0.U 
 
   val R = new RegFile("RISCV32E")
   val pc  = RegInit(0.U(32.W))
