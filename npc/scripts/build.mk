@@ -70,7 +70,8 @@ VERILATOR_FLAGS += --coverage
 VERILATOR_INPUT_FILE += 
 VERILATOR_INPUT = -f $(VERILATOR_INPUT_FILE)
 
-verilator-run:
+VERILATOR_INPUT_FILE += $(BUILD_DIR)/top.v
+verilator-run: verilog
 	@echo
 	@echo "-- Verilator tracing example"
 
