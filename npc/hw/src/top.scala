@@ -1,6 +1,8 @@
 import chisel3._
 import chisel3.util._
 
+import chisel3.util.experimental._
+
 class RegFile(val ISet: String) {
   val regNum = ISet match {
     case "RISCV32E" => 16
@@ -22,7 +24,7 @@ class RegFile(val ISet: String) {
 }
 
 class top extends Module {
-  util.experimental.forceName(this,"clk")
+  
   val io = IO(new Bundle {
     val IMem = new Bundle {
       val readAddr = Output(UInt(32.W))
@@ -36,7 +38,7 @@ class top extends Module {
       val writeData = Output(UInt(32.W))
     }
   })
-
+clock.suggestName("clk")
   io := DontCare
 
   val R = new RegFile("RISCV32E")
