@@ -21,7 +21,7 @@ class RegFile(val ISet: String) {
   // }
 }
 
-class Top extends Module {
+class top extends Module {
   val io = IO(new Bundle {
     val IMem = new Bundle {
       val readAddr = Output(UInt(32.W))

@@ -1,12 +1,12 @@
-include verilator.mk
-include chisel.mk
-
 WORK_DIR  = $(shell pwd)
 BUILD_DIR = $(WORK_DIR)/build
-VERILATOR_INPUT_FILE += $(WORK_DIR)/test/verilator/input.vc $(WORK_DIR)/test/verilator/csrc/sim_main.cpp
-VERILATOR_INPUT_FILE += $(WORK_DIR)/test/verilator/csrc/sim_main.cpp
+
+include scripts/verilator.mk
+include scripts/chisel.mk
+
 # Vtop call args
 VERI_RUNNING_ARGS+=--image $(IMAGE)
+
 
 verilog:
 	$(call git_commit, "generate verilog")
@@ -17,6 +17,11 @@ verilog:
 #===================================
 #             verilator            =
 #===================================
+
+#input file
+VERILATOR_INPUT_FILE += $(WORK_DIR)/hw/test/verilator/input.vc $(WORK_DIR)/hw/test/verilator/csrc/sim_main.cpp
+#VERILATOR_INPUT_FILE += $(WORK_DIR)/hw/test/verilator/vsrc/top.v
+VERILATOR_INPUT_FILE += $(shell find $(WORK_DIR)/hw/test/verilator/vsrc/ -name *.v)
 
 # verilator build dictionaty
 VERI_BUILD_DIR = $(BUILD_DIR)
@@ -77,6 +82,17 @@ verilator-run:
 	@echo
 	@echo "-- BUILD -------------------"
 	$(MAKE) -j -C $(VERI_BUILD_DIR) -f ../Makefile_obj
+
+	@echo
+	@echo "-- RUN ---------------------"
+	@rm -rf logs
+	#@mkdir -p logs
+	$(VERI_BUILD_DIR)/Vtop +trace $(VERI_RUNNING_ARGS)
+
+	@echo
+	@echo "-- COVERAGE ----------------"
+	@rm -rf logs/annotated
+	$(VERILATOR_COVERAGE) --annotate logs/annotated logs/coverage.dat
 
 
 exe-gen: verilog
