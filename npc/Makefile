@@ -11,3 +11,5 @@ sim:
 	@echo "Write this Makefile by yourself."
 
 -include ../Makefile
+clean:
+	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat build

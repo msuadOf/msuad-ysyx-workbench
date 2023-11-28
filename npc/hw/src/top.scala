@@ -38,7 +38,6 @@ class top extends Module {
       val writeData = Output(UInt(32.W))
     }
   })
-clock.suggestName("clk")
   io := DontCare
 
   val R = new RegFile("RISCV32E")

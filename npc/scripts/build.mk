@@ -7,7 +7,7 @@ include scripts/chisel.mk
 # Vtop call args
 VERI_RUNNING_ARGS+=--image $(IMAGE)
 
-
+CHISEL_GEN_VERILOG_FILE=$(BUILD_DIR)/top.v
 verilog:
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
@@ -70,7 +70,7 @@ VERILATOR_FLAGS += --coverage
 VERILATOR_INPUT_FILE += 
 VERILATOR_INPUT = -f $(VERILATOR_INPUT_FILE)
 
-VERILATOR_INPUT_FILE += $(BUILD_DIR)/top.v
+VERILATOR_INPUT_FILE += $(CHISEL_GEN_VERILOG_FILE)
 verilator-run: verilog
 	@echo
 	@echo "-- Verilator tracing example"
