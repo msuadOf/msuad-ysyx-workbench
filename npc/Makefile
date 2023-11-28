@@ -2,9 +2,13 @@ BUILD_DIR ?= ./build
 
 export PATH := $(PATH):$(abspath ./utils)
 
-all: test verilog compile bsp reformat checkformat
+default: all
+
+all: verilog compile bsp reformat checkformat
 
 include scripts/build.mk
+
+run: verilator-run
 
 sim:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
