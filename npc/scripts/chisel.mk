@@ -1,5 +1,3 @@
-# Vtop call args
-VERI_RUNNING_ARGS+=--image $(IMAGE)
 
 export PATH := $(PATH):$(abspath ./utils)
 
