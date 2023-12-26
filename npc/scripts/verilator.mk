@@ -52,7 +52,11 @@ VERILATOR_FLAGS += --coverage
 #VERILATOR_FLAGS += --gdbbt
 
 
-
+####### file #######
+VERILATOR_INCS+=$(shell find $(WORK_DIR)/hw/test/verilator/csrc/ -name *.h)
+VERILATOR_HPPINCS+=$(shell find $(WORK_DIR)/hw/test/verilator/csrc/ -name *.hpp)
+#VERILATOR_SRCS+=$(shell find $(WORK_DIR)/hw/test/verilator/csrc/ -name *.c)
+VERILATOR_CPPSRC+=$(shell find $(WORK_DIR)/hw/test/verilator/csrc/ -name *.cpp)
 
 
 
