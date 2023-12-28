@@ -5,6 +5,18 @@ BUILD_DIR = $(WORK_DIR)/build
 include scripts/verilator.mk
 include scripts/chisel.mk
 
+<<<<<<< Updated upstream
+=======
+# Include all filelist.mk to merge file lists
+FILELIST_MK = $(shell find -L ./hw -name "filelist.mk")
+include $(FILELIST_MK)
+
+
+VERILATOR_INCLUDES += -I $(WORK_DIR)/hw/test/verilator/csrc/monitor
+VERILATOR_INCLUDES += -I $(WORK_DIR)/hw/test/verilator/csrc/include
+VERILATOR_CFLAGS := $(VERILATOR_INCLUDES)
+
+>>>>>>> Stashed changes
 ##########################33
 #    verilator build
 #############################
@@ -67,7 +79,7 @@ VERILATOR_INPUT_FILE +=
 
 VERILATOR_INPUT_FILE += $(CHISEL_GEN_VERILOG_FILE)
 VERILATOR_INPUT = -f $(VERILATOR_INPUT_FILE)
-verilator-run: verilog
+verilator-binary: verilog
 	@echo
 	@echo "-- Verilator tracing example"
 
@@ -80,6 +92,7 @@ verilator-run: verilog
 	@echo "-- BUILD -------------------"
 	$(MAKE) -j -C $(VERI_BUILD_DIR) -f ../Makefile_obj
 
+verilator-run: verilator-binary
 	@echo
 	@echo "-- RUN ---------------------"
 	@rm -rf logs

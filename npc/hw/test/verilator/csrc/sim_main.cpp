@@ -15,12 +15,36 @@
 #include "Vtop.h"
 #include <string.h>
 
+<<<<<<< Updated upstream
+=======
+//personal includes
+// //dpi-c
+// #include "Vtop__Dpi.h"
+// #include <verilated_dpi.h>
+//glibc
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+//readline
+#include <readline/readline.h>
+#include <readline/history.h>
+//system time
+#include <sys/time.h>
+
+#include "monitor.h"
+#include "common.h"
+
+>>>>>>> Stashed changes
 // Legacy function required only so linking works on Cygwin and MSVC++
 double sc_time_stamp() { return 0; }
 
 
 
 int main(int argc, char** argv) {
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     // This is a more complicated example, please also see the simpler examples/make_hello_c.
 
     // Prevent unused variable warnings
@@ -74,7 +98,7 @@ int main(int argc, char** argv) {
     // top->in_wide[0] = 0x11111111;
     // top->in_wide[1] = 0x22222222;
     // top->in_wide[2] = 0x3;
-
+    Log("Start simulation\n");
     // Simulate until $finish
     while (!contextp->gotFinish()) {
         // Historical note, before Verilator 4.200 Verilated::gotFinish()
@@ -124,11 +148,12 @@ int main(int argc, char** argv) {
     top->final();
 
     // Coverage analysis (calling write only after the test is known to pass)
-#if VM_COVERAGE
-    Verilated::mkdir("logs");
-    contextp->coveragep()->write("logs/coverage.dat");
-#endif
 
+<<<<<<< Updated upstream
+=======
+
+    Log("End simulation\n");
+>>>>>>> Stashed changes
     // Return good completion status
     // Don't use exit() or destructor won't get called
     return 0;
