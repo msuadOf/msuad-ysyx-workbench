@@ -1,22 +1,11 @@
-// DESCRIPTION: Verilator: Verilog example module
-//
-// This file ONLY is placed under the Creative Commons Public Domain, for
-// any use, without warranty, 2017 by Wilson Snyder.
-// SPDX-License-Identifier: CC0-1.0
-//======================================================================
-
 // For std::unique_ptr
 #include <memory>
-
 // Include common routines
 #include <verilated.h>
-
 // Include model header, generated from Verilating "top.v"
 #include "Vtop.h"
 #include <string.h>
 
-<<<<<<< Updated upstream
-=======
 //personal includes
 // //dpi-c
 // #include "Vtop__Dpi.h"
@@ -34,17 +23,13 @@
 #include "monitor.h"
 #include "common.h"
 
->>>>>>> Stashed changes
 // Legacy function required only so linking works on Cygwin and MSVC++
 double sc_time_stamp() { return 0; }
 
 
 
 int main(int argc, char** argv) {
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
     // This is a more complicated example, please also see the simpler examples/make_hello_c.
 
     // Prevent unused variable warnings
@@ -149,11 +134,8 @@ int main(int argc, char** argv) {
 
     // Coverage analysis (calling write only after the test is known to pass)
 
-<<<<<<< Updated upstream
-=======
 
     Log("End simulation\n");
->>>>>>> Stashed changes
     // Return good completion status
     // Don't use exit() or destructor won't get called
     return 0;

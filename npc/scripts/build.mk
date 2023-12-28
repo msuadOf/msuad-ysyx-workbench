@@ -5,8 +5,6 @@ BUILD_DIR = $(WORK_DIR)/build
 include scripts/verilator.mk
 include scripts/chisel.mk
 
-<<<<<<< Updated upstream
-=======
 # Include all filelist.mk to merge file lists
 FILELIST_MK = $(shell find -L ./hw -name "filelist.mk")
 include $(FILELIST_MK)
@@ -16,9 +14,8 @@ VERILATOR_INCLUDES += -I $(WORK_DIR)/hw/test/verilator/csrc/monitor
 VERILATOR_INCLUDES += -I $(WORK_DIR)/hw/test/verilator/csrc/include
 VERILATOR_CFLAGS := $(VERILATOR_INCLUDES)
 
->>>>>>> Stashed changes
 ##########################33
-#    verilator build
+#    verilator build(copied)
 #############################
 #INC_PATH += $(WORK_DIR)/hw/test/verilator/csrc/
 INC_PATH := $(dirname $(VERILATOR_INCS)) $(INC_PATH)
@@ -67,6 +64,10 @@ CHISEL_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.v) #search all hw/
 
 CHISEL_GEN_VERILOG_FILE=$(BUILD_DIR)/top.v #build/top.v
 
+C_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.c) #search all hw/
+CPP_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.cpp) #search all hw/
+C_HEAD_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.h) #search all hw/
+
 verilog:$(CHISEL_GEN_VERILOG_FILE)
 $(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
 	$(call git_commit, "generate verilog")
@@ -74,7 +75,7 @@ $(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
 	mill -i __.runMain Elaborate -td $(BUILD_DIR)
 
 # Input files for Verilator
-VERILATOR_INPUT_FILE += 
+VERILATOR_INPUT_FILE += $(C_SRC_FILE) $(CPP_SRC_FILE) 
 
 
 VERILATOR_INPUT_FILE += $(CHISEL_GEN_VERILOG_FILE)
@@ -90,7 +91,7 @@ verilator-binary: verilog
 
 	@echo
 	@echo "-- BUILD -------------------"
-	$(MAKE) -j -C $(VERI_BUILD_DIR) -f ../Makefile_obj
+	CPPFLAGS="$(VERILATOR_CFLAGS)" $(MAKE) -j -C $(VERI_BUILD_DIR) -f ../Makefile_obj
 
 verilator-run: verilator-binary
 	@echo

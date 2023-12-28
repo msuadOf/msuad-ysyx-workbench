@@ -16,9 +16,6 @@ sim run:verilator-run
 
 -include ../Makefile
 clean:
-<<<<<<< Updated upstream
-	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat build
-=======
 	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat build
 clean-verilator clean-v vclean:
 	cp build/top.v top.v.bak._tmp && rm -rf build/* && mv top.v.bak._tmp build/top.v
@@ -28,4 +25,3 @@ distclean:clean clean-chisel
 
 
 .DEFAULT_GOAL = verilator-binary
->>>>>>> Stashed changes
