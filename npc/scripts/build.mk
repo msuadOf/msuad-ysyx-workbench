@@ -24,6 +24,9 @@ INCLUDES = $(addprefix -I, $(INC_PATH))
 CFLAGS  := -O2 -MMD -Wall -Werror $(INCLUDES) $(CFLAGS)
 LDFLAGS := -O2 $(LDFLAGS)
 
+VERILATOR_INCLUDES +=  /home/qsuad/msuad-ysyx-workbench/npc/hw/test/verilator/csrc/monitor
+VERILATOR_CFLAGS := -I $(VERILATOR_INCLUDES)
+
 OBJS = $(VERILATOR_SRCS:%.c=$(OBJ_DIR)/%.o) $(VERILATOR_CPPSRC:%.cpp=$(OBJ_DIR)/%.o)
 
 # Compilation patterns
@@ -86,7 +89,7 @@ verilator-run: verilog
 
 	@echo
 	@echo "-- BUILD -------------------"
-	CPPFLAGS="-I /home/qsuad/msuad-ysyx-workbench/npc/hw/test/verilator/csrc/monitor" $(MAKE) -j -C $(VERI_BUILD_DIR) -f ../Makefile_obj
+	CPPFLAGS="$(VERILATOR_CFLAGS)" $(MAKE) -j -C $(VERI_BUILD_DIR) -f ../Makefile_obj
 
 	@echo
 	@echo "-- RUN ---------------------"

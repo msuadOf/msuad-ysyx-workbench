@@ -53,13 +53,3 @@ DEPS := $(wildcard *.d)
 ifneq ($(DEPS),)
 include $(DEPS)
 endif
-
-%.o: %.c
-	@echo + CC $<
-	@mkdir -p $(dir $@)
-	@$(CC) -fPIE $(CFLAGS) -c -o $@ $<
-
-%.o: %.cpp
-	@echo + CXX $<
-	@mkdir -p $(dir $@)
-	@$(CXX) $(CFLAGS) $(CXXFLAGS) -c -o $@ $<
