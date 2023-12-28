@@ -85,7 +85,7 @@ verilator-run: verilog
 
 	@echo
 	@echo "-- BUILD -------------------"
-	$(MAKE) -j -C $(VERI_BUILD_DIR) -f ../Makefile_obj
+	$(MAKE) -j -C $(VERI_BUILD_DIR) -f ../Makefile_obj CPPFLAGS+=-I /home/qsuad/msuad-ysyx-workbench/npc/hw/test/verilator/csrc/monitor
 
 	@echo
 	@echo "-- RUN ---------------------"

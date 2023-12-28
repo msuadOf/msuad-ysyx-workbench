@@ -23,7 +23,10 @@ double sc_time_stamp() { return 0; }
 
 
 int main(int argc, char** argv) {
+
 monitor();
+
+
 
     // This is a more complicated example, please also see the simpler examples/make_hello_c.
 
