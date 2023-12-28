@@ -17,3 +17,5 @@ sim:
 -include ../Makefile
 clean:
 	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat build
+clean-verilator:
+	cd build && rm -rf !top.v
