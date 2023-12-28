@@ -82,7 +82,7 @@ verilator-run: verilog
 	@echo
 	@echo "-- VERILATE ----------------"
 	@mkdir -p $(VERI_BUILD_DIR)
-	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUT) --Mdir $(VERI_BUILD_DIR) #-I /home/qsuad/msuad-ysyx-workbench/npc/hw/test/verilator/csrc/monitor/monitor.h
+	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUT) --Mdir $(VERI_BUILD_DIR)
 
 	@echo
 	@echo "-- BUILD -------------------"

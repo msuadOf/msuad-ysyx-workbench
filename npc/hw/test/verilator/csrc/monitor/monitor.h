@@ -3,16 +3,16 @@
 #define MONITOR_H
 
 
-// #ifdef __cplusplus
-// extern "C"{
-// #endif
+#ifdef __cplusplus
+extern "C"{
+#endif
 
 int monitor();
 
-// #ifdef __cplusplus
-// }
+#ifdef __cplusplus
+}
 
-// #endif
+#endif
 
 
 #endif // !_MONITOR_H
