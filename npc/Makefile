@@ -12,7 +12,7 @@ sim run:verilator-run
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "-- RUN ---------------------"
 	@rm -rf logs
-	$(VERI_BUILD_DIR)/Vtop +trace $(VERI_RUNNING_ARGS)
+	$(VERI_BUILD_DIR)/Vtop -l $(WORK_DIR)/npc_monitor.log +trace $(VERI_RUNNING_ARGS) 
 
 -include ../Makefile
 clean:
