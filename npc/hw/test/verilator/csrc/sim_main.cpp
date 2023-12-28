@@ -15,12 +15,16 @@
 #include "Vtop.h"
 #include <string.h>
 
+#include "monitor.h"
+
 // Legacy function required only so linking works on Cygwin and MSVC++
 double sc_time_stamp() { return 0; }
 
 
 
 int main(int argc, char** argv) {
+monitor();
+
     // This is a more complicated example, please also see the simpler examples/make_hello_c.
 
     // Prevent unused variable warnings
@@ -129,6 +133,7 @@ int main(int argc, char** argv) {
     contextp->coveragep()->write("logs/coverage.dat");
 #endif
 
+    printf("End simulation\n");
     // Return good completion status
     // Don't use exit() or destructor won't get called
     return 0;
