@@ -9,8 +9,13 @@ include scripts/chisel.mk
 FILELIST_MK = $(shell find -L ./hw -name "filelist.mk")
 include $(FILELIST_MK)
 
+
+VERILATOR_INCLUDES +=  $(WORK_DIR)/hw/test/verilator/csrc/monitor
+#VERILATOR_INCLUDES +=  $(WORK_DIR)/hw/test/verilator/csrc/monitor
+VERILATOR_CFLAGS := -I $(VERILATOR_INCLUDES)
+
 ##########################33
-#    verilator build
+#    verilator build(copied)
 #############################
 #INC_PATH += $(WORK_DIR)/hw/test/verilator/csrc/
 INC_PATH := $(dirname $(VERILATOR_INCS)) $(INC_PATH)
@@ -23,9 +28,6 @@ LD := $(CXX)
 INCLUDES = $(addprefix -I, $(INC_PATH))
 CFLAGS  := -O2 -MMD -Wall -Werror $(INCLUDES) $(CFLAGS)
 LDFLAGS := -O2 $(LDFLAGS)
-
-VERILATOR_INCLUDES +=  /home/qsuad/msuad-ysyx-workbench/npc/hw/test/verilator/csrc/monitor
-VERILATOR_CFLAGS := -I $(VERILATOR_INCLUDES)
 
 OBJS = $(VERILATOR_SRCS:%.c=$(OBJ_DIR)/%.o) $(VERILATOR_CPPSRC:%.cpp=$(OBJ_DIR)/%.o)
 
