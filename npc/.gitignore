@@ -13,6 +13,7 @@
 !.scalafmt.conf
 !build.sc
 !README.md
+!Chisel_Startup.md
 !utils/*
 
 
