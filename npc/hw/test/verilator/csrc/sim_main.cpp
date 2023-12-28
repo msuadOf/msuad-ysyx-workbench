@@ -1,19 +1,24 @@
-// DESCRIPTION: Verilator: Verilog example module
-//
-// This file ONLY is placed under the Creative Commons Public Domain, for
-// any use, without warranty, 2017 by Wilson Snyder.
-// SPDX-License-Identifier: CC0-1.0
-//======================================================================
-
 // For std::unique_ptr
 #include <memory>
-
 // Include common routines
 #include <verilated.h>
-
 // Include model header, generated from Verilating "top.v"
 #include "Vtop.h"
 #include <string.h>
+
+//personal includes
+// //dpi-c
+// #include "Vtop__Dpi.h"
+// #include <verilated_dpi.h>
+//glibc
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+//readline
+#include <readline/readline.h>
+#include <readline/history.h>
+//system time
+#include <sys/time.h>
 
 #include "monitor.h"
 

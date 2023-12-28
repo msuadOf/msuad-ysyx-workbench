@@ -11,7 +11,7 @@ include $(FILELIST_MK)
 
 
 VERILATOR_INCLUDES +=  $(WORK_DIR)/hw/test/verilator/csrc/monitor
-#VERILATOR_INCLUDES +=  $(WORK_DIR)/hw/test/verilator/csrc/monitor
+VERILATOR_INCLUDES +=  $(WORK_DIR)/hw/test/verilator/csrc/include
 VERILATOR_CFLAGS := -I $(VERILATOR_INCLUDES)
 
 ##########################33
