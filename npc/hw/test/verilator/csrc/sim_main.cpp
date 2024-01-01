@@ -27,7 +27,7 @@
 double sc_time_stamp() { return 0; }
 
 void cpu_exec(uint64_t n) {
-  Log("cpu_exec(%d)",n);
+  Log("cpu_exec(%ld)",n);
   return;
 }
 
