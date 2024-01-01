@@ -26,6 +26,10 @@
 // Legacy function required only so linking works on Cygwin and MSVC++
 double sc_time_stamp() { return 0; }
 
+void cpu_exec(uint64_t n) {
+  return;
+}
+
 static char *rl_gets()
 {
   static char *line_read = NULL;
@@ -45,9 +49,29 @@ static char *rl_gets()
 
   return line_read;
 }
-
+static int cmd_c(char *args)
+{
+  cpu_exec(-1);
+  return 0;
+}
 static int cmd_q(char *args){
     return -1;
+}
+static int cmd_si(char *args)
+{
+  args = strtok(NULL, " ");
+  int n;
+  if (args == NULL)
+  {
+    n = 1;
+  }
+  else
+  {
+    n = atoi(args);
+  }
+
+  cpu_exec(n);
+  return 0;
 }
 static int cmd_help(char *args);
 static struct
