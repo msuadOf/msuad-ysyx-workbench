@@ -8,11 +8,11 @@ all: verilog compile bsp reformat checkformat
 
 include scripts/build.mk
 
-run: verilator-run
-
-sim:
+sim run:verilator-run
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	@echo "Write this Makefile by yourself."
+	@echo "-- RUN ---------------------"
+	@rm -rf logs
+	$(VERI_BUILD_DIR)/Vtop +trace $(VERI_RUNNING_ARGS)
 
 -include ../Makefile
 clean:
@@ -22,3 +22,6 @@ clean-verilator clean-v vclean:
 clean-chisel clean-c:
 	-rm -rf out
 distclean:clean clean-chisel
+
+
+.DEFAULT_GOAL = verilator-binary

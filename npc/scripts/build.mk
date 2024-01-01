@@ -10,9 +10,9 @@ FILELIST_MK = $(shell find -L ./hw -name "filelist.mk")
 include $(FILELIST_MK)
 
 
-VERILATOR_INCLUDES +=  $(WORK_DIR)/hw/test/verilator/csrc/monitor
-VERILATOR_INCLUDES +=  $(WORK_DIR)/hw/test/verilator/csrc/include
-VERILATOR_CFLAGS := -I $(VERILATOR_INCLUDES)
+VERILATOR_INCLUDES += -I $(WORK_DIR)/hw/test/verilator/csrc/monitor
+VERILATOR_INCLUDES += -I $(WORK_DIR)/hw/test/verilator/csrc/include -lreadline -ldl -pie
+VERILATOR_CFLAGS := $(VERILATOR_INCLUDES)
 
 ##########################33
 #    verilator build(copied)
@@ -80,7 +80,7 @@ VERILATOR_INPUT_FILE += $(C_SRC_FILE) $(CPP_SRC_FILE)
 
 VERILATOR_INPUT_FILE += $(CHISEL_GEN_VERILOG_FILE)
 VERILATOR_INPUT = -f $(VERILATOR_INPUT_FILE)
-verilator-run: verilog
+verilator-binary: verilog
 	@echo
 	@echo "-- Verilator tracing example"
 
@@ -93,6 +93,7 @@ verilator-run: verilog
 	@echo "-- BUILD -------------------"
 	CPPFLAGS="$(VERILATOR_CFLAGS)" $(MAKE) -j -C $(VERI_BUILD_DIR) -f ../Makefile_obj
 
+verilator-run: verilator-binary
 	@echo
 	@echo "-- RUN ---------------------"
 	@rm -rf logs
