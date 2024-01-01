@@ -23,17 +23,24 @@
 #include "monitor.h"
 #include "common.h"
 
-// Legacy function required only so linking works on Cygwin and MSVC++
-double sc_time_stamp() { return 0; }
 
-const std::unique_ptr<VerilatedContext> contextp{new VerilatedContext};
-const std::unique_ptr<Vtop> top{new Vtop{contextp.get(), "TOP"}};
+//=======cpu run time========
+
+VerilatedContext* contextp;
+Vtop* top;
+ 
+VerilatedVcdC* tfp;
+vluint64_t main_time = 0;  //initial 仿真时间
+double sc_time_stamp()
+{
+	return main_time;
+}
 
 void cpu_exec(uint64_t n) {
   Log("cpu_exec(%ld)",n);
   return;
 }
-
+///=======cpu run time [ends]==================/
 static char *rl_gets()
 {
   static char *line_read = NULL;
@@ -195,6 +202,7 @@ int main(int argc, char** argv) {
     // Using unique_ptr is similar to
     // "VerilatedContext* contextp = new VerilatedContext" then deleting at end.
     // const std::unique_ptr<VerilatedContext> contextp{new VerilatedContext};
+    contextp = new VerilatedContext;
     // Do not instead make Vtop as a file-scope static variable, as the
     // "C++ static initialization order fiasco" may cause a crash
 
@@ -218,6 +226,7 @@ int main(int argc, char** argv) {
     // Using unique_ptr is similar to "Vtop* top = new Vtop" then deleting at end.
     // "TOP" will be the hierarchical name of the module.
     // const std::unique_ptr<Vtop> top{new Vtop{contextp.get(), "TOP"}};
+    top = new Vtop{contextp};
 
     // Set Vtop's input signals
     top->reset = !0;
@@ -281,6 +290,7 @@ int main(int argc, char** argv) {
 
 
     Log("End simulation\n");
+    delete top;
     // Return good completion status
     // Don't use exit() or destructor won't get called
     return 0;
