@@ -1,6 +1,8 @@
 // For std::unique_ptr
 #include <memory>
 // Include common routines
+
+#include "verilated_vcd_c.h" //用于生成波形
 #include <verilated.h>
 // Include model header, generated from Verilating "top.v"
 #include "Vtop.h"
@@ -35,11 +37,50 @@ double sc_time_stamp()
 {
 	return main_time;
 }
+uint64_t ref_regs[33];
+ 
+void hit_exit(int status) {}
+//===
 
+void cpu_init() {
+  //cpu_gpr[32] = CONFIG_MBASE;
+  top -> clock = 0;
+  top -> reset = 1;
+  top -> eval();
+  tfp->dump(main_time);
+  main_time ++;
+  top -> clock = 1;
+  top -> reset = 1;
+  top -> eval();
+  tfp->dump(main_time);
+  main_time ++;
+  top -> reset = 0;
+}
+void exec_once(VerilatedVcdC* tfp) {
+  top->clock = 0;
+  //printf("======clock shoule be 0 now %d\n",top->clock);
+  // top->mem_inst = pmem_read(top->mem_addr);
+  // printf("excute addr:0x%08lx inst:0x%08x\n",top->mem_addr,top->mem_inst);
+  top->eval();
+  tfp->dump(main_time);
+  main_time ++;
+  top->clock = 1;
+  //printf("======clock should be 1 now %d\n",top->clock); 
+  top->eval(); 
+	tfp->dump(main_time);
+  main_time ++;
+}
+ 
 void cpu_exec(uint64_t n) {
   Log("cpu_exec(%ld)",n);
-  return;
+  for(int i; i < n; i++){
+      exec_once(tfp);
+      #ifdef CONFIG_DIFFTEST
+        difftest_exec_once();
+      #endif
+  }
 }
+
 ///=======cpu run time [ends]==================/
 static char *rl_gets()
 {
@@ -227,6 +268,14 @@ int main(int argc, char** argv) {
     // "TOP" will be the hierarchical name of the module.
     // const std::unique_ptr<Vtop> top{new Vtop{contextp.get(), "TOP"}};
     top = new Vtop{contextp};
+
+    
+  //VCD波形设置  start
+  Verilated::traceEverOn(true);
+  tfp = new VerilatedVcdC;
+  top->trace(tfp, 0);
+  tfp->open("build/wave.vcd");
+  //VCD波形设置  end
 
     // Set Vtop's input signals
     top->reset = !0;
