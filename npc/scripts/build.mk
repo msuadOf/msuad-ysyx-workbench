@@ -11,8 +11,9 @@ include $(FILELIST_MK)
 
 
 VERILATOR_INCLUDES += -I $(WORK_DIR)/hw/test/verilator/csrc/monitor
-VERILATOR_INCLUDES += -I $(WORK_DIR)/hw/test/verilator/csrc/include -lreadline -ldl -pie
+VERILATOR_INCLUDES += -I $(WORK_DIR)/hw/test/verilator/csrc/include 
 VERILATOR_CFLAGS := $(VERILATOR_INCLUDES)
+VERILATOR_LDLIBS := -lreadline -ldl -pie
 
 ##########################33
 #    verilator build(copied)
@@ -91,7 +92,7 @@ verilator-binary: verilog
 
 	@echo
 	@echo "-- BUILD -------------------"
-	CPPFLAGS="$(VERILATOR_CFLAGS)" $(MAKE) -j -C $(VERI_BUILD_DIR) -f ../Makefile_obj
+	CPPFLAGS="$(VERILATOR_CFLAGS)" LDLIBS="$(VERILATOR_LDLIBS)" $(MAKE) -j -C $(VERI_BUILD_DIR) -f ../Makefile_obj
 
 verilator-run: verilator-binary
 	@echo
