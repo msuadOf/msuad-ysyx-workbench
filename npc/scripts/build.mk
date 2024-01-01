@@ -105,6 +105,3 @@ verilator-run: verilator-binary
 	@echo "-- COVERAGE ----------------"
 	@rm -rf logs/annotated
 	$(VERILATOR_COVERAGE) --annotate logs/annotated logs/coverage.dat
-
-verilator-le:verilog
-	$(VERILATOR)  -cc --exe --build -j $(VERILATOR_INPUT) --Mdir $(VERI_BUILD_DIR)
