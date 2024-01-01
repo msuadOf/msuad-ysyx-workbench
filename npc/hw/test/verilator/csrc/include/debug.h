@@ -23,7 +23,9 @@
 #define Log(format, ...) \
     _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", \
         __FILE__, __LINE__, __func__, ## __VA_ARGS__)
-
+#define DEF(macro) ()
+#define CONFIG_Log_level_1
+IFDEF(concat(CONFIG_Log_level_,1),ISDEF(concat(CONFIG_Log_level_,0)) )
 #define Log_level(level,format, ...) \
     IFDEF(concat(CONFIG_Log_level_,level), _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", \
         __FILE__, __LINE__, __func__, ## __VA_ARGS__));
