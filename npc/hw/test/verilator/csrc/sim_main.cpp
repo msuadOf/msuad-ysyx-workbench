@@ -72,7 +72,7 @@ void exec_once(VerilatedVcdC* tfp) {
 }
  
 void cpu_exec(uint64_t n) {
-  Log_level(1,"cpu_exec(%ld)",n);
+  Log_level(a2,"cpu_exec(%ld)",n);
   for(int i; i < n; i++){
       exec_once(tfp);
       #ifdef CONFIG_DIFFTEST
