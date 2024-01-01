@@ -26,12 +26,8 @@
 
 #define CONFIG_Log_level_1
 #define Log_level(level,format, ...) \
-// do { \
-//     #ifdef concat(CONFIG_Log_level_,level)
-//     _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", \
-//         __FILE__, __LINE__, __func__, ## __VA_ARGS__)
-//     #endif // DEBUG
-// } while (0)
+    IFDEF(concat(CONFIG_Log_level_,level), _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", \
+        __FILE__, __LINE__, __func__, ## __VA_ARGS__));
 
 #define Assert(cond, format, ...) \
   do { \
