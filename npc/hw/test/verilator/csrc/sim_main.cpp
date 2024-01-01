@@ -27,6 +27,7 @@
 double sc_time_stamp() { return 0; }
 
 void cpu_exec(uint64_t n) {
+  Log("cpu_exec(%d)",n);
   return;
 }
 
@@ -81,9 +82,9 @@ static struct
   int (*handler)(char *);
 } cmd_table[] = {
     {"help", "Display information about all supported commands", cmd_help},
-    //{"c", "Continue the execution of the program", cmd_c},
+    {"c", "Continue the execution of the program", cmd_c},
     {"q", "Exit NEMU", cmd_q},
-    // {"si", "让程序单步执行N条指令后暂停执行,当N没有给出时, 缺省为1", cmd_si},
+    {"si", "让程序单步执行N条指令后暂停执行,当N没有给出时, 缺省为1", cmd_si},
     // {"x", "求出表达式EXPR的值, 将结果作为起始内存地址, 以十六进制形式输出连续的N个4字节", cmd_x},
     // {"info", "打印寄存器状态,打印监视点信息", cmd_info},
     // {"p", "求出表达式EXPR的值, EXPR支持的", cmd_p},
