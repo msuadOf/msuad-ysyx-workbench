@@ -7,7 +7,6 @@
 #include <string.h>
 
 //personal includes
-#include "verilated_vcd_c.h" //用于生成波形
 // //dpi-c
 // #include "Vtop__Dpi.h"
 // #include <verilated_dpi.h>
@@ -24,33 +23,124 @@
 #include "monitor.h"
 #include "common.h"
 
-#include "sim_main.h"
+// Legacy function required only so linking works on Cygwin and MSVC++
+double sc_time_stamp() { return 0; }
 
-
-//================= Environment ===============
-VerilatedContext* contextp;
-Vtop* top;
- 
-VerilatedVcdC* tfp;
-vluint64_t main_time = 0;  //initial 仿真时间
-double sc_time_stamp()
+static char *rl_gets()
 {
-	return main_time;
-}
- 
-uint64_t ref_regs[33];
- 
-void hit_exit(int status) {}
+  static char *line_read = NULL;
 
-static void welcome() {
-    hello_npc(1);
-  Log("Trace: %s", MUXDEF(CONFIG_TRACE, ANSI_FMT("ON", ANSI_FG_GREEN), ANSI_FMT("OFF", ANSI_FG_RED)));
-  IFDEF(CONFIG_TRACE, Log("If trace is enabled, a log file will be generated "
-        "to record the trace. This may lead to a large log file. "
-        "If it is not necessary, you can disable it in menuconfig"));
-  Log("Build time: %s, %s", __TIME__, __DATE__);
-  printf("Welcome to %s-npc!\n", ANSI_FMT(str(__GUEST_ISA__), ANSI_FG_YELLOW ANSI_BG_RED));
-  printf("For help, type \"help\"\n");
+  if (line_read)
+  {
+    free(line_read);
+    line_read = NULL;
+  }
+
+  line_read = readline("(npc) ");
+
+  if (line_read && *line_read)
+  {
+    add_history(line_read);
+  }
+
+  return line_read;
+}
+
+static int cmd_q(char *args){
+    return -1;
+}
+static int cmd_help(char *args);
+static struct
+{
+  const char *name;
+  const char *description;
+  int (*handler)(char *);
+} cmd_table[] = {
+    {"help", "Display information about all supported commands", cmd_help},
+    //{"c", "Continue the execution of the program", cmd_c},
+    {"q", "Exit NEMU", cmd_q},
+    // {"si", "让程序单步执行N条指令后暂停执行,当N没有给出时, 缺省为1", cmd_si},
+    // {"x", "求出表达式EXPR的值, 将结果作为起始内存地址, 以十六进制形式输出连续的N个4字节", cmd_x},
+    // {"info", "打印寄存器状态,打印监视点信息", cmd_info},
+    // {"p", "求出表达式EXPR的值, EXPR支持的", cmd_p},
+    // {"w", "w EXPR: 当表达式EXPR的值发生变化时, 暂停程序执行", cmd_w},
+    // {"d", "d N: Exit NEMU删除序号为N的监视点", cmd_d},
+    /* TODO: Add more commands */
+
+};
+
+#define NR_CMD ARRLEN(cmd_table)
+
+static int cmd_help(char *args)
+{
+  /* extract the first argument */
+  char *arg = strtok(NULL, " ");
+  int i;
+
+  if (arg == NULL)
+  {
+    /* no argument given */
+    for (i = 0; i < NR_CMD; i++)
+    {
+      printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
+    }
+  }
+  else
+  {
+    for (i = 0; i < NR_CMD; i++)
+    {
+      if (strcmp(arg, cmd_table[i].name) == 0)
+      {
+        printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
+        return 0;
+      }
+    }
+    printf("Unknown command '%s'\n", arg);
+  }
+  return 0;
+}
+
+int sdb_mainloop(){
+
+  for (char *str; (str = rl_gets()) != NULL;)
+  {
+    char *str_end = str + strlen(str);
+
+    /* extract the first token as the command */
+    char *cmd = strtok(str, " ");
+    if (cmd == NULL)
+    {
+      continue;
+    }
+
+    /* treat the remaining string as the arguments,
+     * which may need further parsing
+     */
+    char *args = cmd + strlen(cmd) + 1;
+    if (args >= str_end)
+    {
+      args = NULL;
+    }
+
+    int i;
+    for (i = 0; i < NR_CMD; i++)
+    {
+      if (strcmp(cmd, cmd_table[i].name) == 0)
+      {
+        if (cmd_table[i].handler(args) < 0)
+        {
+          return -1;
+        }
+        break;
+      }
+    }
+
+    if (i == NR_CMD)
+    {
+      printf("Unknown command '%s'\n", cmd);
+    }
+  }
+    return 0;
 }
 
 int main(int argc, char** argv) {
@@ -95,6 +185,7 @@ int main(int argc, char** argv) {
     // This needs to be called before you create any model
     contextp->commandArgs(argc, argv);
 
+
     // Construct the Verilated model, from Vtop.h generated from Verilating "top.v".
     // Using unique_ptr is similar to "Vtop* top = new Vtop" then deleting at end.
     // "TOP" will be the hierarchical name of the module.
@@ -110,53 +201,51 @@ int main(int argc, char** argv) {
     // top->in_wide[2] = 0x3;
     Log("Start simulation\n");
     // Simulate until $finish
-    welcome();
-    init_monitor(argc, argv);
     sdb_mainloop();
-    // while (!contextp->gotFinish()) {
-    //     // Historical note, before Verilator 4.200 Verilated::gotFinish()
-    //     // was used above in place of contextp->gotFinish().
-    //     // Most of the contextp-> calls can use Verilated:: calls instead;
-    //     // the Verilated:: versions just assume there's a single context
-    //     // being used (per thread).  It's faster and clearer to use the
-    //     // newer contextp-> versions.
+/*     while (!contextp->gotFinish()) {
+        // Historical note, before Verilator 4.200 Verilated::gotFinish()
+        // was used above in place of contextp->gotFinish().
+        // Most of the contextp-> calls can use Verilated:: calls instead;
+        // the Verilated:: versions just assume there's a single context
+        // being used (per thread).  It's faster and clearer to use the
+        // newer contextp-> versions.
 
-    //     contextp->timeInc(1);  // 1 timeprecision period passes...
-    //     // Historical note, before Verilator 4.200 a sc_time_stamp()
-    //     // function was required instead of using timeInc.  Once timeInc()
-    //     // is called (with non-zero), the Verilated libraries assume the
-    //     // new API, and sc_time_stamp() will no longer work.
+        contextp->timeInc(1);  // 1 timeprecision period passes...
+        // Historical note, before Verilator 4.200 a sc_time_stamp()
+        // function was required instead of using timeInc.  Once timeInc()
+        // is called (with non-zero), the Verilated libraries assume the
+        // new API, and sc_time_stamp() will no longer work.
 
-    //     // Toggle a fast (time/2 period) clock
-    //     top->clock = !top->clock;
+        // Toggle a fast (time/2 period) clock
+        top->clock = !top->clock;
 
-    //     // Toggle control signals on an edge that doesn't correspond
-    //     // to where the controls are sampled; in this example we do
-    //     // this only on a negedge of clock, because we know
-    //     // reset is not sampled there.
-    //     if (!top->clock) {
-    //         if (contextp->time() > 1 && contextp->time() < 10) {
-    //             top->reset = !1;  // Assert reset
-    //         } else {
-    //             top->reset = !0;  // Deassert reset
-    //         }
-    //         // Assign some other inputs
-    //         //top->in_quad += 0x12;
-    //     }
+        // Toggle control signals on an edge that doesn't correspond
+        // to where the controls are sampled; in this example we do
+        // this only on a negedge of clock, because we know
+        // reset is not sampled there.
+        if (!top->clock) {
+            if (contextp->time() > 1 && contextp->time() < 10) {
+                top->reset = !1;  // Assert reset
+            } else {
+                top->reset = !0;  // Deassert reset
+            }
+            // Assign some other inputs
+            //top->in_quad += 0x12;
+        }
 
-    //     // Evaluate model
-    //     // (If you have multiple models being simulated in the same
-    //     // timestep then instead of eval(), call eval_step() on each, then
-    //     // eval_end_step() on each. See the manual.)
-    //     top->eval();
+        // Evaluate model
+        // (If you have multiple models being simulated in the same
+        // timestep then instead of eval(), call eval_step() on each, then
+        // eval_end_step() on each. See the manual.)
+        top->eval();
 
-    //     // Read outputs
-    //     // VL_PRINTF("[%" PRId64 "] clock=%x rstl=%x iquad=%" PRIx64 " -> oquad=%" PRIx64
-    //     //           " owide=%x_%08x_%08x\n",
-    //     //           contextp->time(), top->clock, top->reset, top->in_quad, top->out_quad,
-    //     //           top->out_wide[2], top->out_wide[1], top->out_wide[0]);
-    // }
-
+        // Read outputs
+        // VL_PRINTF("[%" PRId64 "] clock=%x rstl=%x iquad=%" PRIx64 " -> oquad=%" PRIx64
+        //           " owide=%x_%08x_%08x\n",
+        //           contextp->time(), top->clock, top->reset, top->in_quad, top->out_quad,
+        //           top->out_wide[2], top->out_wide[1], top->out_wide[0]);
+    }
+ */
     // Final model cleanup
     top->final();
 
@@ -167,10 +256,4 @@ int main(int argc, char** argv) {
     // Return good completion status
     // Don't use exit() or destructor won't get called
     return 0;
-}
-void assert_fail_msg(){
-    panic("Callback: void assert_fail_msg()");
-
-panic("啊~啊~不要过来啊~~机器寄了QAQ");
-
 }

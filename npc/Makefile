@@ -8,11 +8,11 @@ all: verilog compile bsp reformat checkformat
 
 include scripts/build.mk
 
-sim run:verilator-run
+sim run:verilator-binary
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
 	@echo "-- RUN ---------------------"
 	@rm -rf logs
-	$(VERI_BUILD_DIR)/Vtop -l $(WORK_DIR)/npc_monitor.log +trace $(VERI_RUNNING_ARGS) 
+	$(VERI_BUILD_DIR)/Vtop +trace $(VERI_RUNNING_ARGS)
 
 -include ../Makefile
 clean:

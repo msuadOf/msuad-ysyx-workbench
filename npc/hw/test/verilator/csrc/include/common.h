@@ -16,10 +16,6 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
-#define CONFIG_MBASE 0x80000000
-#define CONFIG_MSIZE 0x8000000
-#define CONFIG_PC_RESET_OFFSET 0x0
-
 #include <stdint.h>
 #include <inttypes.h>
 #include <stdbool.h>
@@ -39,6 +35,5 @@ typedef MUXDEF(PMEM64, uint64_t, uint32_t) paddr_t;
 typedef uint16_t ioaddr_t;
 
 #include <debug.h>
-#include "hellonpc.h"
 
 #endif
