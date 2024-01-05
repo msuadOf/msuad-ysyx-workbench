@@ -79,6 +79,10 @@ const char *regnames[] = {
     "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
     "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"};
 #define gpr(idx) (s->regs[check_reg_idx(idx)])
+void isa_reg_display_byIndex(int i)
+{
+    printf("%-8s%-#20x%-20d\n", regnames[i], gpr(i), gpr(i));
+}
 void isa_reg_display()
 {
   int i = 0;
@@ -124,7 +128,13 @@ void exec_once(VerilatedVcdC* tfp) {
 	tfp->dump(main_time);
   main_time ++;
 }
- 
+extern "C" void ebreak(){
+    puts(ANSI_FG_GREEN);
+    puts("excute the ebreak inst\n");
+    puts(ANSI_NONE);
+    hit_exit(0);
+}
+
 void cpu_exec(uint64_t n) {
   Log_level_2("cpu_exec(%ld)",n);
   for(int i; i < n; i++){
