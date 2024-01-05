@@ -78,6 +78,6 @@ class top extends Module {
   R(rd)             := src1 + imm
   io.DMem.wData := R(rd)
 
-  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},pc=${R(rd)}\n")
+  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)}\n")
   printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")
 }
