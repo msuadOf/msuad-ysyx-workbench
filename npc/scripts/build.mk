@@ -65,21 +65,21 @@ CHISEL_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.v) #search all hw/
 
 CHISEL_GEN_VERILOG_FILE=$(BUILD_DIR)/top.v #build/top.v
 
-C_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.c) #search all hw/
-CPP_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.cpp) #search all hw/
-C_HEAD_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.h) #search all hw/
+VERILOG_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.v)
+C_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.c) #search all hw/
+CPP_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.cpp) #search all hw/
+C_HEAD_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.h) #search all hw/
 
 verilog:$(CHISEL_GEN_VERILOG_FILE)
 $(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
-	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
 	mill -i __.runMain Elaborate -td $(BUILD_DIR)
 
 # Input files for Verilator
-VERILATOR_INPUT_FILE += $(C_SRC_FILE) $(CPP_SRC_FILE) 
+VERILATOR_INPUT_FILE += $(C_SRC_FILE) $(CPP_SRC_FILE)
 
 
-VERILATOR_INPUT_FILE += $(CHISEL_GEN_VERILOG_FILE)
+VERILATOR_INPUT_FILE += $(CHISEL_GEN_VERILOG_FILE) $(VERILOG_SRC_FILE)
 VERILATOR_INPUT = -f $(VERILATOR_INPUT_FILE)
 verilator-binary: verilog
 	@echo
@@ -105,4 +105,3 @@ verilator-run: verilator-binary
 	@echo "-- COVERAGE ----------------"
 	@rm -rf logs/annotated
 	$(VERILATOR_COVERAGE) --annotate logs/annotated logs/coverage.dat
-

@@ -9,7 +9,7 @@ all: verilog compile bsp reformat checkformat
 include scripts/build.mk
 
 sim run:verilator-binary
-	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
+	$(call git_commit, "sim npc") # DO NOT REMOVE THIS LINE!!!
 	@echo "-- RUN ---------------------"
 	@rm -rf logs
 	$(VERI_BUILD_DIR)/Vtop +trace $(VERI_RUNNING_ARGS)
