@@ -63,6 +63,11 @@ void exec_once(VerilatedVcdC* tfp) {
   // printf("excute addr:0x%08lx inst:0x%08x\n",top->mem_addr,top->mem_inst);
   top->eval();
   tfp->dump(main_time);
+
+  //====== cpu exec body begin ======
+  
+  //====== cpu exec body ends  ======
+
   main_time ++;
   top->clock = 1;
   //printf("======clock should be 1 now %d\n",top->clock); 
