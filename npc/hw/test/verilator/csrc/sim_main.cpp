@@ -9,9 +9,9 @@
 #include <string.h>
 
 //personal includes
-// //dpi-c
-// #include "Vtop__Dpi.h"
-// #include <verilated_dpi.h>
+//dpi-c
+#include "Vtop__Dpi.h"
+#include <verilated_dpi.h>
 //glibc
 #include <stdio.h>
 #include <stdlib.h>
