@@ -1,11 +1,11 @@
 import chisel3._
 import chisel3.util._
 
-class ebreakDpi extends BlackBox with HasBlackBoxResource{
+class ebreakDpi extends BlackBox with HasBlackBoxPath{
     val io=IO(new Bundle {
         val inst=Input(UInt(32.W))
     })
-    addResource("/../../chisel_ebreak_dpi.v")
+    addPath("./chisel_ebreak_dpi.v")
     // setInline("chisel_ebreak_dpi.v",
     //     """
     //     |import "DPI-C" function void ebreak();
