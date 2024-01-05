@@ -13,9 +13,6 @@ object hw extends ScalaModule with ScalafmtModule { m =>
   def sources = T.sources(
     millSourcePath / "hw" / "src" 
   )
-  def resources = T.resources(
-    millSourcePath / "hw" / "src" 
-  )
   override def scalacOptions = Seq(
     "-language:reflectiveCalls",
     "-deprecation",
