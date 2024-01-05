@@ -46,7 +46,7 @@ class top extends Module {
   io.DMem.rAddr  := 0.U
   io.DMem.wAddr := 0.U
 
-  val R  = new RegFile("RISCV32E")
+  val R  = new RegFile("RISCV32I")
   val pc = RegInit(0.U(32.W))
 
   //fetch inst
