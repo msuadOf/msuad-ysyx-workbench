@@ -84,7 +84,7 @@ void exec_once(VerilatedVcdC* tfp) {
   //====== cpu exec body begin ======
   top->io_IMem_rData=0xffc10113;
   int pc=top->io_IMem_rAddr;
-  Log("pc=%08x\n",pc);
+  //Log("pc=%08x\n",pc);
   //====== cpu exec body ends  ======
 
   main_time ++;
