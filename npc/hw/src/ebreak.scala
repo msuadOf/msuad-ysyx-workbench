@@ -5,7 +5,7 @@ class ebreakDpi extends BlackBox with HasBlackBoxInline{
     val io=IO(new Bundle {
         val inst=Input(UInt(32.W))
     })
-    setInline("chisel_ebreak_dpi.v",
+    setInline("",
         """
         |import "DPI-C" function void ebreak();
         |module ebreakDpi(
