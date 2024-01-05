@@ -24,12 +24,6 @@ class RegFile(val ISet: String) {
 }
 
 class top(isa_info:String="RISCV32") extends Module {
-  val regNum=isa_info match {
-    case "RISCV32E" => 16
-    case "RISCV32"  => 32
-    case "RISCV64"  => 64
-    case _: String => throw new IllegalArgumentException("RegFile() args should be [RISCV32E] [RISCV32] [RISCV64]")
-  }
   val io = IO(new Bundle {
     val IMem = new Bundle {
       val rAddr = Output(UInt(32.W))

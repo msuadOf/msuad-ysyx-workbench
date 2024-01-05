@@ -41,12 +41,10 @@ typedef struct diff_t {
   vaddr_t pc;
   vaddr_t snpc; // static next pc
   vaddr_t dnpc; // dynamic next pc
-  word_t ref_regs[33];
+  word_t regs[33];
 } diff_t;
 diff_t* s;
-void diff_cpuInfoUpdate(diff_t* s){
-  
-}
+
 static const uint32_t img [] = {
   0x00000297,  // auipc t0,0
   0x00028823,  // sb  zero,16(t0)
@@ -58,7 +56,30 @@ static const uint32_t img [] = {
  
 void hit_exit(int status) {}
 //===
-
+void diff_cpuInfoUpdate(diff_t* s){
+  /*
+  for i in range(0,32):
+    print(f"s->regs[{i}]=top->io_diff_regs_{i};",end="")
+  print("\n")
+  */
+  s->regs[0]=top->io_diff_regs_0;s->regs[1]=top->io_diff_regs_1;s->regs[2]=top->io_diff_regs_2;s->regs[3]=top->io_diff_regs_3;s->regs[4]=top->io_diff_regs_4;s->regs[5]=top->io_diff_regs_5;s->regs[6]=top->io_diff_regs_6;s->regs[7]=top->io_diff_regs_7;s->regs[8]=top->io_diff_regs_8;s->regs[9]=top->io_diff_regs_9;s->regs[10]=top->io_diff_regs_10;s->regs[11]=top->io_diff_regs_11;s->regs[12]=top->io_diff_regs_12;s->regs[13]=top->io_diff_regs_13;s->regs[14]=top->io_diff_regs_14;s->regs[15]=top->io_diff_regs_15;s->regs[16]=top->io_diff_regs_16;s->regs[17]=top->io_diff_regs_17;s->regs[18]=top->io_diff_regs_18;s->regs[19]=top->io_diff_regs_19;s->regs[20]=top->io_diff_regs_20;s->regs[21]=top->io_diff_regs_21;s->regs[22]=top->io_diff_regs_22;s->regs[23]=top->io_diff_regs_23;s->regs[24]=top->io_diff_regs_24;s->regs[25]=top->io_diff_regs_25;s->regs[26]=top->io_diff_regs_26;s->regs[27]=top->io_diff_regs_27;s->regs[28]=top->io_diff_regs_28;s->regs[29]=top->io_diff_regs_29;s->regs[30]=top->io_diff_regs_30;s->regs[31]=top->io_diff_regs_31;
+  
+}
+static inline int check_reg_idx(int idx) {
+  assert(idx >= 0 && idx < 32);
+  return idx;
+}
+#define gpr(idx) (s->regs[check_reg_idx(idx)])
+void isa_reg_display()
+{
+  int i = 0;
+  for (i = 0; i < 32; i++)
+  {
+    printf("%-8s%-#20x%-20d\n", regs[i], gpr(i), gpr(i));
+  }
+  printf("%-8s%-#20x%-20d\n", "pc", s->pc, s->pc);
+  putchar('\n');
+}
 void cpu_init() {
   //cpu_gpr[32] = CONFIG_MBASE;
   top -> clock = 0;
@@ -99,6 +120,7 @@ void cpu_exec(uint64_t n) {
   Log_level_2("cpu_exec(%ld)",n);
   for(int i; i < n; i++){
       exec_once(tfp);
+      isa_reg_display();
       #ifdef CONFIG_DIFFTEST
         difftest_exec_once();
       #endif
