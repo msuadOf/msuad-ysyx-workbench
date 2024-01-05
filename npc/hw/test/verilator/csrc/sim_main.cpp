@@ -37,7 +37,24 @@ double sc_time_stamp()
 {
 	return main_time;
 }
-uint64_t ref_regs[33];
+typedef struct diff_t {
+  vaddr_t pc;
+  vaddr_t snpc; // static next pc
+  vaddr_t dnpc; // dynamic next pc
+  word_t ref_regs[33];
+} diff_t;
+diff_t* s;
+void diff_cpuInfoUpdate(diff_t* s){
+  
+}
+static const uint32_t img [] = {
+  0x00000297,  // auipc t0,0
+  0x00028823,  // sb  zero,16(t0)
+  0x0102c503,  // lbu a0,16(t0)
+  0x00100073,  // ebreak (used as nemu_trap)
+  0xdeadbeef,  // some data
+};
+
  
 void hit_exit(int status) {}
 //===
@@ -65,7 +82,7 @@ void exec_once(VerilatedVcdC* tfp) {
   tfp->dump(main_time);
 
   //====== cpu exec body begin ======
-
+  
   //====== cpu exec body ends  ======
 
   main_time ++;
@@ -283,6 +300,8 @@ int main(int argc, char** argv) {
   //VCD波形设置  end
 
     // Set Vtop's input signals
+    diff_t d_npc;
+    s=&d_npc;
   cpu_init();
     // top->in_small = 1;
     // top->in_quad = 0x1234;
