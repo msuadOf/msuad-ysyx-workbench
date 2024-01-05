@@ -65,7 +65,7 @@ void exec_once(VerilatedVcdC* tfp) {
   tfp->dump(main_time);
 
   //====== cpu exec body begin ======
-  
+
   //====== cpu exec body ends  ======
 
   main_time ++;
@@ -283,8 +283,7 @@ int main(int argc, char** argv) {
   //VCD波形设置  end
 
     // Set Vtop's input signals
-    top->reset = !0;
-    top->clock = 0;
+  cpu_init();
     // top->in_small = 1;
     // top->in_quad = 0x1234;
     // top->in_wide[0] = 0x11111111;
