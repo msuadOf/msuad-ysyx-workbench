@@ -120,6 +120,7 @@ void cpu_exec(uint64_t n) {
   Log_level_2("cpu_exec(%ld)",n);
   for(int i; i < n; i++){
       exec_once(tfp);
+      diff_cpuInfoUpdate(s);
       isa_reg_display();
       #ifdef CONFIG_DIFFTEST
         difftest_exec_once();
