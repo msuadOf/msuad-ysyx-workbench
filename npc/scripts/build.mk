@@ -74,6 +74,7 @@ $(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
 	$(call git_commit, "generate verilog")
 	mkdir -p $(BUILD_DIR)
 	mill -i __.runMain Elaborate -td $(BUILD_DIR)
+	cp -rf $(CHISEL_SRC_FILE) $(BUILD_DIR)
 
 # Input files for Verilator
 VERILATOR_INPUT_FILE += $(C_SRC_FILE) $(CPP_SRC_FILE) 

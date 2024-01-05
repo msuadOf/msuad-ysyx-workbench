@@ -1,11 +1,13 @@
 import chisel3._
 import chisel3.util._
 
-class ebreakDpi extends BlackBox with HasBlackBoxPath{
+class ebreakDpi extends BlackBox {
     val io=IO(new Bundle {
         val inst=Input(UInt(32.W))
     })
-    addPath("./hw/src/chisel_ebreak_dpi.v")
+    // verilog see /hw/test/verilator/vsrc/chisel_ebreak_dpi.v
+
+    
     // setInline("chisel_ebreak_dpi.v",
     //     """
     //     |import "DPI-C" function void ebreak();
