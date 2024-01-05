@@ -37,6 +37,11 @@ class top extends Module {
       val wAddr = Output(UInt(32.W))
       val wData = Output(UInt(32.W))
     }
+
+    val diff=new Bundle {
+      val pc  = Output(UInt(32.W))
+      val regs = Output(Vec(32,UInt(32.W)))
+    }
   })
   io.DMem.rAddr  := 0.U
   io.DMem.wAddr := 0.U
@@ -78,6 +83,8 @@ class top extends Module {
   R(rd)             := src1 + imm
   io.DMem.wData := R(rd)
 
-  //printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)}\n")
-  //printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")
+  io.diff.pc:=pc
+  io.diff.regs:=0.asUInt
+  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)}\n")
+  printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")
 }
