@@ -27,27 +27,27 @@ class top extends Module {
 
   val io = IO(new Bundle {
     val IMem = new Bundle {
-      val readAddr = Output(UInt(32.W))
-      val readData = Input(UInt(32.W))
+      val rAddr = Output(UInt(32.W))
+      val rData = Input(UInt(32.W))
     }
 
     val DMem = new Bundle {
-      val readAddr  = Output(UInt(32.W))
-      val readData  = Input(UInt(32.W))
-      val writeAddr = Output(UInt(32.W))
-      val writeData = Output(UInt(32.W))
+      val rAddr  = Output(UInt(32.W))
+      val rData  = Input(UInt(32.W))
+      val wAddr = Output(UInt(32.W))
+      val wData = Output(UInt(32.W))
     }
   })
-  io.DMem.readAddr  := 0.U
-  io.DMem.writeAddr := 0.U
+  io.DMem.rAddr  := 0.U
+  io.DMem.wAddr := 0.U
 
   val R  = new RegFile("RISCV32E")
   val pc = RegInit(0.U(32.W))
 
   //fetch inst
-  io.IMem.readAddr := pc
+  io.IMem.rAddr := pc
   val inst = Wire(UInt(32.W))
-  inst := io.IMem.readData
+  inst := io.IMem.rData
 
   //  //(src1,src2,rd,imm,instType)
   //  def instDivsion(inst:UInt):(UInt,UInt,UInt,UInt,UInt)={
@@ -58,7 +58,7 @@ class top extends Module {
   //decode and exec
   // RVIInstr.table.map((m) => {
   //   when(m._1===inst){
-  //     io.DMem.writeData:=m._2(2)
+  //     io.DMem.wData:=m._2(2)
   //   }
 
   // })
@@ -76,7 +76,7 @@ class top extends Module {
 
   //addi exec
   R(rd)             := src1 + imm
-  io.DMem.writeData := R(rd)
+  io.DMem.wData := R(rd)
 
-  printf(p"top.scala: io.DMem.readData=${io.DMem.readData},clk=${clock.asBool},rst=${reset.asBool}\n")
+  printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")
 }
