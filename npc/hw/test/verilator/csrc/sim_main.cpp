@@ -70,13 +70,18 @@ static inline int check_reg_idx(int idx) {
   assert(idx >= 0 && idx < 32);
   return idx;
 }
+const char *regnames[] = {
+    "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
+    "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5",
+    "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
+    "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"};
 #define gpr(idx) (s->regs[check_reg_idx(idx)])
 void isa_reg_display()
 {
   int i = 0;
   for (i = 0; i < 32; i++)
   {
-    printf("%-8s%-#20x%-20d\n", s->regs[i], gpr(i), gpr(i));
+    printf("%-8s%-#20x%-20d\n", regnames[i], gpr(i), gpr(i));
   }
   printf("%-8s%-#20x%-20d\n", "pc", s->pc, s->pc);
   putchar('\n');
