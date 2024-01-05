@@ -66,6 +66,7 @@ void diff_cpuInfoUpdate(diff_t* s){
   
 }
 static inline int check_reg_idx(int idx) {
+  Log("check_reg_idx %d",idx);
   assert(idx >= 0 && idx < 32);
   return idx;
 }
