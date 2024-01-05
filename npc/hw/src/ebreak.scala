@@ -8,7 +8,7 @@ class ebreakDpi extends BlackBox with HasBlackBoxInline{
     setInline("chisel_ebreak_dpi.v",
         """
         |import "DPI-C" function void ebreak();
-        |module EBREAK(
+        |module ebreakDpi(
         |    input wire [31:0] inst_i
         |);
         |always @(*) begin
