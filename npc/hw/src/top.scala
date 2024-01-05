@@ -78,5 +78,5 @@ class top extends Module {
   R(rd)             := src1 + imm
   io.DMem.writeData := R(rd)
 
-  printf("%d,%d",io.DMem.readData,clock.asBool)
+  printf("%d,%d,%d\n",io.DMem.readData,clock.asBool,reset.asBool)
 }
