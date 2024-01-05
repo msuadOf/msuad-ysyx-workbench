@@ -78,5 +78,5 @@ class top extends Module {
   R(rd)             := src1 + imm
   io.DMem.writeData := R(rd)
 
-  printf("%d,%d,%d\n",io.DMem.readData,clock.asBool,reset.asBool)
+  printf(p"top.scala: io.DMem.readData={io.DMem.readData},clk={clock.asBool},rst={reset.asBool}\n")
 }
