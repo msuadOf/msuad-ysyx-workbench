@@ -75,7 +75,7 @@ void isa_reg_display()
   int i = 0;
   for (i = 0; i < 32; i++)
   {
-    printf("%-8s%-#20x%-20d\n", regs[i], gpr(i), gpr(i));
+    printf("%-8s%-#20x%-20d\n", s->regs[i], gpr(i), gpr(i));
   }
   printf("%-8s%-#20x%-20d\n", "pc", s->pc, s->pc);
   putchar('\n');
