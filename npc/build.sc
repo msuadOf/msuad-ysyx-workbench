@@ -11,8 +11,8 @@ object hw extends ScalaModule with ScalafmtModule { m =>
   override def scalaVersion = "2.13.10"
   override def millSourcePath = os.pwd
   def sources = T.sources(
-    millSourcePath / "hw" / "src" ,
-    millSourcePath / "hw" / "test" / "verilator" / "ssrc"
+    millSourcePath / "hw" / "src" 
+
   )
   override def scalacOptions = Seq(
     "-language:reflectiveCalls",
