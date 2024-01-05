@@ -84,7 +84,7 @@ class top extends Module {
   io.DMem.wData := R(rd)
 
   io.diff.pc:=pc
-  io.diff.regs:=Vec(32,(0.U(32.W)))
+  io.diff.regs:=Vec(32,(UInt(32.W)))
   printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)}\n")
   printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")
 }
