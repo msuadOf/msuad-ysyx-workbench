@@ -344,6 +344,8 @@ int main(int argc, char** argv) {
 
     Log("End simulation\n");
     delete top;
+    delete contextp;
+    delete tfp;
     // Return good completion status
     // Don't use exit() or destructor won't get called
     return 0;
