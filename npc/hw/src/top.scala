@@ -77,6 +77,6 @@ class top extends Module {
   //addi exec
   R(rd)             := src1 + imm
   io.DMem.wData := R(rd)
-
+  
   printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")
 }
