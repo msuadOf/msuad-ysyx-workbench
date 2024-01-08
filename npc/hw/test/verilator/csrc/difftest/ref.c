@@ -13,28 +13,31 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
-#ifndef __COMMON_H__
-#define __COMMON_H__
+#include <isa.h>
+#include <difftest-def.h>
+#include "common.h"
 
-#include <stdint.h>
-#include <inttypes.h>
-#include <stdbool.h>
-#include <string.h>
+#define __EXPORT export
 
-//#include <generated/autoconf.h>
-#include <macro.h>
-#include <assert.h>
+__EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction) {
+  assert(0);
+}
 
+__EXPORT void difftest_regcpy(void *dut, bool direction) {
+  assert(0);
+}
 
-typedef MUXDEF(CONFIG_ISA64, uint64_t, uint32_t) word_t;
-typedef MUXDEF(CONFIG_ISA64, int64_t, int32_t)  sword_t;
-#define FMT_WORD MUXDEF(CONFIG_ISA64, "0x%016" PRIx64, "0x%08" PRIx32)
+__EXPORT void difftest_exec(uint64_t n) {
+  assert(0);
+}
 
-typedef word_t vaddr_t;
-typedef MUXDEF(PMEM64, uint64_t, uint32_t) paddr_t;
-#define FMT_PADDR MUXDEF(PMEM64, "0x%016" PRIx64, "0x%08" PRIx32)
-typedef uint16_t ioaddr_t;
+__EXPORT void difftest_raise_intr(word_t NO) {
+  assert(0);
+}
 
-#include <debug.h>
-
-#endif
+__EXPORT void difftest_init(int port) {
+  // void init_mem();
+  // init_mem();
+  /* Perform ISA dependent initialization. */
+  //init_isa();
+}
