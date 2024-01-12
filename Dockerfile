@@ -2,12 +2,12 @@ FROM ubuntu:22.04
 
 ENV WORKPLACE=/workplace
 ENV PATH=$RISCV/bin:$PATH
-ENV MAKEFLAGS=-j4
+ENV MAKEFLAGS=-j6
 
 WORKDIR $WORKPLACE
 
 # 基本工具
-RUN echo -e "deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse \ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse \ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse \ndeb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse \n" > /etc/apt/sources.list && \
+RUN printf "deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse \ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse \ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse \ndeb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse \n" > /etc/apt/sources.list && \
     apt update && \
 	apt install -y autoconf automake autotools-dev \
                 curl libmpc-dev libmpfr-dev libgmp-dev \
@@ -34,18 +34,11 @@ RUN curl -L http://raw.gitmirror.com/lefou/millw/0.4.11/millw | sed 's/github.co
 RUN git clone https://github.com/verilator/verilator.git verilator && \
     unset VERILATOR_ROOT && \
     cd verilator && git pull && git checkout v5.008 && \
-    mkdir -p /var/cache/swap/ && \
-    dd if=/dev/zero of=/var/cache/swap/swap0 bs=32M count=512 && \
-    chmod 0600 /var/cache/swap/swap0 && \
-    mkswap /var/cache/swap/swap0 && \
-    swapon /var/cache/swap/swap0 && \
-    swapon -s && \
     autoconf && \
     ./configure && \
     make && \
-    make install && \
-    swapoff /var/cache/swap/swap0 && \
-    rm /var/cache/swap/swap0 && swapoff -a
+    make install 
+
 
 
 
