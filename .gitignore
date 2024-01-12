@@ -20,3 +20,4 @@
 !/labs/**
 !/notes/*/am-kernels
 !Dockerfile
+!README*
