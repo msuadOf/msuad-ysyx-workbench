@@ -18,7 +18,22 @@
 #include <difftest-def.h>
 #include <memory/paddr.h>
 
+#include <difftest-def.h>
+
+//enum { DIFFTEST_TO_DUT, DIFFTEST_TO_REF };
+void print_mem(){
+
+}
 __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction) {
+  word_t* _buf=buf;
+  if(direction==DIFFTEST_TO_DUT){
+    for(int i=0;i<n;i++){
+      _buf[i]=paddr_read(addr+i,4);
+    }
+  }
+  if(direction==DIFFTEST_TO_REF){
+    
+  }
   assert(0);
 }
 
