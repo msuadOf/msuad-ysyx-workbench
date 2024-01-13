@@ -68,7 +68,6 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
       cpu.gpr[i]=s->regs[i];
     }
     cpu.pc=s->regs[32];
-    Log("%x",s->regs[32]);
     return;
   }
   assert(0);
