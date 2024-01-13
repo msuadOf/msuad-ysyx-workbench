@@ -93,6 +93,9 @@ void isa_reg_display()
   printf("%-8s%-#20x%-20d\n", "pc", s->pc, s->pc);
   putchar('\n');
 }
+void assert_fail_msg(){
+  isa_reg_display();
+}
 void cpu_init() {
   //cpu_gpr[32] = CONFIG_MBASE;
   top -> clock = 0;
