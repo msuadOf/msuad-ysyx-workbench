@@ -44,7 +44,7 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
     Log(ANSI_FG_RED "difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction): direction error");
     assert(0);
   }
-   Log("entered");
+
 }
 
 typedef struct CPU_state_diff_t {
@@ -60,11 +60,15 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
     for(int i=0;i<32;i++){
       s->regs[i]=cpu.gpr[i];
     }
+    s->regs[32]=cpu.pc;
+    return;
   }
   if(direction==DIFFTEST_TO_REF){
     for(int i=0;i<32;i++){
       cpu.gpr[i]=s->regs[i];
     }
+    cpu.pc=s->regs[32];
+    return;
   }
   assert(0);
 }
