@@ -30,7 +30,7 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
   assert(n>=0);
   n=n/4 *4;
   Log("entered");
-  printf("n=%d",n);
+  printf("n=%ld",n);
 
   if(direction==DIFFTEST_TO_DUT){
     for(int i=0;i<n;i++){
