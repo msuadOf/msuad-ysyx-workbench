@@ -32,12 +32,12 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
   Log("n=%ld",n);
 
   if(direction==DIFFTEST_TO_DUT){
-    for(int i=0;i<n;i++){
+    for(size_t i=0;i<n;i++){
       _buf[i]=paddr_read(addr+i,4);
     }
   }
   else if (direction==DIFFTEST_TO_REF){
-    for(int i=0;i<n;i++){
+    for(size_t i=0;i<n;i++){
       paddr_write(addr+i,4,_buf[i]);
     }
   }else{
