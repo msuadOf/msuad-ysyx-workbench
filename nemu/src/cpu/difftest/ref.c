@@ -33,7 +33,7 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
 
   if(direction==DIFFTEST_TO_DUT){
     for(size_t i=0;i<n;i++){
-      _buf[i]=paddr_read(addr+i,4);
+      _buf[i]=paddr_read(addr+i*4,4);
     }
   }
   else if (direction==DIFFTEST_TO_REF){
