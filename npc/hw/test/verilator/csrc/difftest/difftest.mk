@@ -9,7 +9,7 @@ ARGS_DIFF = --diff=$(DIFF_REF_SO)
 $(DIFF_REF_SO):
 	@echo + BUILD difftest-reference
 	
-	#$(MAKE) -s -C $(NEMU_HOME) $(MKFLAGS)
+	$(MAKE) -s -C $(NEMU_HOME) $(MKFLAGS)
 
 .PHONY: $(DIFF_REF_SO)
 endif
