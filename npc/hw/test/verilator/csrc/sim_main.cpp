@@ -210,7 +210,7 @@ int main(int argc, char** argv) {
     // Set Vtop's input signals
     CPU_state_diff_t d_npc;
     s=&d_npc;
-  cpu_init();
+
     // top->in_small = 1;
     // top->in_quad = 0x1234;
     // top->in_wide[0] = 0x11111111;

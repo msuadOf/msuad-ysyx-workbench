@@ -183,14 +183,16 @@ static int parse_args(int argc, char *argv[]) {
 }
 
 extern void init_difftest(char *ref_so_file, long img_size, int port);
-
+extern void cpu_init();
 int monitor(int argc, char** argv){
     for(int i=0;i<argc;i++){
         printf("%s ",argv[i]);
     }
     printf("%c",'\n');
+
     parse_args(argc, argv);
     init_difftest(diff_so_file, 1, 123);
+    cpu_init();
 
     return sdb_mainloop();
 }
