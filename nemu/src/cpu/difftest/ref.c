@@ -28,8 +28,8 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
   word_t* _buf=buf;
   
   assert(n>=0);
-  Log("entered");
   n=n/4 *4;
+  Log("entered");
   printf("n=%f",(float)n);
 
   if(direction==DIFFTEST_TO_DUT){
