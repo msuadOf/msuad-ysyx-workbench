@@ -44,7 +44,7 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
     Log(ANSI_FG_RED "difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction): direction error");
     assert(0);
   }
- 
+   Log("entered");
 }
 
 typedef struct CPU_state_diff_t {
