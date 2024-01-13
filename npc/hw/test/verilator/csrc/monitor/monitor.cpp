@@ -194,5 +194,6 @@ int monitor(int argc, char** argv){
     init_difftest(diff_so_file, 1, 123);
     cpu_init();
 
+    Log("Start simulation\n");
     return sdb_mainloop();
 }

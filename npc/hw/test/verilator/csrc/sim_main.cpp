@@ -216,7 +216,7 @@ int main(int argc, char** argv) {
     // top->in_wide[0] = 0x11111111;
     // top->in_wide[1] = 0x22222222;
     // top->in_wide[2] = 0x3;
-    Log("Start simulation\n");
+
     // Simulate until $finish
     monitor(argc,argv);
 /*     while (!contextp->gotFinish()) {
