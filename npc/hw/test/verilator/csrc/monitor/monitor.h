@@ -8,7 +8,7 @@
 // #endif
 
 int sdb_mainloop();
-
+int monitor(int argc, char** argv);
 
 // #ifdef __cplusplus
 // }

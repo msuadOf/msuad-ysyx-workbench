@@ -218,7 +218,7 @@ int main(int argc, char** argv) {
     // top->in_wide[2] = 0x3;
     Log("Start simulation\n");
     // Simulate until $finish
-    sdb_mainloop();
+    monitor(argc,argv);
 /*     while (!contextp->gotFinish()) {
         // Historical note, before Verilator 4.200 Verilated::gotFinish()
         // was used above in place of contextp->gotFinish().
