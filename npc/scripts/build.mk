@@ -4,6 +4,7 @@ BUILD_DIR = $(WORK_DIR)/build
 
 include scripts/verilator.mk
 include scripts/chisel.mk
+include hw/test/verilator/csrc/difftest/difftest.mk
 
 # Include all filelist.mk to merge file lists
 FILELIST_MK = $(shell find -L ./hw -name "filelist.mk")

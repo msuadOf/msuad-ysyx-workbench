@@ -43,14 +43,14 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
   assert(0);
 }
 
-typedef struct diff_t {
+typedef struct CPU_state_diff_t {
   vaddr_t pc;
   vaddr_t snpc; // static next pc
   vaddr_t dnpc; // dynamic next pc
   word_t regs[33];
-} diff_t;
+} CPU_state_diff_t;
 __EXPORT void difftest_regcpy(void *dut, bool direction) {
-  diff_t* s=dut;
+  CPU_state_diff_t* s=dut;
 
   if(direction==DIFFTEST_TO_DUT){
     for(int i=0;i<32;i++){

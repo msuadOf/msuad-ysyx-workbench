@@ -23,5 +23,7 @@ clean-chisel clean-c:
 	-rm -rf out
 distclean:clean clean-chisel
 
+debug1:$(DIFF_REF_SO)
+	#$(DIFF_REF_SO) $(ARGS_DIFF)
 
 .DEFAULT_GOAL = verilator-binary
