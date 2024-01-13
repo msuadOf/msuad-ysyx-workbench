@@ -186,7 +186,7 @@ extern void init_difftest(char *ref_so_file, long img_size, int port);
 extern void cpu_init();
 int monitor(int argc, char** argv){
     for(int i=0;i<argc;i++){
-        printf("%s ",argv[i+1]);
+        printf("%s ",argv[i]);
     }
     printf("%c",'\n');
 
