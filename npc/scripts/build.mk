@@ -13,7 +13,7 @@ include $(FILELIST_MK)
 
 VERILATOR_INCLUDES += -I $(WORK_DIR)/hw/test/verilator/csrc/monitor
 VERILATOR_INCLUDES += -I $(WORK_DIR)/hw/test/verilator/csrc/include 
-VERILATOR_CFLAGS := $(VERILATOR_INCLUDES) -rdynamic
+VERILATOR_CFLAGS := $(VERILATOR_INCLUDES)
 VERILATOR_LDLIBS := -lreadline -ldl -pie
 
 ##########################33
