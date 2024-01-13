@@ -66,6 +66,7 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
   if(direction==DIFFTEST_TO_REF){
     Log("entered");
     for(int i=0;i<32;i++){
+      Log("entered");
       cpu.gpr[i]=s->regs[i];
       printf("%d",i);
     }
