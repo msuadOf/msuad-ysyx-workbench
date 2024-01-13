@@ -342,6 +342,9 @@ int main(int argc, char** argv) {
   tfp->open("build/wave.vcd");
   //VCD波形设置  end
 
+extern void init_difftest(char *ref_so_file, long img_size, int port);
+  
+
     // Set Vtop's input signals
     diff_t d_npc;
     s=&d_npc;
