@@ -181,6 +181,12 @@ static int parse_args(int argc, char *argv[]) {
   }
   return 0;
 }
-int monitor(int argc, char** argv){
 
+extern void init_difftest(char *ref_so_file, long img_size, int port);
+
+int monitor(int argc, char** argv){
+    parse_args(argc, argv);
+    init_difftest(diff_so_file, 1, 123);
+
+    return sdb_mainloop();
 }
