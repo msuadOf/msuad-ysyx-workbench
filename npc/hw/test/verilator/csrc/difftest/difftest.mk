@@ -1,5 +1,4 @@
-define CONFIG_DIFFTEST 
-endef
+CONFIG_DIFFTEST=1
 
 ifdef CONFIG_DIFFTEST
 DIFF_REF_SO = $(BUILD_DIR)/riscv32-nemu-interpreter-so
