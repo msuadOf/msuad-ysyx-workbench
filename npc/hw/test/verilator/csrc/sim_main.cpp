@@ -37,13 +37,13 @@ double sc_time_stamp()
 {
 	return main_time;
 }
-typedef struct diff_t {
+typedef struct CPU_state_diff_t {
   vaddr_t pc;
   vaddr_t snpc; // static next pc
   vaddr_t dnpc; // dynamic next pc
   word_t regs[33];
-} diff_t;
-diff_t* s;
+} CPU_state_diff_t;
+CPU_state_diff_t* s;
 
 static const uint32_t img [] = {
   0x00000297,  // auipc t0,0
@@ -56,7 +56,7 @@ static const uint32_t img [] = {
  
 void hit_exit(int status) {}
 //===
-void diff_cpuInfoUpdate(diff_t* s){
+void diff_cpuInfoUpdate(CPU_state_diff_t* s){
   /*
   for i in range(0,32):
     print(f"s->regs[{i}]=top->io_diff_regs_{i};",end="")
@@ -176,6 +176,7 @@ static int cmd_q(char *args){
 }
 static int cmd_si(char *args)
 {
+  monitor();
   args = strtok(NULL, " ");
   int n;
   if (args == NULL)
@@ -343,10 +344,10 @@ int main(int argc, char** argv) {
   //VCD波形设置  end
 
 extern void init_difftest(char *ref_so_file, long img_size, int port);
-  
+
 
     // Set Vtop's input signals
-    diff_t d_npc;
+    CPU_state_diff_t d_npc;
     s=&d_npc;
   cpu_init();
     // top->in_small = 1;
