@@ -25,6 +25,16 @@ void (*ref_difftest_regcpy)(void *dut, bool direction) = NULL;
 void (*ref_difftest_exec)(uint64_t n) = NULL;
 void (*ref_difftest_raise_intr)(uint64_t NO) = NULL;
 
+enum { DIFFTEST_TO_DUT, DIFFTEST_TO_REF };
+typedef struct CPU_state_diff_t {
+  vaddr_t pc;
+  vaddr_t snpc; // static next pc
+  vaddr_t dnpc; // dynamic next pc
+  word_t regs[33];
+} CPU_state_diff_t;
+
+#define CONFIG_DIFFTEST
+
 #ifdef CONFIG_DIFFTEST
 
 static bool is_skip_ref = false;
