@@ -28,7 +28,7 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
   word_t* _buf=buf;
   
   assert(n>=0);
-  n=n/4 *4;
+  n=n/4 ;
   Log("n=%ld",n);
 
   if(direction==DIFFTEST_TO_DUT){
@@ -37,9 +37,8 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
     }
   }
   else if (direction==DIFFTEST_TO_REF){
-    Log("entered");
     for(size_t i=0;i<n;i++){
-      paddr_write(addr+i,4,_buf[i]);
+      paddr_write(addr+i*4,4,_buf[i]);
     }
   }else{
     Log(ANSI_FG_RED "difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction): direction error");
