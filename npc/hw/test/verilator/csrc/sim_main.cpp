@@ -128,6 +128,8 @@ void cpu_init() {
   tfp->dump(main_time);
   main_time ++;
   top -> reset = 0;
+
+  diff_cpuInfoUpdate(s);
 }
 void exec_once(VerilatedVcdC* tfp) {
   top->clock = 0;
