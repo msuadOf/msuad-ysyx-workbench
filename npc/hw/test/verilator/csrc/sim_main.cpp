@@ -95,6 +95,7 @@ void isa_reg_display()
     printf("%-8s%-#20x%-20d\n", regnames[i], gpr(i), gpr(i));
   }
   printf("%-8s%-#20x%-20d\n", "pc", s->pc, s->pc);
+  printf("%-8s%-#20x%-20d\n", "dnpc", s->dnpc, s->dnpc);
   putchar('\n');
 }
 void isa_reg_display(CPU_state_diff_t* s)
@@ -106,6 +107,7 @@ void isa_reg_display(CPU_state_diff_t* s)
     printf("%-8s%-#20x%-20d\n", regnames[i], gpr(i), gpr(i));
   }
   printf("%-8s%-#20x%-20d\n", "pc", s->pc, s->pc);
+  printf("%-8s%-#20x%-20d\n", "dnpc", s->dnpc, s->dnpc);
   putchar('\n');
 }
 void assert_fail_msg(){
