@@ -67,7 +67,7 @@ void difftest_skip_dut(int nr_ref, int nr_dut) {
   }
 }
 extern CPU_state_diff_t* s;
-void checkregs(CPU_state_diff_t *ref, vaddr_t pc) ;
+extern void checkregs(CPU_state_diff_t *ref, vaddr_t pc) ;
 void init_difftest(char *ref_so_file, long img_size, int port) {
   assert(ref_so_file != NULL);
 
@@ -118,7 +118,7 @@ bool isa_difftest_checkregs(CPU_state_diff_t *ref_r, vaddr_t pc) {
   //return true;
 }
 
-static void checkregs(CPU_state_diff_t *ref, vaddr_t pc) {
+void checkregs(CPU_state_diff_t *ref, vaddr_t pc) {
   if (!isa_difftest_checkregs(ref, pc)) {
     npc_state.state = NPC_ABORT;
     npc_state.halt_pc = pc;
