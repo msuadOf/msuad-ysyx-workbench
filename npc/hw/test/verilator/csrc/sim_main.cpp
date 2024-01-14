@@ -147,6 +147,8 @@ void cpu_exec(uint64_t n) {
       exec_once(tfp);
       diff_cpuInfoUpdate(s);
       #ifdef CONFIG_DIFFTEST
+        CPU_state_diff_t npc_state_bak;
+        printf(ANSI_FG_GREEN "CPU_state_diff_t=%d\n" ANSI_NONE,sizeof(CPU_state_diff_t));
         difftest_step(s);
       #endif
   }
@@ -214,8 +216,8 @@ int main(int argc, char** argv) {
 
 
     // Set Vtop's input signals
-    CPU_state_diff_t d_npc;
-    s=&d_npc;
+    CPU_state_diff_t npc_state;
+    s=&npc_state;
 
     // top->in_small = 1;
     // top->in_quad = 0x1234;
