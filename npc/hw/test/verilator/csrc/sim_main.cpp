@@ -24,7 +24,7 @@
 
 #include "monitor.h"
 #include "common.h"
-
+#include "cpu.h"
 
 //=======cpu run time========
 
@@ -37,12 +37,7 @@ double sc_time_stamp()
 {
 	return main_time;
 }
-typedef struct CPU_state_diff_t {
-  vaddr_t pc;
-  vaddr_t snpc; // static next pc
-  vaddr_t dnpc; // dynamic next pc
-  word_t regs[33];
-} CPU_state_diff_t;
+
 CPU_state_diff_t* s;
 
 static const uint32_t img [] = {
@@ -79,6 +74,10 @@ const char *regnames[] = {
     "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
     "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"};
 #define gpr(idx) (s->regs[check_reg_idx(idx)])
+const char* reg_name(int idx) {
+  extern const char* regnames[];
+  return regnames[check_reg_idx(idx)];
+}
 void isa_reg_display_byIndex(int i)
 {
     printf("%-8s%-#20x%-20d\n", regnames[i], gpr(i), gpr(i));

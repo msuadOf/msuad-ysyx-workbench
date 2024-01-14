@@ -95,13 +95,32 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
 }
 
 
-// static void checkregs(CPU_state_diff_t *ref, vaddr_t pc) {
-//   if (!isa_difftest_checkregs(ref, pc)) {
-//     nemu_state.state = NEMU_ABORT;
-//     nemu_state.halt_pc = pc;
-//     isa_reg_display();
-//   }
-// }
+bool isa_difftest_checkregs(CPU_state_diff_t *ref_r, vaddr_t pc) {
+  int state=true;
+  int reg_num = 32;
+  for (int i = 0; i < reg_num; i++) {
+    if (ref_r->regs[i] != s->regs[i]) {
+      printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"%s\" is diffrent: (nemu-false)= %08x ,(qemu-yes)= %08x.\n",reg_name(i),s->regs[i],ref_r->regs[i]);
+      state=false;
+      //return false;
+    }
+  }
+  if (ref_r->pc != s->pc) {
+    printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"pc\" is diffrent: (nemu-false)= %08x ,(qemu-yes)= %08x.\n",s->pc,ref_r->pc);
+    state=false;
+    //return false;
+  }
+  return state;
+  //return true;
+}
+
+static void checkregs(CPU_state_diff_t *ref, vaddr_t pc) {
+  if (!isa_difftest_checkregs(ref, pc)) {
+    nemu_state.state = NEMU_ABORT;
+    nemu_state.halt_pc = pc;
+    isa_reg_display();
+  }
+}
 
 // void difftest_step(vaddr_t pc, vaddr_t npc) {
 //   CPU_state_diff_t ref_r;

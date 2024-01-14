@@ -25,13 +25,15 @@ typedef struct CPU_state_diff_t {
   word_t regs[33];
 } CPU_state_diff_t;
 
+
 // monitor
 //extern unsigned char isa_logo[];
 //void init_isa();
 
 // // reg
-extern CPU_state_diff_t cpu;
+extern CPU_state_diff_t* s;
 void isa_reg_display();
+const char* reg_name(int idx);
 // word_t isa_reg_str2val(const char *name, bool *success);
 // int isa_reg_getValueByIndex(int i);
 
