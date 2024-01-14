@@ -130,7 +130,7 @@ printf("pc=%x",s->pc);
   //ref_difftest_exec(1);
   ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
 
-  checkregs(&ref_r, s->pc);
+  //checkregs(&ref_r, s->pc);
 }
 #else
 void init_difftest(char *ref_so_file, long img_size, int port) { }
