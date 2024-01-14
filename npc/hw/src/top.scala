@@ -87,6 +87,7 @@ class top(isa_info:String="RISCV32") extends Module {
 
   io.diff.pc:=pc
   io.diff.regs:=R.reg
+  printf("%x\n",pc)
   printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)}\n")
   printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")
 }
