@@ -46,7 +46,7 @@ class top(isa_info:String="RISCV32") extends Module {
   io.DMem.wAddr := 0.U
 
   val R  = new RegFile("RISCV32")
-  val pc = RegInit("0x80000000".U(32.W))
+  val pc = RegInit("x80000000".U(32.W))
 
   //fetch inst
   io.IMem.rAddr := pc
