@@ -86,7 +86,7 @@ class top(isa_info: String = "RISCV32") extends Module {
         if (t._1 == RV32I_ALUInstr.ADDI) {
           printf("ADDI\n")
         }
-        printf(p"Inst_Decode:${getVariableName(t._1)}\n");
+        printf(p"Inst_Decode:${(t._1)}\n");
       }
     }
   })
