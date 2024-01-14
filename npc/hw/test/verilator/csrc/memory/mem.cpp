@@ -1,6 +1,6 @@
 #include "mem.h"
 
-static uint8_t pmem[0x8000000] __attribute((aligned(4096))) = {};
+static uint8_t pmem[0x8000000] __attribute((aligned(4096))) = {0x00100073};
 
 static inline word_t host_read(void *addr, int len) {
   switch (len) {
