@@ -97,6 +97,17 @@ void isa_reg_display()
   printf("%-8s%-#20x%-20d\n", "pc", s->pc, s->pc);
   putchar('\n');
 }
+void isa_reg_display(CPU_state_diff_t* s)
+{
+  printf("> npc reg display:\n");
+  int i = 0;
+  for (i = 0; i < 32; i++)
+  {
+    printf("%-8s%-#20x%-20d\n", regnames[i], gpr(i), gpr(i));
+  }
+  printf("%-8s%-#20x%-20d\n", "pc", s->pc, s->pc);
+  putchar('\n');
+}
 void assert_fail_msg(){
   isa_reg_display();
 }
