@@ -149,7 +149,7 @@ void cpu_exec(uint64_t n) {
       #ifdef CONFIG_DIFFTEST
         CPU_state_diff_t npc_state_bak;
         memcpy(&npc_state_bak,s,sizeof(CPU_state_diff_t));
-        difftest_step(s);
+        difftest_step(s,&npc_state_bak);
       #endif
   }
 }
