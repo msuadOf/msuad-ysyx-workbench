@@ -99,6 +99,9 @@ void assert_fail_msg(){
   isa_reg_display();
 }
 void cpu_init() {
+  s->dnpc=RESET_VECTOR;
+  s->snpc=RESET_VECTOR;
+
   //cpu_gpr[32] = CONFIG_MBASE;
   top -> clock = 0;
   top -> reset = 1;
