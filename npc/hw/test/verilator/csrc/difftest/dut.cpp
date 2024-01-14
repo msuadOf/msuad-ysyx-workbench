@@ -15,7 +15,7 @@
 
 #include <dlfcn.h>
 
-#include <isa.h>
+#include <cpu.h>
 
 #include <utils.h>
 #include <difftest-def.h>
