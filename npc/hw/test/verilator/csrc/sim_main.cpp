@@ -118,6 +118,7 @@ void exec_once(VerilatedVcdC* tfp) {
   tfp->dump(main_time);
 
   //====== cpu exec body begin ======
+  paddr_read()
   top->io_IMem_rData=0xffc10113;
   int pc=top->io_IMem_rAddr;
   Log_level_1("pc=%08x\n",pc);
