@@ -88,6 +88,7 @@ void isa_reg_display_byIndex(int i)
 }
 void isa_reg_display()
 {
+  printf("> npc reg display:");
   int i = 0;
   for (i = 0; i < 32; i++)
   {
