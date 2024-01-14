@@ -148,7 +148,7 @@ void cpu_exec(uint64_t n) {
       diff_cpuInfoUpdate(s);
       #ifdef CONFIG_DIFFTEST
         CPU_state_diff_t npc_state_bak;
-        printf(ANSI_FG_GREEN "CPU_state_diff_t=%d\n" ANSI_NONE,sizeof(CPU_state_diff_t));
+        printf(ANSI_FG_GREEN "CPU_state_diff_t=%ld\n" ANSI_NONE,sizeof(CPU_state_diff_t));
         difftest_step(s);
       #endif
   }
