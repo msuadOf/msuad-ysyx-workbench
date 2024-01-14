@@ -146,7 +146,6 @@ void cpu_exec(uint64_t n) {
   for(int i; i < n; i++){
       exec_once(tfp);
       diff_cpuInfoUpdate(s);
-      printf("\npc=%x\n",s->pc);
       #ifdef CONFIG_DIFFTEST
         difftest_step(s);
       #endif

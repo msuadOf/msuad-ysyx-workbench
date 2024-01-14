@@ -72,7 +72,6 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
 
   void *handle;
   handle = dlopen(ref_so_file, RTLD_LAZY);
-  Log("====");
   assert(handle);
 
   ref_difftest_memcpy = ( void (*)(unsigned int, void*, long unsigned int, bool) ) dlsym(handle, "difftest_memcpy");
@@ -125,12 +124,12 @@ static void checkregs(CPU_state_diff_t *ref, vaddr_t pc) {
 
 void difftest_step(CPU_state_diff_t* s) {
   CPU_state_diff_t ref_r={0};
-printf("pc=%x",s->pc);
+
   ref_difftest_regcpy(&ref_r, DIFFTEST_TO_REF);
-  //ref_difftest_exec(1);
+  ref_difftest_exec(1);
   ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
 
-  //checkregs(&ref_r, s->pc);
+  checkregs(&ref_r, s->pc);
 }
 #else
 void init_difftest(char *ref_so_file, long img_size, int port) { }
