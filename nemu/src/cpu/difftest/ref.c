@@ -29,7 +29,7 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
   
   assert(n>=0);
   n=n/4 ;
-  Log("n=%ld",n);
+  Log("n=%ld,buf[0]=0x%08x",n,((uint32_t*)buf)[0]);
 
   if(direction==DIFFTEST_TO_DUT){
     for(size_t i=0;i<n;i++){
