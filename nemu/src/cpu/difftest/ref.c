@@ -55,7 +55,7 @@ typedef struct CPU_state_diff_t {
 } CPU_state_diff_t;
 __EXPORT void difftest_regcpy(void *dut, bool direction) {
   CPU_state_diff_t* s=dut;
-Log("[nemu]:difftest_regcpy");
+printf(ANSI_BG_BLUE "[nemu]:difftest_regcpy\n");
   if(direction==DIFFTEST_TO_DUT){
     for(int i=0;i<32;i++){
       s->regs[i]=cpu.gpr[i];
