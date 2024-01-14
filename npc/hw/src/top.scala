@@ -47,7 +47,7 @@ class top(isa_info:String="RISCV32") extends Module {
 
   val R  = new RegFile("RISCV32")
   val pc = RegInit("h80000000".U(32.W))
-
+pc:=pc+4.U
   //fetch inst
   io.IMem.rAddr := pc
   val inst = Wire(UInt(32.W))
