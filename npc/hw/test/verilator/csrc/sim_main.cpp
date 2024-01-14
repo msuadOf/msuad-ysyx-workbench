@@ -24,7 +24,8 @@
 
 #include "monitor.h"
 #include "common.h"
-
+#include "cpu.h"
+#include "mem.h"
 
 //=======cpu run time========
 
@@ -37,12 +38,7 @@ double sc_time_stamp()
 {
 	return main_time;
 }
-typedef struct CPU_state_diff_t {
-  vaddr_t pc;
-  vaddr_t snpc; // static next pc
-  vaddr_t dnpc; // dynamic next pc
-  word_t regs[33];
-} CPU_state_diff_t;
+
 CPU_state_diff_t* s;
 
 static const uint32_t img [] = {
@@ -61,9 +57,12 @@ void diff_cpuInfoUpdate(CPU_state_diff_t* s){
   for i in range(0,32):
     print(f"s->regs[{i}]=top->io_diff_regs_{i};",end="")
   print("\n")
+  print("s->dnpc=s->regs[32];")
   */
   s->regs[0]=top->io_diff_regs_0;s->regs[1]=top->io_diff_regs_1;s->regs[2]=top->io_diff_regs_2;s->regs[3]=top->io_diff_regs_3;s->regs[4]=top->io_diff_regs_4;s->regs[5]=top->io_diff_regs_5;s->regs[6]=top->io_diff_regs_6;s->regs[7]=top->io_diff_regs_7;s->regs[8]=top->io_diff_regs_8;s->regs[9]=top->io_diff_regs_9;s->regs[10]=top->io_diff_regs_10;s->regs[11]=top->io_diff_regs_11;s->regs[12]=top->io_diff_regs_12;s->regs[13]=top->io_diff_regs_13;s->regs[14]=top->io_diff_regs_14;s->regs[15]=top->io_diff_regs_15;s->regs[16]=top->io_diff_regs_16;s->regs[17]=top->io_diff_regs_17;s->regs[18]=top->io_diff_regs_18;s->regs[19]=top->io_diff_regs_19;s->regs[20]=top->io_diff_regs_20;s->regs[21]=top->io_diff_regs_21;s->regs[22]=top->io_diff_regs_22;s->regs[23]=top->io_diff_regs_23;s->regs[24]=top->io_diff_regs_24;s->regs[25]=top->io_diff_regs_25;s->regs[26]=top->io_diff_regs_26;s->regs[27]=top->io_diff_regs_27;s->regs[28]=top->io_diff_regs_28;s->regs[29]=top->io_diff_regs_29;s->regs[30]=top->io_diff_regs_30;s->regs[31]=top->io_diff_regs_31;
-  
+  s->pc = s->dnpc;
+  s->dnpc=top->io_IMem_rAddr;
+
 }
 static inline int check_reg_idx(int idx) {
   if(!(idx >= 0 && idx < 32)){
@@ -79,21 +78,46 @@ const char *regnames[] = {
     "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7",
     "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"};
 #define gpr(idx) (s->regs[check_reg_idx(idx)])
+const char* reg_name(int idx) {
+  extern const char* regnames[];
+  return regnames[check_reg_idx(idx)];
+}
 void isa_reg_display_byIndex(int i)
 {
     printf("%-8s%-#20x%-20d\n", regnames[i], gpr(i), gpr(i));
 }
 void isa_reg_display()
 {
+  printf("> npc reg display:\n");
   int i = 0;
   for (i = 0; i < 32; i++)
   {
     printf("%-8s%-#20x%-20d\n", regnames[i], gpr(i), gpr(i));
   }
   printf("%-8s%-#20x%-20d\n", "pc", s->pc, s->pc);
+  printf("%-8s%-#20x%-20d\n", "dnpc", s->dnpc, s->dnpc);
   putchar('\n');
 }
+void isa_reg_display(CPU_state_diff_t* s)
+{
+  printf("> npc reg display:\n");
+  int i = 0;
+  for (i = 0; i < 32; i++)
+  {
+    printf("%-8s%-#20x%-20d\n", regnames[i], gpr(i), gpr(i));
+  }
+  printf("%-8s%-#20x%-20d\n", "pc", s->pc, s->pc);
+  printf("%-8s%-#20x%-20d\n", "dnpc", s->dnpc, s->dnpc);
+  putchar('\n');
+}
+void assert_fail_msg(){
+  isa_reg_display();
+}
 void cpu_init() {
+  s->pc=RESET_VECTOR;
+  s->dnpc=RESET_VECTOR;
+  s->snpc=RESET_VECTOR;
+
   //cpu_gpr[32] = CONFIG_MBASE;
   top -> clock = 0;
   top -> reset = 1;
@@ -106,6 +130,8 @@ void cpu_init() {
   tfp->dump(main_time);
   main_time ++;
   top -> reset = 0;
+
+  diff_cpuInfoUpdate(s);
 }
 void exec_once(VerilatedVcdC* tfp) {
   top->clock = 0;
@@ -116,6 +142,7 @@ void exec_once(VerilatedVcdC* tfp) {
   tfp->dump(main_time);
 
   //====== cpu exec body begin ======
+  //paddr_read()
   top->io_IMem_rData=0xffc10113;
   int pc=top->io_IMem_rAddr;
   Log_level_1("pc=%08x\n",pc);
@@ -135,13 +162,16 @@ extern "C" void ebreak(){
     hit_exit(0);
 }
 
+extern void difftest_step(CPU_state_diff_t* s,CPU_state_diff_t* s_bak);
 void cpu_exec(uint64_t n) {
   Log_level_2("cpu_exec(%ld)",n);
   for(int i; i < n; i++){
       exec_once(tfp);
       diff_cpuInfoUpdate(s);
       #ifdef CONFIG_DIFFTEST
-        difftest_exec_once();
+        CPU_state_diff_t npc_state_bak;
+        memcpy(&npc_state_bak,s,sizeof(CPU_state_diff_t));
+        difftest_step(s,&npc_state_bak);
       #endif
   }
 }
@@ -190,7 +220,7 @@ int main(int argc, char** argv) {
     // Pass arguments so Verilated code can see them, e.g. $value$plusargs
     // This needs to be called before you create any model
     contextp->commandArgs(argc, argv);
-
+    argc--; //屎
 
     // Construct the Verilated model, from Vtop.h generated from Verilating "top.v".
     // Using unique_ptr is similar to "Vtop* top = new Vtop" then deleting at end.
@@ -206,21 +236,19 @@ int main(int argc, char** argv) {
   tfp->open("build/wave.vcd");
   //VCD波形设置  end
 
-extern void init_difftest(char *ref_so_file, long img_size, int port);
-
 
     // Set Vtop's input signals
-    CPU_state_diff_t d_npc;
-    s=&d_npc;
-  cpu_init();
+    CPU_state_diff_t npc_state;
+    s=&npc_state;
+
     // top->in_small = 1;
     // top->in_quad = 0x1234;
     // top->in_wide[0] = 0x11111111;
     // top->in_wide[1] = 0x22222222;
     // top->in_wide[2] = 0x3;
-    Log("Start simulation\n");
+
     // Simulate until $finish
-    sdb_mainloop();
+    monitor(argc,argv);
 /*     while (!contextp->gotFinish()) {
         // Historical note, before Verilator 4.200 Verilated::gotFinish()
         // was used above in place of contextp->gotFinish().

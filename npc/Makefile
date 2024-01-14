@@ -8,11 +8,11 @@ all: verilog compile bsp reformat checkformat
 
 include scripts/build.mk
 
-sim run:verilator-binary
+sim run:verilator-binary $(DIFF_REF_SO)
 	$(call git_commit, "sim npc") # DO NOT REMOVE THIS LINE!!!
 	@echo "-- RUN ---------------------"
 	@rm -rf logs
-	$(VERI_BUILD_DIR)/Vtop +trace $(VERI_RUNNING_ARGS)
+	$(VERI_BUILD_DIR)/Vtop $(VERI_RUNNING_ARGS) +trace
 
 -include ../Makefile
 clean:
@@ -22,8 +22,5 @@ clean-verilator clean-v vclean:
 clean-chisel clean-c:
 	-rm -rf out
 distclean:clean clean-chisel
-
-debug1:$(DIFF_REF_SO)
-	#$(DIFF_REF_SO) $(ARGS_DIFF)
 
 .DEFAULT_GOAL = verilator-binary
