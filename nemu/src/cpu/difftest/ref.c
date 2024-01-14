@@ -55,13 +55,14 @@ typedef struct CPU_state_diff_t {
 } CPU_state_diff_t;
 __EXPORT void difftest_regcpy(void *dut, bool direction) {
   CPU_state_diff_t* s=dut;
-printf(ANSI_BG_BLUE "[nemu]:difftest_regcpy\n");
+
   if(direction==DIFFTEST_TO_DUT){
     for(int i=0;i<32;i++){
       s->regs[i]=cpu.gpr[i];
     }
     s->regs[32]=cpu.pc;
     s->pc=cpu.pc;
+    printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_DUT pc=%x\n" ANSI_NONE,cpu.pc);
     return;
   }
   if(direction==DIFFTEST_TO_REF){
@@ -70,6 +71,7 @@ printf(ANSI_BG_BLUE "[nemu]:difftest_regcpy\n");
     }
     cpu.pc=s->regs[32];
     cpu.pc=s->pc; 
+    printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_REF pc=%x\n" ANSI_NONE,cpu.pc);
     return;
   }
   assert(0);
