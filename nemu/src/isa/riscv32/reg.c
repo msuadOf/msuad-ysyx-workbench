@@ -31,6 +31,7 @@ void isa_reg_displayByIndex(int i)
 }
 void isa_reg_display()
 {
+  puts("> nemu reg display:\n");
   int i = 0;
   for (i = 0; i < 32; i++)
   {

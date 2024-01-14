@@ -29,6 +29,7 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
   
   assert(n>=0);
   n=n/4 ;
+  isa_reg_display();
   Log("n=%ld,buf[0]=0x%08x",n,((uint32_t*)buf)[0]);
 
   if(direction==DIFFTEST_TO_DUT){
@@ -55,7 +56,7 @@ typedef struct CPU_state_diff_t {
 } CPU_state_diff_t;
 __EXPORT void difftest_regcpy(void *dut, bool direction) {
   CPU_state_diff_t* s=(CPU_state_diff_t*)dut;
-isa_reg_display();
+
   if(direction==DIFFTEST_TO_DUT){
     for(int i=0;i<32;i++){
       s->regs[i]=cpu.gpr[i];
