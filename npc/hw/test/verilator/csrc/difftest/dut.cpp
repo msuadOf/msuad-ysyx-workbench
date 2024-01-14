@@ -91,6 +91,7 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   ref_difftest_regcpy(s, DIFFTEST_TO_REF);
   ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), CONFIG_MSIZE, DIFFTEST_TO_REF);
   //ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
+  extern void checkregs(CPU_state_diff_t *ref, vaddr_t pc) ;
   CPU_state_diff_t ref_r={0};
   checkregs(&ref_r, s->pc);
 
