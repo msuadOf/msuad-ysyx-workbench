@@ -192,8 +192,9 @@ int monitor(int argc, char** argv){
     printf("%c",'\n');
 
     parse_args(argc, argv);
-    init_difftest(diff_so_file, 1, 123);
     cpu_init();
+    init_difftest(diff_so_file, 1, 123);
+    
 
     Log("Start simulation\n");
     return sdb_mainloop();
