@@ -1,7 +1,7 @@
 /***************************************************************************************
 * Copyright (c) 2014-2022 Zihao Yu, Nanjing University
 *
-* NEMU is licensed under Mulan PSL v2.
+* NPC is licensed under Mulan PSL v2.
 * You can use this software according to the terms and conditions of the Mulan PSL v2.
 * You may obtain a copy of Mulan PSL v2 at:
 *          http://license.coscl.org.cn/MulanPSL2
@@ -20,15 +20,15 @@
 
 // ----------- state -----------
 
-enum { NEMU_RUNNING, NEMU_STOP, NEMU_END, NEMU_ABORT, NEMU_QUIT };
+enum { NPC_RUNNING, NPC_STOP, NPC_END, NPC_ABORT, NPC_QUIT };
 
-// typedef struct {
-//   int state;
-//   uint32_t halt_pc;
-//   uint32_t halt_ret;
-// } NEMUState;
+typedef struct {
+  int state;
+  uint32_t halt_pc;
+  uint32_t halt_ret;
+} NPCState;
 
-// extern NEMUState nemu_state;
+extern NPCState npc_state;
 
 // ----------- timer -----------
 
