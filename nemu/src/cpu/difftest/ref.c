@@ -62,7 +62,7 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
     }
     s->regs[32]=cpu.pc;
     s->pc=cpu.pc;
-    printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_DUT pc=%x\n" ANSI_NONE,cpu.pc);
+    printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_DUT (nemu)pc=%x (dut)pc=%x\n" ANSI_NONE,cpu.pc,s->pc);
     return;
   }
   if(direction==DIFFTEST_TO_REF){
@@ -71,7 +71,7 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
     }
     cpu.pc=s->regs[32];
     cpu.pc=s->pc; 
-    printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_REF pc=%x\n" ANSI_NONE,cpu.pc);
+    printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_REF (nemu)pc=%x (dut)pc=%x\n" ANSI_NONE,cpu.pc,s->pc);
     return;
   }
   assert(0);
