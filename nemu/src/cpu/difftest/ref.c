@@ -25,11 +25,12 @@ void print_mem(){
 
 }
 __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction) {
-  word_t* _buf=buf;
+  word_t* _buf=(word_t*)buf;
   
   assert(n>=0);
   n=n/4 ;
-  Log("n=%ld",n);
+  isa_reg_display();
+  Log("n=%ld,buf[0]=0x%08x",n,((uint32_t*)buf)[0]);
 
   if(direction==DIFFTEST_TO_DUT){
     for(size_t i=0;i<n;i++){
@@ -54,13 +55,15 @@ typedef struct CPU_state_diff_t {
   word_t regs[33];
 } CPU_state_diff_t;
 __EXPORT void difftest_regcpy(void *dut, bool direction) {
-  CPU_state_diff_t* s=dut;
+  CPU_state_diff_t* s=(CPU_state_diff_t*)dut;
 
   if(direction==DIFFTEST_TO_DUT){
     for(int i=0;i<32;i++){
       s->regs[i]=cpu.gpr[i];
     }
     s->regs[32]=cpu.pc;
+    s->pc=cpu.pc;
+    printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_DUT (nemu)pc=%x (dut)pc=%x\n" ANSI_NONE,cpu.pc,s->pc);
     return;
   }
   if(direction==DIFFTEST_TO_REF){
@@ -68,14 +71,21 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
       cpu.gpr[i]=s->regs[i];
     }
     cpu.pc=s->regs[32];
+    cpu.pc=s->pc; 
+    printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_REF (nemu)pc=%x (dut)pc=%x\n" ANSI_NONE,cpu.pc,s->pc);
     return;
   }
   assert(0);
 }
 
 __EXPORT void difftest_exec(uint64_t n) {
+  printf("===========difftest_exec begin===========\n");
   cpu_exec(n);
-  assert(0);
+  printf("===========difftest_exec end===========\n");
+}
+
+__EXPORT void difftest_reg_display() {
+  isa_reg_display();
 }
 
 __EXPORT void difftest_raise_intr(word_t NO) {
