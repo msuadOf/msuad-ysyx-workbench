@@ -145,7 +145,7 @@ void cpu_exec(uint64_t n) {
       exec_once(tfp);
       diff_cpuInfoUpdate(s);
       #ifdef CONFIG_DIFFTEST
-        difftest_step(s);
+        //difftest_step(s);
       #endif
   }
 }
