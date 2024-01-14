@@ -89,8 +89,6 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
 
 
   ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), CONFIG_MSIZE, DIFFTEST_TO_REF);
-  guest_to_host(RESET_VECTOR)[0]=0x10;
-    ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), CONFIG_MSIZE, DIFFTEST_TO_REF);
   //ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), img_size, DIFFTEST_TO_REF);
 
   ref_difftest_regcpy(s, DIFFTEST_TO_REF);
