@@ -125,7 +125,7 @@ static void checkregs(CPU_state_diff_t *ref, vaddr_t pc) {
 void difftest_step(CPU_state_diff_t* s) {
   CPU_state_diff_t ref_r={0};
 
-  ref_difftest_regcpy(&ref_r, DIFFTEST_TO_REF);
+  ref_difftest_regcpy(s, DIFFTEST_TO_REF);
   ref_difftest_exec(1);
   ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
 
