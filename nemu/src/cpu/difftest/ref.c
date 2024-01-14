@@ -61,6 +61,9 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
       s->regs[i]=cpu.gpr[i];
     }
     s->regs[32]=cpu.pc;
+    s->pc=cpu.pc;
+    s->snpc=cpu.snpc;
+    s->dnpc=cpu.dnpc;
     return;
   }
   if(direction==DIFFTEST_TO_REF){
@@ -68,6 +71,9 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
       cpu.gpr[i]=s->regs[i];
     }
     cpu.pc=s->regs[32];
+    cpu.pc=s->pc;
+    cpu.snpc=s->snpc;
+    cpu.dnpc=s->dnpc;  
     return;
   }
   assert(0);
