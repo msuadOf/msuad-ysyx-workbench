@@ -137,6 +137,7 @@ extern "C" void ebreak(){
     hit_exit(0);
 }
 
+extern void difftest_step(CPU_state_diff_t* s);
 void cpu_exec(uint64_t n) {
   Log_level_2("cpu_exec(%ld)",n);
   for(int i; i < n; i++){
