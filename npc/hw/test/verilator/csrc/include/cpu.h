@@ -13,17 +13,25 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
-#ifndef __ISA_H__
-#define __ISA_H__
+#ifndef __CPU_H__
+#define __CPU_H__
 
+#include "common.h"
+
+typedef struct CPU_state_diff_t {
+  vaddr_t pc;
+  vaddr_t snpc; // static next pc
+  vaddr_t dnpc; // dynamic next pc
+  word_t regs[33];
+} CPU_state_diff_t;
 
 // monitor
-extern unsigned char isa_logo[];
-void init_isa();
+//extern unsigned char isa_logo[];
+//void init_isa();
 
 // // reg
-// extern CPU_state cpu;
-// void isa_reg_display();
+extern CPU_state_diff_t cpu;
+void isa_reg_display();
 // word_t isa_reg_str2val(const char *name, bool *success);
 // int isa_reg_getValueByIndex(int i);
 
