@@ -23,12 +23,11 @@
 
 #include "mem.h"
 
-extern "C" {
 void (*ref_difftest_memcpy)(paddr_t addr, void *buf, size_t n, bool direction) = NULL;
 void (*ref_difftest_regcpy)(void *dut, bool direction) = NULL;
 void (*ref_difftest_exec)(uint64_t n) = NULL;
 void (*ref_difftest_raise_intr)(uint64_t NO) = NULL;
-}
+
 
 enum { DIFFTEST_TO_DUT, DIFFTEST_TO_REF };
 
@@ -124,8 +123,8 @@ static void checkregs(CPU_state_diff_t *ref, vaddr_t pc) {
   }
 }
 
-extern "C" void difftest_step(CPU_state_diff_t* s) {
-  CPU_state_diff_t ref_r;
+void difftest_step(CPU_state_diff_t* s) {
+  CPU_state_diff_t ref_r={0};
 printf("pc=%x",s->pc);
   ref_difftest_regcpy(&ref_r, DIFFTEST_TO_REF);
   //ref_difftest_exec(1);
