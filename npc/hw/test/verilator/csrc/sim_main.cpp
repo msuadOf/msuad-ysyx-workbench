@@ -101,6 +101,7 @@ void assert_fail_msg(){
   isa_reg_display();
 }
 void cpu_init() {
+  s->pc=RESET_VECTOR;
   s->dnpc=RESET_VECTOR;
   s->snpc=RESET_VECTOR;
 
