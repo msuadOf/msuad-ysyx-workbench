@@ -1,7 +1,7 @@
 /***************************************************************************************
 * Copyright (c) 2014-2022 Zihao Yu, Nanjing University
 *
-* NEMU is licensed under Mulan PSL v2.
+* NPC is licensed under Mulan PSL v2.
 * You can use this software according to the terms and conditions of the Mulan PSL v2.
 * You may obtain a copy of Mulan PSL v2 at:
 *          http://license.coscl.org.cn/MulanPSL2
@@ -39,14 +39,14 @@ static bool is_skip_ref = false;
 static int skip_dut_nr_inst = 0;
 
 // this is used to let ref skip instructions which
-// can not produce consistent behavior with NEMU
+// can not produce consistent behavior with NPC
 void difftest_skip_ref() {
   is_skip_ref = true;
   // If such an instruction is one of the instruction packing in QEMU
   // (see below), we end the process of catching up with QEMU's pc to
   // keep the consistent behavior in our best.
   // Note that this is still not perfect: if the packed instructions
-  // already write some memory, and the incoming instruction in NEMU
+  // already write some memory, and the incoming instruction in NPC
   // will load that memory, we will encounter false negative. But such
   // situation is infrequent.
   skip_dut_nr_inst = 0;
@@ -54,7 +54,7 @@ void difftest_skip_ref() {
 
 // this is used to deal with instruction packing in QEMU.
 // Sometimes letting QEMU step once will execute multiple instructions.
-// We should skip checking until NEMU's pc catches up with QEMU's pc.
+// We should skip checking until NPC's pc catches up with QEMU's pc.
 // The semantic is
 //   Let REF run `nr_ref` instructions first.
 //   We expect that DUT will catch up with REF within `nr_dut` instructions.
@@ -100,13 +100,13 @@ bool isa_difftest_checkregs(CPU_state_diff_t *ref_r, vaddr_t pc) {
   int reg_num = 32;
   for (int i = 0; i < reg_num; i++) {
     if (ref_r->regs[i] != s->regs[i]) {
-      printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"%s\" is diffrent: (nemu-false)= %08x ,(qemu-yes)= %08x.\n",reg_name(i),s->regs[i],ref_r->regs[i]);
+      printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"%s\" is diffrent: (npc-false)= %08x ,(ref-yes)= %08x.\n",reg_name(i),s->regs[i],ref_r->regs[i]);
       state=false;
       //return false;
     }
   }
   if (ref_r->pc != s->pc) {
-    printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"pc\" is diffrent: (nemu-false)= %08x ,(qemu-yes)= %08x.\n",s->pc,ref_r->pc);
+    printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"pc\" is diffrent: (npc-false)= %08x ,(ref-yes)= %08x.\n",s->pc,ref_r->pc);
     state=false;
     //return false;
   }
@@ -116,8 +116,8 @@ bool isa_difftest_checkregs(CPU_state_diff_t *ref_r, vaddr_t pc) {
 
 static void checkregs(CPU_state_diff_t *ref, vaddr_t pc) {
   if (!isa_difftest_checkregs(ref, pc)) {
-    nemu_state.state = NEMU_ABORT;
-    nemu_state.halt_pc = pc;
+    npc_state.state = NPC_ABORT;
+    npc_state.halt_pc = pc;
     isa_reg_display();
   }
 }
