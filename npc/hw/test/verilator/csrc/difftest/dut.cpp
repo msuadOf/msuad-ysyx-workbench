@@ -136,7 +136,8 @@ void difftest_step(CPU_state_diff_t* s,CPU_state_diff_t* s_bak) {
   CPU_state_diff_t ref_r={0};
 
   ref_difftest_reg_display();
-  isa_reg_display();
+  isa_reg_display(s_bak);
+  isa_reg_display(s);
   ref_difftest_regcpy(s_bak, DIFFTEST_TO_REF);
   printf("======\n");
     ref_difftest_reg_display();
