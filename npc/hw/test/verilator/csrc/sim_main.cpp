@@ -25,6 +25,7 @@
 #include "monitor.h"
 #include "common.h"
 #include "cpu.h"
+#include "mem.h"
 
 //=======cpu run time========
 
