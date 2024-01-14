@@ -59,7 +59,7 @@ void diff_cpuInfoUpdate(CPU_state_diff_t* s){
   print("s->pc=s->regs[32];")
   */
   s->regs[0]=top->io_diff_regs_0;s->regs[1]=top->io_diff_regs_1;s->regs[2]=top->io_diff_regs_2;s->regs[3]=top->io_diff_regs_3;s->regs[4]=top->io_diff_regs_4;s->regs[5]=top->io_diff_regs_5;s->regs[6]=top->io_diff_regs_6;s->regs[7]=top->io_diff_regs_7;s->regs[8]=top->io_diff_regs_8;s->regs[9]=top->io_diff_regs_9;s->regs[10]=top->io_diff_regs_10;s->regs[11]=top->io_diff_regs_11;s->regs[12]=top->io_diff_regs_12;s->regs[13]=top->io_diff_regs_13;s->regs[14]=top->io_diff_regs_14;s->regs[15]=top->io_diff_regs_15;s->regs[16]=top->io_diff_regs_16;s->regs[17]=top->io_diff_regs_17;s->regs[18]=top->io_diff_regs_18;s->regs[19]=top->io_diff_regs_19;s->regs[20]=top->io_diff_regs_20;s->regs[21]=top->io_diff_regs_21;s->regs[22]=top->io_diff_regs_22;s->regs[23]=top->io_diff_regs_23;s->regs[24]=top->io_diff_regs_24;s->regs[25]=top->io_diff_regs_25;s->regs[26]=top->io_diff_regs_26;s->regs[27]=top->io_diff_regs_27;s->regs[28]=top->io_diff_regs_28;s->regs[29]=top->io_diff_regs_29;s->regs[30]=top->io_diff_regs_30;s->regs[31]=top->io_diff_regs_31;
-  s->pc=s->regs[32];
+  s->pc=s->io_IMem_rAddr;
 
 }
 static inline int check_reg_idx(int idx) {
