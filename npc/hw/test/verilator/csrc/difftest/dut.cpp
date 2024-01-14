@@ -12,7 +12,8 @@
 *
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
-
+extern "C" {
+  
 #include <dlfcn.h>
 
 #include <cpu.h>
@@ -134,3 +135,5 @@ printf("pc=%x",s->pc);
 #else
 void init_difftest(char *ref_so_file, long img_size, int port) { }
 #endif
+
+}
