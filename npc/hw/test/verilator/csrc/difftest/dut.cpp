@@ -145,8 +145,8 @@ void difftest_step(CPU_state_diff_t* s,CPU_state_diff_t* s_bak) {
 
 uint32_t _ibuf=10;
   ref_difftest_memcpy(s->dnpc, &_ibuf, 4, DIFFTEST_TO_DUT);
-  printf("nemu_ibuf=0x%x",_ibuf);
-   printf("nemu_ibuf=0x%x",paddr_read(s->dnpc,4));
+  printf("nemu_ibuf=0x%08x",_ibuf);
+   printf("nemu_ibuf=0x%08x",paddr_read(s->pc,4));
   ref_difftest_exec(1);
   // ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
 
