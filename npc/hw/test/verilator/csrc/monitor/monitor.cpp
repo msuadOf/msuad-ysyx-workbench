@@ -8,9 +8,17 @@
 #include <readline/history.h>
 
 #include "common.h"
+#include "mem.h"
 
 
 extern void cpu_exec(uint64_t n);
+
+static int is_batch_mode = false;
+
+void sdb_set_batch_mode()
+{
+  is_batch_mode = true;
+}
 
 static char *rl_gets()
 {
@@ -108,6 +116,12 @@ static int cmd_help(char *args)
 
 int sdb_mainloop(){
 
+  if (is_batch_mode)
+  {
+    cmd_c(NULL);
+    return 0;
+  }
+
   for (char *str; (str = rl_gets()) != NULL;)
   {
     char *str_end = str + strlen(str);
@@ -153,7 +167,30 @@ static char *log_file = NULL;
 static char *diff_so_file = NULL;
 static char *img_file = NULL;
 
+static long load_img() {
+  if (img_file == NULL) {
+    Log("No image is given. Use the default build-in image.");
+    return 4096; // built-in image size
+  }
+
+  FILE *fp = fopen(img_file, "rb");
+  Assert(fp, "Can not open '%s'", img_file);
+
+  fseek(fp, 0, SEEK_END);
+  long size = ftell(fp);
+
+  Log("The image is %s, size = %ld", img_file, size);
+
+  fseek(fp, 0, SEEK_SET);
+  int ret = fread(guest_to_host(RESET_VECTOR), size, 1, fp);
+  assert(ret == 1);
+
+  fclose(fp);
+  return size;
+}
+
 #include <getopt.h>
+
 static int parse_args(int argc, char *argv[]) {
   const struct option table[] = {
     {"batch"    , no_argument      , NULL, 'b'},
@@ -169,7 +206,7 @@ static int parse_args(int argc, char *argv[]) {
     //   case 'b': sdb_set_batch_mode(); break;
     //   case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
-    //   case 1: img_file = optarg; return 0;
+      case 1: img_file = optarg; return 0;
       default:
         printf("Usage: %s [OPTION...] IMAGE [args]\n\n", argv[0]);
         printf("\t-b,--batch              run with batch mode\n");
@@ -192,6 +229,7 @@ int monitor(int argc, char** argv){
     printf("%c",'\n');
 
     parse_args(argc, argv);
+    long img_size = load_img();
     cpu_init();
     init_difftest(diff_so_file, 1, 123);
     

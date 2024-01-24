@@ -50,7 +50,9 @@ static const uint32_t img [] = {
 };
 
  
-void hit_exit(int status) {}
+void hit_exit(int status) {
+  exit(status);
+}
 //===
 void diff_cpuInfoUpdate(CPU_state_diff_t* s){
   /*
@@ -143,7 +145,7 @@ void exec_once(VerilatedVcdC* tfp) {
 
   //====== cpu exec body begin ======
   //paddr_read()
-  top->io_IMem_rData=0xffc10113;
+  top->io_IMem_rData=paddr_read(top->io_IMem_rAddr,4);
   int pc=top->io_IMem_rAddr;
   Log_level_1("pc=%08x\n",pc);
   //====== cpu exec body ends  ======
