@@ -21,8 +21,9 @@
 #include <difftest-def.h>
 
 //enum { DIFFTEST_TO_DUT, DIFFTEST_TO_REF };
+void init_disasm(const char *triple);
 void print_mem(){
-
+  Log("0x%08x:0x%08x\n",cpu.pc,paddr_read(cpu.pc,4));
 }
 __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction) {
   word_t* _buf=(word_t*)buf;
@@ -79,7 +80,8 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
 }
 
 __EXPORT void difftest_exec(uint64_t n) {
-  printf("===========difftest_exec begin===========\n");
+  printf("\n===========difftest_exec begin,n=%ld===========\n",n);
+  print_mem();
   cpu_exec(n);
   printf("===========difftest_exec end===========\n");
 }
@@ -97,4 +99,14 @@ __EXPORT void difftest_init(int port) {
   init_mem();
   /* Perform ISA dependent initialization. */
   init_isa();
+  #ifndef CONFIG_ISA_loongarch32r
+  IFDEF(CONFIG_ITRACE, init_disasm(
+    MUXDEF(CONFIG_ISA_x86,     "i686",
+    MUXDEF(CONFIG_ISA_mips32,  "mipsel",
+    MUXDEF(CONFIG_ISA_riscv,
+      MUXDEF(CONFIG_RV64,      "riscv64",
+                               "riscv32"),
+                               "bad"))) "-pc-linux-gnu"
+  ));
+#endif
 }
