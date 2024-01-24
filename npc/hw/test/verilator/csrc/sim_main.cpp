@@ -166,11 +166,13 @@ extern void difftest_step(CPU_state_diff_t* s,CPU_state_diff_t* s_bak);
 void cpu_exec(uint64_t n) {
   Log_level_2("cpu_exec(%ld)",n);
   for(int i; i < n; i++){
-      exec_once(tfp);
-      diff_cpuInfoUpdate(s);
       #ifdef CONFIG_DIFFTEST
         CPU_state_diff_t npc_state_bak;
         memcpy(&npc_state_bak,s,sizeof(CPU_state_diff_t));
+      #endif
+      exec_once(tfp);
+      diff_cpuInfoUpdate(s);
+      #ifdef CONFIG_DIFFTEST
         difftest_step(s,&npc_state_bak);
       #endif
   }

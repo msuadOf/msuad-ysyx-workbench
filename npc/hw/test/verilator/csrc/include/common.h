@@ -38,4 +38,6 @@ typedef uint16_t ioaddr_t;
 
 #include <debug.h>
 
+#include "cpu.h"
+
 #endif
