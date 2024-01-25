@@ -50,6 +50,8 @@ class top(isa_info: String = "RISCV32") extends Module {
 
     val diff = new Bundle {
       val pc   = Output(UInt(32.W))
+      val dnpc =Output(UInt(32.W))
+      val snpc =Output(UInt(32.W))
       val regs = Output(Vec(32, UInt(32.W)))
     }
   })
@@ -58,7 +60,12 @@ class top(isa_info: String = "RISCV32") extends Module {
 
   val R  = new RegFile("RISCV32")
   val pc = RegInit("h80000000".U(32.W))
-  pc := pc + 4.U
+  val snpc,dnpc=Wire(UInt(32.W))
+  snpc := pc + 4.U
+  dnpc := pc + 4.U
+  pc := dnpc
+  io.diff.dnpc:=dnpc
+  io.diff.snpc:=snpc
   //fetch inst
   io.IMem.rAddr := pc
   val inst = Wire(UInt(32.W))
@@ -104,7 +111,7 @@ class top(isa_info: String = "RISCV32") extends Module {
   println(src1)
 
   //addi exec
-  R(rd)         := src1 + imm//.asSInt(32.W)
+  R(rd)         := (src1.asSInt + imm.asSInt).asUInt
   io.DMem.wData := R(rd)
 
   val ebreakDpi = Module(new ebreakDpi)

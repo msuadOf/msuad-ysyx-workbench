@@ -51,7 +51,14 @@ static const uint32_t img [] = {
 
  
 void hit_exit(int status) {
-  exit(status);
+  if(status==0){
+    //difftest_skip_ref();
+    npc_state.state=NPC_END;
+    npc_state.halt_pc = s->pc;
+    npc_state.halt_ret = s->regs[10]; // R(10) is $a0
+    return;
+  }
+  Assert(0,"hit_exit status(=%d) error!",status);
 }
 //===
 void diff_cpuInfoUpdate(CPU_state_diff_t* s){
@@ -62,8 +69,11 @@ void diff_cpuInfoUpdate(CPU_state_diff_t* s){
   print("s->dnpc=s->regs[32];")
   */
   s->regs[0]=top->io_diff_regs_0;s->regs[1]=top->io_diff_regs_1;s->regs[2]=top->io_diff_regs_2;s->regs[3]=top->io_diff_regs_3;s->regs[4]=top->io_diff_regs_4;s->regs[5]=top->io_diff_regs_5;s->regs[6]=top->io_diff_regs_6;s->regs[7]=top->io_diff_regs_7;s->regs[8]=top->io_diff_regs_8;s->regs[9]=top->io_diff_regs_9;s->regs[10]=top->io_diff_regs_10;s->regs[11]=top->io_diff_regs_11;s->regs[12]=top->io_diff_regs_12;s->regs[13]=top->io_diff_regs_13;s->regs[14]=top->io_diff_regs_14;s->regs[15]=top->io_diff_regs_15;s->regs[16]=top->io_diff_regs_16;s->regs[17]=top->io_diff_regs_17;s->regs[18]=top->io_diff_regs_18;s->regs[19]=top->io_diff_regs_19;s->regs[20]=top->io_diff_regs_20;s->regs[21]=top->io_diff_regs_21;s->regs[22]=top->io_diff_regs_22;s->regs[23]=top->io_diff_regs_23;s->regs[24]=top->io_diff_regs_24;s->regs[25]=top->io_diff_regs_25;s->regs[26]=top->io_diff_regs_26;s->regs[27]=top->io_diff_regs_27;s->regs[28]=top->io_diff_regs_28;s->regs[29]=top->io_diff_regs_29;s->regs[30]=top->io_diff_regs_30;s->regs[31]=top->io_diff_regs_31;
-  s->pc = s->dnpc;
-  s->dnpc=top->io_IMem_rAddr;
+  //s->pc = s->dnpc;
+  //s->dnpc=top->io_IMem_rAddr;
+  s->dnpc=top->io_diff_dnpc;
+  s->snpc=top->io_diff_snpc;
+  s->pc=top->io_diff_pc;
 
 }
 static inline int check_reg_idx(int idx) {
@@ -116,9 +126,9 @@ void assert_fail_msg(){
   isa_reg_display();
 }
 void cpu_init() {
-  s->pc=RESET_VECTOR;
-  s->dnpc=RESET_VECTOR;
-  s->snpc=RESET_VECTOR;
+  // s->pc=RESET_VECTOR;
+  // s->dnpc=RESET_VECTOR;
+  // s->snpc=RESET_VECTOR;
 
   //cpu_gpr[32] = CONFIG_MBASE;
   top -> clock = 0;
@@ -167,6 +177,12 @@ extern "C" void ebreak(){
 extern void difftest_step(CPU_state_diff_t* s,CPU_state_diff_t* s_bak);
 void cpu_exec(uint64_t n) {
   Log_level_2("cpu_exec(%ld)",n);
+    //寄了以后就别运行了
+      if(npc_state.state==NPC_ABORT || npc_state.state==NPC_END){
+        Log("Program execution has ended. To restart the program, exit NPC and run again.\n");
+      return;
+      }
+
   for(int i; i < n; i++){
       #ifdef CONFIG_DIFFTEST
         CPU_state_diff_t npc_state_bak;
@@ -174,9 +190,19 @@ void cpu_exec(uint64_t n) {
       #endif
       exec_once(tfp);
       diff_cpuInfoUpdate(s);
+
+      if(npc_state.state==NPC_STOP) break; //inst:ebreak
+
       #ifdef CONFIG_DIFFTEST
         difftest_step(s,&npc_state_bak);
       #endif
+
+    //寄了以后就别运行了
+      if(npc_state.state==NPC_ABORT || npc_state.state==NPC_END){
+        Log("Program execution has ended. To restart the program, exit NPC and run again.\n");
+      return;
+      }
+  
   }
 }
 
@@ -242,8 +268,8 @@ int main(int argc, char** argv) {
 
 
     // Set Vtop's input signals
-    CPU_state_diff_t npc_state;
-    s=&npc_state;
+    CPU_state_diff_t cpu_state;
+    s=&cpu_state;
 
     // top->in_small = 1;
     // top->in_quad = 0x1234;
@@ -309,5 +335,5 @@ int main(int argc, char** argv) {
     delete tfp;
     // Return good completion status
     // Don't use exit() or destructor won't get called
-    return 0;
+    return is_exit_status_bad();
 }

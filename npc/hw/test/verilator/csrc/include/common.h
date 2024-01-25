@@ -40,4 +40,6 @@ typedef uint16_t ioaddr_t;
 
 #include "cpu.h"
 
+int is_exit_status_bad();
+
 #endif

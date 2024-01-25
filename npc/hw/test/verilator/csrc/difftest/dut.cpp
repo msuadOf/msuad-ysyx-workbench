@@ -106,8 +106,8 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
   checkregs(&ref_r, s->pc);
 
-  ref_difftest_reg_display();
-  isa_reg_display();
+  //ref_difftest_reg_display();
+  //isa_reg_display();
 }
 
 void ref_reg_display(CPU_state_diff_t *s,CPU_state_diff_t *ref)
@@ -124,6 +124,12 @@ void ref_reg_display(CPU_state_diff_t *s,CPU_state_diff_t *ref)
       printf(ANSI_FG_RED);
     printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", "pc", ref->pc, ref->pc, s->pc, s->pc);
     printf(ANSI_NONE);
+
+    if(s->dnpc!=s->dnpc)
+      printf(ANSI_FG_RED);
+    printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", "dnpc", s->dnpc, s->dnpc, s->dnpc, s->dnpc);
+    printf(ANSI_NONE);
+
     printf("***********************************************|****************************************|\n");
 }
 void ref_reg_display(CPU_state_diff_t s,CPU_state_diff_t ref){
@@ -161,19 +167,14 @@ void checkregs(CPU_state_diff_t *ref, vaddr_t pc) {
   if (!isa_difftest_checkregs(ref, pc)) {
     npc_state.state = NPC_ABORT;
     npc_state.halt_pc = pc;
-    isa_reg_display();
+    ref_reg_display(ref);
   }
 }
 
 void difftest_step(CPU_state_diff_t* s,CPU_state_diff_t* s_bak) {
   CPU_state_diff_t ref_r={0};
 
-  ref_difftest_reg_display();
-
   ref_difftest_regcpy(s_bak, DIFFTEST_TO_REF);
-  printf("======\n");
-    ref_difftest_reg_display();
-
 
 uint32_t _ibuf=10;
   ref_difftest_memcpy(s->dnpc, &_ibuf, 4, DIFFTEST_TO_DUT);
@@ -181,9 +182,6 @@ uint32_t _ibuf=10;
    printf("nemu_ibuf=0x%08x",paddr_read(s->pc,4));
   ref_difftest_exec(1);
   ref_difftest_regcpy(&ref_r, DIFFTEST_TO_DUT);
-
-    ref_reg_display(s_bak,&ref_r);
-  ref_reg_display(s,&ref_r);
 
   checkregs(&ref_r, s->pc);
 }

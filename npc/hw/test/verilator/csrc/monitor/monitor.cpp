@@ -45,6 +45,7 @@ static int cmd_c(char *args)
   return -1;
 }
 static int cmd_q(char *args){
+  npc_state.state = NPC_QUIT;
     return -1;
 }
 static int cmd_si(char *args)
@@ -203,7 +204,7 @@ static int parse_args(int argc, char *argv[]) {
   int o;
   while ( (o = getopt_long(argc, argv, "-bhl:d:p:", table, NULL)) != -1) {
     switch (o) {
-    //   case 'b': sdb_set_batch_mode(); break;
+      case 'b': sdb_set_batch_mode(); break;
     //   case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
       case 1: img_file = optarg; return 0;
@@ -235,5 +236,6 @@ int monitor(int argc, char** argv){
     
 
     Log("Start simulation\n");
+    npc_state.state=NPC_RUNNING;
     return sdb_mainloop();
 }

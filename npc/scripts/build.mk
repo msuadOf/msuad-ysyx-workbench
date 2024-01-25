@@ -57,14 +57,19 @@ verilator-app: $(BINARY)
 ######## end ################
 
 # Vtop call args
-# image
-ifneq ($(IMAGE), )
-VERI_RUNNING_ARGS+=--image $(IMAGE)
-endif
 # difftest
 ifneq ($(DIFF_REF_SO), )
 VERI_RUNNING_ARGS += $(ARGS_DIFF)
 endif
+# am args
+ifneq ($(IMG), )
+VERI_RUNNING_ARGS += $(ARGS)
+endif
+# image
+ifneq ($(IMG), )
+VERI_RUNNING_ARGS += $(IMG)
+endif
+
 
 CHISEL_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.scala) #search all hw/
 CHISEL_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.v) #search all hw/
