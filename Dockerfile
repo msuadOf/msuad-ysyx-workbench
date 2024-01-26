@@ -15,7 +15,7 @@ RUN printf "deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricte
                 gperf libtool patchutils bc zlib1g-dev \
                 libexpat-dev pkg-config git \
                 libusb-1.0-0-dev device-tree-compiler \
-                default-jdk gnupg vim \
+                openjdk-17-jdk gnupg vim \
                 man gcc-doc gdb git \
                 libreadline-dev libsdl2-dev llvm llvm-dev \
                 vim tmux ssh openssh-server\
