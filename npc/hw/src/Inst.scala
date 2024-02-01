@@ -80,44 +80,40 @@ object LSUOpType { //TODO: refactor LSU fuop
 object ALUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
   def ADDI = (e: ExecEnv) => e.Rrd := e.src1+ e.immI
-  def SLLI  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def SLTI  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def SLTIU = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def XORI  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def SRLI  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def ORI   = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def ANDI  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def SRAI  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def SLLI  = (e: ExecEnv) => TODO()
+  def SLTI  = (e: ExecEnv) => TODO()
+  def SLTIU = (e: ExecEnv) => TODO()
+  def XORI  = (e: ExecEnv) => TODO()
+  def SRLI  = (e: ExecEnv) => TODO()
+  def ORI   = (e: ExecEnv) => TODO()
+  def ANDI  = (e: ExecEnv) => TODO()
+  def SRAI  = (e: ExecEnv) => TODO()
 
-  def ADD  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def SLL  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def SLT  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def SLTU = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def XOR  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def SRL  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def OR   = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def AND  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def SUB  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
-  def SRA  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def ADD  = (e: ExecEnv) => TODO()
+  def SLL  = (e: ExecEnv) => TODO()
+  def SLT  = (e: ExecEnv) => TODO()
+  def SLTU = (e: ExecEnv) => TODO()
+  def XOR  = (e: ExecEnv) => TODO()
+  def SRL  = (e: ExecEnv) => TODO()
+  def OR   = (e: ExecEnv) => TODO()
+  def AND  = (e: ExecEnv) => TODO()
+  def SUB  = (e: ExecEnv) => TODO()
+  def SRA  = (e: ExecEnv) => TODO()
 
   def AUIPC = (e: ExecEnv) => e.Rrd := (e.pc.asSInt + e.immU).asUInt
-  def LUI   = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def LUI   = (e: ExecEnv) => TODO()
 }
-object panic{
-  def apply()={
-    chisel3.assert(0.B, "033 [31m"+"a must always increment"+"033 [0m")
-  }
-}
+
 object BRUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
   def JAL  = (e: ExecEnv) => {e.Rrd := e.pc + 4.U ; e.pc:=e.pc + e.immJ; }
-  def JALR = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-  def BEQ  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-  def BNE  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-  def BLT  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-  def BGE  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-  def BLTU = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-  def BGEU = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+  def JALR = (e: ExecEnv) => TODO() 
+  def BEQ  = (e: ExecEnv) => TODO() 
+  def BNE  = (e: ExecEnv) => TODO() 
+  def BLT  = (e: ExecEnv) => TODO() 
+  def BGE  = (e: ExecEnv) => TODO() 
+  def BLTU = (e: ExecEnv) => TODO() 
+  def BGEU = (e: ExecEnv) => TODO() 
 
 }
 object RV32I_ALUInstr {
