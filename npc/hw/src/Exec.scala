@@ -31,6 +31,7 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
   }
   object Reg {
     def IDLE() = {
+        R(0):=R(0)
       R.reg := R.reg
     }
   }

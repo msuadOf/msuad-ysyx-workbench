@@ -31,14 +31,11 @@ class RegFile(val ISet: String) {
   }
   val reg = RegInit(VecInit(Seq.tabulate(regNum+1)(i => 0.U(32.W))))
   def apply(idx: UInt): UInt = {
-    var index=UInt()
-    when ( idx===0.U ){
-       index=(regNum).asUInt
-    }
-    .otherwise{
-      index=idx
-    }
-    reg(index)
+    MuxCase(reg(idx),Seq(
+                          (idx===0.U) -> reg(idx),
+                          (idx=/=0.U) -> RegEnable(0.U,0.U,0.B) 
+                          ))
+    reg(idx)
   }
   def apply(idx: Int): UInt = {
     reg(idx)
@@ -128,9 +125,7 @@ class top(isa_info: String = "RISCV32") extends Module  {
 
 
 
-     println(RVIInstr.table(0)._2) 
-     //Out: RV32I_ALUInstr$$$Lambda$548/0x00007fc79c332f20@7cedfa63
-     RVIInstr.table(0)._2.asInstanceOf[(ExecEnv)=>Unit](Decoder)
+
 
   RVIInstr.table.asInstanceOf[Array[((BitPat,Any),ExecEnv=>Any)]].foreach((t: ((BitPat,Any),ExecEnv=>Any)) => {
     prefix(s"InstMatch_${getVariableName(t._1)}") {
