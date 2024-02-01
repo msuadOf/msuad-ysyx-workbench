@@ -125,7 +125,7 @@ def LBU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be implet
 def LHU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
 def SB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
 def SH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def SW  = (e: ExecEnv) => e.R(8):=0.U//e.Mw(e.src1 + e.immS, 4, e.src2) 
+def SW  = (e: ExecEnv) => e.R(8):=e.R(8)//e.Mw(e.src1 + e.immS, 4, e.src2) 
 
 }
 object RV32I_ALUInstr {
