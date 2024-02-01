@@ -78,7 +78,7 @@ object LSUOpType { //TODO: refactor LSU fuop
 }
 
 object ALUExec {
-  def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.imm.asSInt).asUInt
+  def ADDI = (e: ExecEnv) => 0//e.Rrd := (e.src1.asSInt + e.imm.asSInt).asUInt
 
   def SLLI  = (e: ExecEnv) => BitPat("b0000000_?????_?????_001_?????_0010011")
   def SLTI  = (e: ExecEnv) => BitPat("b???????_?????_?????_010_?????_0010011")
