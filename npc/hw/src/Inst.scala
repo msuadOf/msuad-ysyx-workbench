@@ -79,53 +79,53 @@ object LSUOpType { //TODO: refactor LSU fuop
 
 object ALUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-  def ADDI = (e: ExecEnv) => e.Rrd := e.src1+ e.immI
-  def SLLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SLTI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SLTIU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def XORI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SRLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def ORI   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def ANDI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SRAI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def ADDI  = (e: ExecEnv) => { e.IDLE(); e.Rrd := e.src1 + e.immI }
+  def SLLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SLTI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SLTIU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def XORI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SRLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def ORI   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def ANDI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SRAI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
 
-  def ADD  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SLL  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SLTU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def XOR  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SRL  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def OR   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def AND  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SUB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SRA  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def ADD  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SLL  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SLTU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def XOR  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SRL  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def OR   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def AND  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SUB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SRA  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
 
-  def AUIPC = (e: ExecEnv) => e.Rrd := (e.pc.asSInt + e.immU).asUInt
-  def LUI   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def AUIPC = (e: ExecEnv) => { e.IDLE(); e.Rrd := e.pc + e.immU }
+  def LUI   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
 }
 
 object BRUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-  def JAL  = (e: ExecEnv) => {e.Rrd := e.pc + 4.U ; e.pc:=e.pc + e.immJ; }
-  def JALR = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-  def BEQ  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-  def BNE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-  def BLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-  def BGE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-  def BLTU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-  def BGEU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def JAL  = (e: ExecEnv) => { e.IDLE(); e.Rrd := e.pc + 4.U; e.pc := e.pc + e.immJ; }
+  def JALR = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def BEQ  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def BNE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def BLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def BGE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def BLTU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def BGEU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
 
 }
 object LSUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-def LB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def LH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def LW  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def LBU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def LHU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def SB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def SH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def SW  = (e: ExecEnv) => {e.R.reg:=e.R.reg;e.R.reg(8):=2.U}//e.Mw(e.src1 + e.immS, 4, e.src2) 
+  def LB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def LH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def LW  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def LBU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def LHU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SW  = (e: ExecEnv) => { e.IDLE(); e.Mw(e.src1 + e.immS, 4, e.src2) }
 
 }
 object RV32I_ALUInstr {
@@ -190,12 +190,12 @@ object RV32I_BRUInstr {
   def BGEU = BitPat("b???????_?????_?????_111_?????_1100011")
 
   val table = Array(
-    JAL  -> List(Inst.J, FuType.bru, ALUOpType.jal)  -> BRUExec.JAL,
+    JAL -> List(Inst.J, FuType.bru, ALUOpType.jal) -> BRUExec.JAL,
     JALR -> List(Inst.I, FuType.bru, ALUOpType.jalr) -> BRUExec.JALR,
-    BEQ  -> List(Inst.B, FuType.bru, ALUOpType.beq)  -> BRUExec.BEQ,
-    BNE  -> List(Inst.B, FuType.bru, ALUOpType.bne)  -> BRUExec.BNE,
-    BLT  -> List(Inst.B, FuType.bru, ALUOpType.blt)  -> BRUExec.BLT,
-    BGE  -> List(Inst.B, FuType.bru, ALUOpType.bge)  -> BRUExec.BGE,
+    BEQ -> List(Inst.B, FuType.bru, ALUOpType.beq) -> BRUExec.BEQ,
+    BNE -> List(Inst.B, FuType.bru, ALUOpType.bne) -> BRUExec.BNE,
+    BLT -> List(Inst.B, FuType.bru, ALUOpType.blt) -> BRUExec.BLT,
+    BGE -> List(Inst.B, FuType.bru, ALUOpType.bge) -> BRUExec.BGE,
     BLTU -> List(Inst.B, FuType.bru, ALUOpType.bltu) -> BRUExec.BLTU,
     BGEU -> List(Inst.B, FuType.bru, ALUOpType.bgeu) -> BRUExec.BGEU
   )
@@ -213,14 +213,14 @@ object RV32I_LSUInstr {
   def SW  = BitPat("b???????_?????_?????_010_?????_0100011")
 
   val table = Array(
-    LB  -> List(Inst.I, FuType.lsu, LSUOpType.lb) -> LSUExec.LB ,
-    LH  -> List(Inst.I, FuType.lsu, LSUOpType.lh) -> LSUExec.LH ,
-    LW  -> List(Inst.I, FuType.lsu, LSUOpType.lw) -> LSUExec.LW ,
-    LBU -> List(Inst.I, FuType.lsu, LSUOpType.lbu)-> LSUExec.LBU ,
-    LHU -> List(Inst.I, FuType.lsu, LSUOpType.lhu)-> LSUExec. LHU,
-    SB  -> List(Inst.S, FuType.lsu, LSUOpType.sb) -> LSUExec.SB ,
-    SH  -> List(Inst.S, FuType.lsu, LSUOpType.sh) -> LSUExec.SH ,
-    SW  -> List(Inst.S, FuType.lsu, LSUOpType.sw) -> LSUExec. SW 
+    LB -> List(Inst.I, FuType.lsu, LSUOpType.lb) -> LSUExec.LB,
+    LH -> List(Inst.I, FuType.lsu, LSUOpType.lh) -> LSUExec.LH,
+    LW -> List(Inst.I, FuType.lsu, LSUOpType.lw) -> LSUExec.LW,
+    LBU -> List(Inst.I, FuType.lsu, LSUOpType.lbu) -> LSUExec.LBU,
+    LHU -> List(Inst.I, FuType.lsu, LSUOpType.lhu) -> LSUExec.LHU,
+    SB -> List(Inst.S, FuType.lsu, LSUOpType.sb) -> LSUExec.SB,
+    SH -> List(Inst.S, FuType.lsu, LSUOpType.sh) -> LSUExec.SH,
+    SW -> List(Inst.S, FuType.lsu, LSUOpType.sw) -> LSUExec.SW
   )
 }
 
