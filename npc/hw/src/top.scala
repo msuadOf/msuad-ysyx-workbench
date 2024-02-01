@@ -60,6 +60,7 @@ class top(isa_info: String = "RISCV32") extends Module  {
   })
   io.DMem.rAddr := 0.U
   io.DMem.wAddr := 0.U
+  io.DMem.wData := Fill(32,1.U) //FFFF FFFF
   io.DMem.wen:=0.U
   io.DMem.ren:=0.U
 
@@ -140,7 +141,7 @@ class top(isa_info: String = "RISCV32") extends Module  {
 
   //R(rd)         :=add_exec(src1,imm)
   //R(rd)         := (src1.asSInt + imm.asSInt).asUInt
-  io.DMem.wData := R(rd)
+  //io.DMem.wData := R(rd)
 
   val ebreakDpi = Module(new ebreakDpi)
   ebreakDpi.io.inst := inst
@@ -148,6 +149,6 @@ class top(isa_info: String = "RISCV32") extends Module  {
   io.diff.pc   := pc
   io.diff.regs := R.reg
   printf("io.IMem.rAddr=%x\n", io.IMem.rAddr)
-  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)}\n")
+  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)},s0=${R(8)}\n")
   printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")
 }
