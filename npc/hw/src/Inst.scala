@@ -105,7 +105,7 @@ object ALUExec {
 }
 object BRUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-  def JAL  = (e: ExecEnv) => {e.Rrd := e.pc + 4.U ; e.pc:=e.pc + e.immJ }
+  def JAL  = (e: ExecEnv) => {e.Rrd := e.pc + 4.U ; e.pc:=e.pc + e.immJ; chisel3.assert(0.B, "a must always increment")}
   def JALR = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
   def BEQ  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
   def BNE  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
