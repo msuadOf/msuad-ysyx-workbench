@@ -80,52 +80,52 @@ object LSUOpType { //TODO: refactor LSU fuop
 object ALUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
   def ADDI = (e: ExecEnv) => e.Rrd := e.src1+ e.immI
-  def SLLI  = (e: ExecEnv) => TODO()
-  def SLTI  = (e: ExecEnv) => TODO()
-  def SLTIU = (e: ExecEnv) => TODO()
-  def XORI  = (e: ExecEnv) => TODO()
-  def SRLI  = (e: ExecEnv) => TODO()
-  def ORI   = (e: ExecEnv) => TODO()
-  def ANDI  = (e: ExecEnv) => TODO()
-  def SRAI  = (e: ExecEnv) => TODO()
+  def SLLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SLTI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SLTIU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def XORI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SRLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def ORI   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def ANDI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SRAI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
 
-  def ADD  = (e: ExecEnv) => TODO()
-  def SLL  = (e: ExecEnv) => TODO()
-  def SLT  = (e: ExecEnv) => TODO()
-  def SLTU = (e: ExecEnv) => TODO()
-  def XOR  = (e: ExecEnv) => TODO()
-  def SRL  = (e: ExecEnv) => TODO()
-  def OR   = (e: ExecEnv) => TODO()
-  def AND  = (e: ExecEnv) => TODO()
-  def SUB  = (e: ExecEnv) => TODO()
-  def SRA  = (e: ExecEnv) => TODO()
+  def ADD  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SLL  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SLTU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def XOR  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SRL  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def OR   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def AND  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SUB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SRA  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
 
   def AUIPC = (e: ExecEnv) => e.Rrd := (e.pc.asSInt + e.immU).asUInt
-  def LUI   = (e: ExecEnv) => TODO()
+  def LUI   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
 }
 
 object BRUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
   def JAL  = (e: ExecEnv) => {e.Rrd := e.pc + 4.U ; e.pc:=e.pc + e.immJ; }
-  def JALR = (e: ExecEnv) => TODO() 
-  def BEQ  = (e: ExecEnv) => TODO() 
-  def BNE  = (e: ExecEnv) => TODO() 
-  def BLT  = (e: ExecEnv) => TODO() 
-  def BGE  = (e: ExecEnv) => TODO() 
-  def BLTU = (e: ExecEnv) => TODO() 
-  def BGEU = (e: ExecEnv) => TODO() 
+  def JALR = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def BEQ  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def BNE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def BLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def BGE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def BLTU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def BGEU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
 
 }
 object LSUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-def LB  = (e: ExecEnv) => TODO() 
-def LH  = (e: ExecEnv) => TODO() 
-def LW  = (e: ExecEnv) => TODO() 
-def LBU = (e: ExecEnv) => TODO() 
-def LHU = (e: ExecEnv) => TODO() 
-def SB  = (e: ExecEnv) => TODO() 
-def SH  = (e: ExecEnv) => TODO() 
-def SW  = (e: ExecEnv) => TODO() 
+def LB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+def LH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+def LW  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+def LBU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+def LHU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+def SB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+def SH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+def SW  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
 
 }
 object RV32I_ALUInstr {
