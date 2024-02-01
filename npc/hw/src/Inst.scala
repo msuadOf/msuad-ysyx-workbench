@@ -78,7 +78,9 @@ object LSUOpType { //TODO: refactor LSU fuop
 }
 
 object ALUExec {
-  
+  def ADDI= (e:ExecEnv) => {
+    e.Rrd := (e.src1.asSInt + e.imm.asSInt).asUInt
+  }
   
   def SLLI  = BitPat("b0000000_?????_?????_001_?????_0010011")
   def SLTI  = BitPat("b???????_?????_?????_010_?????_0010011")
@@ -129,12 +131,9 @@ object RV32I_ALUInstr {
   def AUIPC = BitPat("b????????????????????_?????_0010111")
   def LUI   = BitPat("b????????????????????_?????_0110111")
 
-  def ADDI_exec = (e:ExecEnv) => {
-    e.Rrd := (e.src1.asSInt + e.imm.asSInt).asUInt
-  }
 
   val table = Array(
-    Tuple2( (ADDI -> List(Inst.I, FuType.alu, ALUOpType.add) ) ,ADDI_exec),
+    Tuple2( (ADDI -> List(Inst.I, FuType.alu, ALUOpType.add) ) ,ALUExec.ADDI),
     SLLI -> List(Inst.I, FuType.alu, ALUOpType.sll),
     SLTI -> List(Inst.I, FuType.alu, ALUOpType.slt),
     SLTIU -> List(Inst.I, FuType.alu, ALUOpType.sltu),
