@@ -44,7 +44,7 @@ class ExecEnv(val inst:UInt,val pc:UInt,val R:RegFile,val DMem:MemIO) {
   //val rs1, rs2, rd, src1, src2, imm ,Rrd = Wire(UInt())
   val rs1  = inst(19, 15)
   val rs2  = inst(24, 20)
-  val imm  = inst(31, 20)
+  val immI  = inst(31, 20)
   val rd   = inst(11, 7)
   val src1 = R(rs1)
   val src2 = R(rs2) 
