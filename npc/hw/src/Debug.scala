@@ -3,7 +3,7 @@ import chisel3.util._
 
 object panic{
   def apply(info:String)={
-    chisel3.assert(0.B, "\\033[31m"+info+"\\033[0m"+"\n")
+    chisel3.assert(0.B, info+"\n")
   }
 }
 object TODO{
