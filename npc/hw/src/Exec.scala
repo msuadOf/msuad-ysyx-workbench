@@ -7,9 +7,15 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
   val rs2 = inst(24, 20)
 
   val rd   = inst(11, 7)
-  val src1 = R(rs1)
-  val src2 = R(rs2)
-  val Rrd  = R(rd)
+  val src1 = R.read(rs1)
+  val src2 = R.read(rs2)
+  object Rrd{
+    def :=(that: UInt): Unit = {
+        R.write(rd,that)
+    }
+  }
+  
+  //val Rrd  = R.read(rd)
 
   val immI = ( inst(31, 20).asSInt + 0.S(32.W) ).asUInt //imm = SEXT(BITS(i, 31, 20), 12);
   val immU = ((inst(31, 12) << 12).asSInt + 0.S(32.W) ).asUInt //imm = SEXT(BITS(i, 31, 12), 20) << 12;

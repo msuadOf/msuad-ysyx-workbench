@@ -22,29 +22,6 @@ class MemIO extends Bundle {
       val wData = Output(UInt(32.W))
       val wen   = Output(UInt(1.W))
 }
-class RegFile(val ISet: String) {
-  val regNum = ISet match {
-    case "RISCV32E" => 16
-    case "RISCV32"  => 32
-    case "RISCV64"  => 64
-    case _: String => throw new IllegalArgumentException("RegFile() args should be [RISCV32E] [RISCV32] [RISCV64]")
-  }
-  val reg = RegInit(VecInit(Seq.tabulate(regNum+1)(i => 0.U(32.W))))
-  def apply(idx: UInt): UInt = {
-    MuxCase(reg(idx),Seq(
-                          (idx===0.U) -> reg(idx),
-                          (idx=/=0.U) -> RegEnable(0.U,0.U,0.B) 
-                          ))
-    reg(idx)
-  }
-  def apply(idx: Int): UInt = {
-    reg(idx)
-  }
-  import chisel3.experimental.{prefix, SourceInfo}
-  // final def :=(that: => Data)(implicit sourceInfo: SourceInfo): Unit = {
-  //     this.:=(that)(sourceInfo)
-  // }
-}
 
 class top(isa_info: String = "RISCV32") extends Module  {
   val io = IO(new Bundle {
@@ -113,15 +90,14 @@ class top(isa_info: String = "RISCV32") extends Module  {
   val Decoder=new ExecEnv(inst,pc,R,io.DMem)
 //RVIInstr.table.map((t:Tuple2[BitPat,Any])=>if(t._1===inst) )
   //first inst:addi
-  val rs1, rs2, rd, src1, src2, imm = Wire(UInt())
+  val rs1, rs2, rd, imm = Wire(UInt())
   rs1  := inst(19, 15)
   rs2  := inst(24, 20)
   imm  := inst(31, 20)
   rd   := inst(11, 7)
-  src1 := R(rs1)
-  src2 := R(rs2)
-  println(rs1)
-  println(src1)
+  // src1 := R(rs1)
+  // src2 := R(rs2)
+
 
 
 
@@ -152,6 +128,6 @@ class top(isa_info: String = "RISCV32") extends Module  {
   io.diff.pc   := pc
   io.diff.regs := R.reg
   printf("io.IMem.rAddr=%x\n", io.IMem.rAddr)
-  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)},s0=${R(8)}\n")
+//  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)},s0=${R(8)}\n")
   printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")
 }
