@@ -102,6 +102,17 @@ object ALUExec {
 
   def AUIPC = (e: ExecEnv) => e.Rrd := (e.pc.asSInt + e.immU).asUInt
   def LUI   = (e: ExecEnv) => BitPat("b????????????????????_?????_0110111")
+}
+object BRUExec {
+  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
+def JAL  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+def JALR = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+def BEQ  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+def BNE  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+def BLT  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+def BGE  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+def BLTU = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+def BGEU = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
 
 }
 object RV32I_ALUInstr {
@@ -166,14 +177,14 @@ object RV32I_BRUInstr {
   def BGEU = BitPat("b???????_?????_?????_111_?????_1100011")
 
   val table = Array(
-    JAL -> List(Inst.J, FuType.bru, ALUOpType.jal),
-    JALR -> List(Inst.I, FuType.bru, ALUOpType.jalr),
-    BEQ -> List(Inst.B, FuType.bru, ALUOpType.beq),
-    BNE -> List(Inst.B, FuType.bru, ALUOpType.bne),
-    BLT -> List(Inst.B, FuType.bru, ALUOpType.blt),
-    BGE -> List(Inst.B, FuType.bru, ALUOpType.bge),
-    BLTU -> List(Inst.B, FuType.bru, ALUOpType.bltu),
-    BGEU -> List(Inst.B, FuType.bru, ALUOpType.bgeu)
+    JAL  -> List(Inst.J, FuType.bru, ALUOpType.jal)  -> BRUExec.JAL,
+    JALR -> List(Inst.I, FuType.bru, ALUOpType.jalr) -> BRUExec.JALR,
+    BEQ  -> List(Inst.B, FuType.bru, ALUOpType.beq)  -> BRUExec.BEQ,
+    BNE  -> List(Inst.B, FuType.bru, ALUOpType.bne)  -> BRUExec.BNE,
+    BLT  -> List(Inst.B, FuType.bru, ALUOpType.blt)  -> BRUExec.BLT,
+    BGE  -> List(Inst.B, FuType.bru, ALUOpType.bge)  -> BRUExec.BGE,
+    BLTU -> List(Inst.B, FuType.bru, ALUOpType.bltu) -> BRUExec.BLTU,
+    BGEU -> List(Inst.B, FuType.bru, ALUOpType.bgeu) -> BRUExec.BGEU
   )
 
 }
@@ -201,5 +212,5 @@ object RV32I_LSUInstr {
 }
 
 object RVIInstr {
-  val table = RV32I_ALUInstr.table //++ RV32I_BRUInstr.table ++ RV32I_LSUInstr.table
+  val table = RV32I_ALUInstr.table ++ RV32I_BRUInstr.table //++ RV32I_LSUInstr.table
 }

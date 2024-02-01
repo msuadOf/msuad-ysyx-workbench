@@ -15,5 +15,5 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
   val immU = inst(31, 12).asSInt << 12.U //imm = SEXT(BITS(i, 31, 12), 20) << 12;
   val immS = (inst(31, 25).asSInt << 5.U).asUInt | inst(11, 7) //imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7);
   val immJ =( ((inst(31)<<19 | inst(19,12)<<11  | inst(20)<<10 | inst(30,21) ) <<1).asSInt +0.S(32.W) ).asUInt //imm = SEXT((   (BITS(i, 31, 31) << 19) | BITS(i, 30, 21) | (BITS(i, 20, 20) << 10) | (BITS(i, 19, 12) << 11) ) << 1, 21);
-  val immB = ( (   (inst( 31, 31) << 12) | inst( 30, 25)<<5 | (inst( 11, 8) << 1) | (inst( 7, 7) << 11) ).asSInt + 0.S(32.W) ).asUInt //*imm = SEXT((   (inst( 31, 31) << 12) | BITS(i, 30, 25)<<5 | (BITS(i, 11, 8) << 1) | (BITS(i, 7, 7) << 11) ) , 13);
+  val immB = ( (   (inst( 31, 31) << 12) | inst( 30, 25)<<5 | (inst( 11, 8) << 1) | (inst( 7, 7) << 11)  ).asSInt + 0.S(32.W) ).asUInt //*imm = SEXT((   (inst( 31, 31) << 12) | BITS(i, 30, 25)<<5 | (BITS(i, 11, 8) << 1) | (BITS(i, 7, 7) << 11) ) , 13);
 }
