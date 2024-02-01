@@ -29,11 +29,18 @@ class RegFile(val ISet: String) {
     case "RISCV64"  => 64
     case _: String => throw new IllegalArgumentException("RegFile() args should be [RISCV32E] [RISCV32] [RISCV64]")
   }
-  val reg = RegInit(VecInit(Seq.tabulate(regNum)(i => 0.U(32.W))))
-  def apply(idx: Int): UInt = {
-    reg(idx)
-  }
+  val reg = RegInit(VecInit(Seq.tabulate(regNum+1)(i => 0.U(32.W))))
   def apply(idx: UInt): UInt = {
+    var index=idx
+    when ( idx===0.U ){
+       index=(regNum).asUInt
+    }
+    .otherwise{
+      index=idx
+    }
+    reg(index)
+  }
+  def apply(idx: Int): UInt = {
     reg(idx)
   }
   import chisel3.experimental.{prefix, SourceInfo}
@@ -55,7 +62,7 @@ class top(isa_info: String = "RISCV32") extends Module  {
       val pc   = Output(UInt(32.W))
       val dnpc = Output(UInt(32.W))
       val snpc = Output(UInt(32.W))
-      val regs = Output(Vec(32, UInt(32.W)))
+      val regs = Output(Vec(33, UInt(32.W)))
     }
   })
   io.DMem.rAddr := 0.U
