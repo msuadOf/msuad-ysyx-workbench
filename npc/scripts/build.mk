@@ -103,7 +103,7 @@ verilator-binary: verilog
 
 	@echo
 	@echo "-- BUILD -------------------"
-	CPPFLAGS="$(VERILATOR_CFLAGS)" LDLIBS="$(VERILATOR_LDLIBS)" $(MAKE) -j -C $(VERI_BUILD_DIR) -f ../Makefile_obj
+	CPPFLAGS="$(VERILATOR_CFLAGS)" LDLIBS="$(VERILATOR_LDLIBS)" $(MAKE) -j4 -C $(VERI_BUILD_DIR) -f ../Makefile_obj
 
 verilator-run: verilator-binary
 	@echo

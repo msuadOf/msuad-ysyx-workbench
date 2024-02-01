@@ -33,8 +33,17 @@ class RegFile(val ISet: String) {
   //     this.:=(that)(sourceInfo)
   // }
 }
-
-class top(isa_info: String = "RISCV32") extends Module {
+class ExecEnv(inst:UInt,pc:UInt,R:RegFile) {
+  val rs1, rs2, rd, src1, src2, imm ,Rrd = Wire(UInt())
+  rs1  := inst(19, 15)
+  rs2  := inst(24, 20)
+  imm  := inst(31, 20)
+  rd   := inst(11, 7)
+  src1 := R(rs1)
+  src2 := R(rs2) 
+  Rrd  := R(rd)
+}
+class top(isa_info: String = "RISCV32") extends Module  {
   val io = IO(new Bundle {
     val IMem = new Bundle {
       val rAddr = Output(UInt(32.W))
@@ -50,22 +59,22 @@ class top(isa_info: String = "RISCV32") extends Module {
 
     val diff = new Bundle {
       val pc   = Output(UInt(32.W))
-      val dnpc =Output(UInt(32.W))
-      val snpc =Output(UInt(32.W))
+      val dnpc = Output(UInt(32.W))
+      val snpc = Output(UInt(32.W))
       val regs = Output(Vec(32, UInt(32.W)))
     }
   })
   io.DMem.rAddr := 0.U
   io.DMem.wAddr := 0.U
 
-  val R  = new RegFile("RISCV32")
-  val pc = RegInit("h80000000".U(32.W))
-  val snpc,dnpc=Wire(UInt(32.W))
-  snpc := pc + 4.U
-  dnpc := pc + 4.U
-  pc := dnpc
-  io.diff.dnpc:=dnpc
-  io.diff.snpc:=snpc
+  val R          = new RegFile("RISCV32")
+  val pc         = RegInit("h80000000".U(32.W))
+  val snpc, dnpc = Wire(UInt(32.W))
+  snpc         := pc + 4.U
+  dnpc         := pc + 4.U
+  pc           := dnpc
+  io.diff.dnpc := dnpc
+  io.diff.snpc := snpc
   //fetch inst
   io.IMem.rAddr := pc
   val inst = Wire(UInt(32.W))
@@ -84,19 +93,21 @@ class top(isa_info: String = "RISCV32") extends Module {
   //   }
 
   // })
-  RVIInstr.table(0)._1 === inst
-  inst === RVIInstr.table(0)._1
 
-  RVIInstr.table.foreach((t: Tuple2[BitPat, Any]) => {
-    prefix(s"InstMatch_${getVariableName(t._1)}") {
-      when(t._1 === inst) {
-        if (t._1 == RV32I_ALUInstr.ADDI) {
-          printf("ADDI\n")
-        }
-        printf(p"Inst_Decode:${(t._1)}\n");
-      }
-    }
-  })
+
+  // RVIInstr.table(0)._1 === inst
+  // inst === RVIInstr.table(0)._1
+
+  // RVIInstr.table.foreach((t: Tuple3[BitPat, Any, Object => Object]) => {
+  //   prefix(s"InstMatch_${getVariableName(t._1)}") {
+  //     when(t._1 === inst) {
+  //       if (t._1 == RV32I_ALUInstr.ADDI) {
+  //         printf("ADDI\n")
+  //       }
+  //       printf(p"Inst_Decode:${(t._1)}\n");
+  //     }
+  //   }
+  // })
 
 //RVIInstr.table.map((t:Tuple2[BitPat,Any])=>if(t._1===inst) )
   //first inst:addi
@@ -110,8 +121,18 @@ class top(isa_info: String = "RISCV32") extends Module {
   println(rs1)
   println(src1)
 
+  def p  (fun: (UInt,UInt,UInt)  => UInt ) : Unit = {
+    fun(R(rd),src1,src2)
+  } 
+
+     println(RVIInstr.table(0)._2) 
+     //Out: RV32I_ALUInstr$$$Lambda$548/0x00007fc79c332f20@7cedfa63
+     RVIInstr.table(0)._2.asInstanceOf[(UInt,UInt,UInt)=>Unit](R(rd), src1, imm)
+
   //addi exec
-  R(rd)         := (src1.asSInt + imm.asSInt).asUInt
+
+  //R(rd)         :=add_exec(src1,imm)
+  //R(rd)         := (src1.asSInt + imm.asSInt).asUInt
   io.DMem.wData := R(rd)
 
   val ebreakDpi = Module(new ebreakDpi)
