@@ -80,39 +80,39 @@ object LSUOpType { //TODO: refactor LSU fuop
 object ALUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
   def ADDI = (e: ExecEnv) => e.Rrd := e.src1+ e.immI
-  def SLLI  = (e: ExecEnv) => BitPat("b0000000_?????_?????_001_?????_0010011")
-  def SLTI  = (e: ExecEnv) => BitPat("b???????_?????_?????_010_?????_0010011")
-  def SLTIU = (e: ExecEnv) => BitPat("b???????_?????_?????_011_?????_0010011")
-  def XORI  = (e: ExecEnv) => BitPat("b???????_?????_?????_100_?????_0010011")
-  def SRLI  = (e: ExecEnv) => BitPat("b0000000_?????_?????_101_?????_0010011")
-  def ORI   = (e: ExecEnv) => BitPat("b???????_?????_?????_110_?????_0010011")
-  def ANDI  = (e: ExecEnv) => BitPat("b???????_?????_?????_111_?????_0010011")
-  def SRAI  = (e: ExecEnv) => BitPat("b0100000_?????_?????_101_?????_0010011")
+  def SLLI  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def SLTI  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def SLTIU = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def XORI  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def SRLI  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def ORI   = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def ANDI  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def SRAI  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
 
-  def ADD  = (e: ExecEnv) => BitPat("b0000000_?????_?????_000_?????_0110011")
-  def SLL  = (e: ExecEnv) => BitPat("b0000000_?????_?????_001_?????_0110011")
-  def SLT  = (e: ExecEnv) => BitPat("b0000000_?????_?????_010_?????_0110011")
-  def SLTU = (e: ExecEnv) => BitPat("b0000000_?????_?????_011_?????_0110011")
-  def XOR  = (e: ExecEnv) => BitPat("b0000000_?????_?????_100_?????_0110011")
-  def SRL  = (e: ExecEnv) => BitPat("b0000000_?????_?????_101_?????_0110011")
-  def OR   = (e: ExecEnv) => BitPat("b0000000_?????_?????_110_?????_0110011")
-  def AND  = (e: ExecEnv) => BitPat("b0000000_?????_?????_111_?????_0110011")
-  def SUB  = (e: ExecEnv) => BitPat("b0100000_?????_?????_000_?????_0110011")
-  def SRA  = (e: ExecEnv) => BitPat("b0100000_?????_?????_101_?????_0110011")
+  def ADD  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def SLL  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def SLT  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def SLTU = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def XOR  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def SRL  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def OR   = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def AND  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def SUB  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
+  def SRA  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
 
   def AUIPC = (e: ExecEnv) => e.Rrd := (e.pc.asSInt + e.immU).asUInt
-  def LUI   = (e: ExecEnv) => BitPat("b????????????????????_?????_0110111")
+  def LUI   = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n")
 }
 object BRUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-def JAL  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-def JALR = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-def BEQ  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-def BNE  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-def BLT  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-def BGE  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-def BLTU = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
-def BGEU = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+  def JAL  = (e: ExecEnv) => {e.Rrd := e.pc + 4.U ; e.pc:=e.pc + e.immJ }
+  def JALR = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+  def BEQ  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+  def BNE  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+  def BLT  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+  def BGE  = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+  def BLTU = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
+  def BGEU = (e: ExecEnv) => printf("[Error]:The inst is not impleted\n") 
 
 }
 object RV32I_ALUInstr {
