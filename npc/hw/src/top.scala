@@ -128,6 +128,7 @@ class top(isa_info: String = "RISCV32") extends Module  {
   RVIInstr.table.asInstanceOf[Array[((BitPat,Any),ExecEnv=>Any)]].foreach((t: ((BitPat,Any),ExecEnv=>Any)) => {
     prefix(s"InstMatch_${getVariableName(t._1)}") {
       when(t._1._1 === inst) {
+        Decoder.IDLE()
         t._2(Decoder)
         if (t._1._1 == RV32I_ALUInstr.ADDI) {
           printf("ADDI\n")

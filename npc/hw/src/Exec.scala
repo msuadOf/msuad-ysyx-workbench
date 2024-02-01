@@ -19,8 +19,8 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
 
   object Mem {
     def IDLE() = {
-      DMem.wAddr := DMem.wAddr
-      DMem.wData := DMem.wData
+      DMem.wAddr := Fill(32,1.U)
+      DMem.wData := Fill(32,1.U)
       DMem.wen   := 0.U
     }
     def write(addr: UInt, len: Int, data: UInt) = {
@@ -35,6 +35,6 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
     }
   }
 
-  def 
+  def IDLE() = {Mem.IDLE();Reg.IDLE()}
   def Mw(addr: UInt, len: Int, data: UInt) = Mem.write(addr,len,data)
 }
