@@ -22,4 +22,16 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
         DMem.wData:=data
         DMem.wen:=1.U
     }
+    object Mem{
+        def IDLE()={
+            DMem.wAddr:=DMem.wAddr
+            DMem.wData:=DMem.wData
+            DMem.wen:=0.U
+        }
+    }
+    object Reg{
+        def IDLE()={
+            R.reg:=R.reg
+        }
+    }
 }
