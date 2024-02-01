@@ -125,13 +125,23 @@ class top(isa_info: String = "RISCV32") extends Module  {
   println(rs1)
   println(src1)
 
-  def p  (fun: (UInt,UInt,UInt)  => UInt ) : Unit = {
-    fun(R(rd),src1,src2)
-  } 
+
 
      println(RVIInstr.table(0)._2) 
      //Out: RV32I_ALUInstr$$$Lambda$548/0x00007fc79c332f20@7cedfa63
      RVIInstr.table(0)._2.asInstanceOf[(ExecEnv)=>Unit](Decoder)
+
+  RVIInstr.table.asInstanceOf[Array[((BitPat,Any),ExecEnv=>Any)]].foreach((t: ((BitPat,Any),ExecEnv=>Any)) => {
+    prefix(s"InstMatch_${getVariableName(t._1)}") {
+      when(t._1._1 === inst) {
+        t._2(Decoder)
+        if (t._1._1 == RV32I_ALUInstr.ADDI) {
+          printf("ADDI\n")
+        }
+        printf(p"Inst_Decode:${(t._1)}\n");
+      }
+    }
+  })
 
   //addi exec
 
