@@ -31,7 +31,7 @@ class RegFile(val ISet: String) {
   }
   val reg = RegInit(VecInit(Seq.tabulate(regNum+1)(i => 0.U(32.W))))
   def apply(idx: UInt): UInt = {
-    var index=idx
+    var index=UInt()
     when ( idx===0.U ){
        index=(regNum).asUInt
     }
