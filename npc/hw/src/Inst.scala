@@ -116,6 +116,18 @@ object BRUExec {
   def BGEU = (e: ExecEnv) => TODO() 
 
 }
+object LSUExec {
+  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
+def LB  = (e: ExecEnv) => TODO() 
+def LH  = (e: ExecEnv) => TODO() 
+def LW  = (e: ExecEnv) => TODO() 
+def LBU = (e: ExecEnv) => TODO() 
+def LHU = (e: ExecEnv) => TODO() 
+def SB  = (e: ExecEnv) => TODO() 
+def SH  = (e: ExecEnv) => TODO() 
+def SW  = (e: ExecEnv) => TODO() 
+
+}
 object RV32I_ALUInstr {
   def ADDI  = BitPat("b???????_?????_?????_000_?????_0010011")
   def SLLI  = BitPat("b0000000_?????_?????_001_?????_0010011")
@@ -201,17 +213,17 @@ object RV32I_LSUInstr {
   def SW  = BitPat("b???????_?????_?????_010_?????_0100011")
 
   val table = Array(
-    LB -> List(Inst.I, FuType.lsu, LSUOpType.lb),
-    LH -> List(Inst.I, FuType.lsu, LSUOpType.lh),
-    LW -> List(Inst.I, FuType.lsu, LSUOpType.lw),
-    LBU -> List(Inst.I, FuType.lsu, LSUOpType.lbu),
-    LHU -> List(Inst.I, FuType.lsu, LSUOpType.lhu),
-    SB -> List(Inst.S, FuType.lsu, LSUOpType.sb),
-    SH -> List(Inst.S, FuType.lsu, LSUOpType.sh),
-    SW -> List(Inst.S, FuType.lsu, LSUOpType.sw)
+    LB  -> List(Inst.I, FuType.lsu, LSUOpType.lb) -> LSUExec.LB ,
+    LH  -> List(Inst.I, FuType.lsu, LSUOpType.lh) -> LSUExec.LH ,
+    LW  -> List(Inst.I, FuType.lsu, LSUOpType.lw) -> LSUExec.LW ,
+    LBU -> List(Inst.I, FuType.lsu, LSUOpType.lbu)-> LSUExec.LBU ,
+    LHU -> List(Inst.I, FuType.lsu, LSUOpType.lhu)-> LSUExec. LHU,
+    SB  -> List(Inst.S, FuType.lsu, LSUOpType.sb) -> LSUExec.SB ,
+    SH  -> List(Inst.S, FuType.lsu, LSUOpType.sh) -> LSUExec.SH ,
+    SW  -> List(Inst.S, FuType.lsu, LSUOpType.sw) -> LSUExec. SW 
   )
 }
 
 object RVIInstr {
-  val table = RV32I_ALUInstr.table ++ RV32I_BRUInstr.table //++ RV32I_LSUInstr.table
+  val table = RV32I_ALUInstr.table ++ RV32I_BRUInstr.table ++ RV32I_LSUInstr.table
 }
