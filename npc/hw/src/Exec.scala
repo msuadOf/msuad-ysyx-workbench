@@ -11,7 +11,7 @@ class ExecEnv(val inst:UInt,val pc:UInt,val R:RegFile,val DMem:MemIO) {
   val src2 = R(rs2) 
   val Rrd  = R(rd)
 
-  val immI  = inst(31, 20)
+  val immI  = inst(31, 20).asSInt
   val immU  = inst(31, 12)<<12.U
   val immS  = inst(31, 20)
   val immJ  = inst(31, 20)
