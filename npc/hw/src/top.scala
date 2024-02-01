@@ -41,17 +41,7 @@ class RegFile(val ISet: String) {
   //     this.:=(that)(sourceInfo)
   // }
 }
-class ExecEnv(val inst:UInt,val pc:UInt,val R:RegFile,val DMem:MemIO) {
-  //val rs1, rs2, rd, src1, src2, imm ,Rrd = Wire(UInt())
-  val rs1  = inst(19, 15)
-  val rs2  = inst(24, 20)
-  val immI  = inst(31, 20)
-  val rd   = inst(11, 7)
-  val src1 = R(rs1)
-  val src2 = R(rs2) 
-  val Rrd  = R(rd)
 
-}
 class top(isa_info: String = "RISCV32") extends Module  {
   val io = IO(new Bundle {
     val IMem = new Bundle {
