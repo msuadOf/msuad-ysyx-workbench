@@ -155,7 +155,15 @@ void exec_once(VerilatedVcdC* tfp) {
 
   //====== cpu exec body begin ======
   //paddr_read()
+  //IMem read
   top->io_IMem_rData=paddr_read(top->io_IMem_rAddr,4);
+  //DMem read
+  top->io_DMem_rData=paddr_read(top->io_DMem_rAddr,4);
+  //DMem write
+  if(top->io_DMem_wen==1){
+    paddr_write(top->io_DMem_wAddr,4,top->io_DMem_wData);
+  }
+
   int pc=top->io_IMem_rAddr;
   Log_level_1("pc=%08x\n",pc);
   //====== cpu exec body ends  ======

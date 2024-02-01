@@ -19,7 +19,7 @@ class MemIO extends Bundle {
       val rData = Input(UInt(32.W))
       val wAddr = Output(UInt(32.W))
       val wData = Output(UInt(32.W))
-
+      val wen   = Output(UInt(1.W))
 }
 class RegFile(val ISet: String) {
   val regNum = ISet match {
@@ -69,6 +69,7 @@ class top(isa_info: String = "RISCV32") extends Module  {
   })
   io.DMem.rAddr := 0.U
   io.DMem.wAddr := 0.U
+  io.DMem.wen:=0.U
 
   val R          = new RegFile("RISCV32")
   val pc         = RegInit("h80000000".U(32.W))
