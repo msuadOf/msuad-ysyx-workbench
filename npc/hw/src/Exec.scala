@@ -35,6 +35,6 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
     }
   }
 
-  def
+  def 
   def Mw(addr: UInt, len: Int, data: UInt) = Mem.write(addr,len,data)
 }
