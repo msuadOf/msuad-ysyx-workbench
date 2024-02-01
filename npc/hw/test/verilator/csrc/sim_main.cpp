@@ -158,7 +158,9 @@ void exec_once(VerilatedVcdC* tfp) {
   //IMem read
   top->io_IMem_rData=paddr_read(top->io_IMem_rAddr,4);
   //DMem read
-  top->io_DMem_rData=paddr_read(top->io_DMem_rAddr,4);
+  if(top->io_DMem_ren==1){
+    top->io_DMem_rData=paddr_read(top->io_DMem_rAddr,4);
+  }
   //DMem write
   if(top->io_DMem_wen==1){
     paddr_write(top->io_DMem_wAddr,4,top->io_DMem_wData);
