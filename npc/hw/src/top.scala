@@ -14,6 +14,13 @@ object getVariableName {
   }
 }
 
+class MemIO extends Bundle {
+      val rAddr = Output(UInt(32.W))
+      val rData = Input(UInt(32.W))
+      val wAddr = Output(UInt(32.W))
+      val wData = Output(UInt(32.W))
+
+}
 class RegFile(val ISet: String) {
   val regNum = ISet match {
     case "RISCV32E" => 16
@@ -33,32 +40,44 @@ class RegFile(val ISet: String) {
   //     this.:=(that)(sourceInfo)
   // }
 }
+class ExecEnv(val inst:UInt,val pc:UInt,val R:RegFile,val DMem:MemIO) {
+  //val rs1, rs2, rd, src1, src2, imm ,Rrd = Wire(UInt())
+  val rs1  = inst(19, 15)
+  val rs2  = inst(24, 20)
+  val imm  = inst(31, 20)
+  val rd   = inst(11, 7)
+  val src1 = R(rs1)
+  val src2 = R(rs2) 
+  val Rrd  = R(rd)
 
-class top(isa_info: String = "RISCV32") extends Module {
+}
+class top(isa_info: String = "RISCV32") extends Module  {
   val io = IO(new Bundle {
     val IMem = new Bundle {
       val rAddr = Output(UInt(32.W))
       val rData = Input(UInt(32.W))
     }
 
-    val DMem = new Bundle {
-      val rAddr = Output(UInt(32.W))
-      val rData = Input(UInt(32.W))
-      val wAddr = Output(UInt(32.W))
-      val wData = Output(UInt(32.W))
-    }
+    val DMem = new MemIO
 
     val diff = new Bundle {
       val pc   = Output(UInt(32.W))
+      val dnpc = Output(UInt(32.W))
+      val snpc = Output(UInt(32.W))
       val regs = Output(Vec(32, UInt(32.W)))
     }
   })
   io.DMem.rAddr := 0.U
   io.DMem.wAddr := 0.U
 
-  val R  = new RegFile("RISCV32")
-  val pc = RegInit("h80000000".U(32.W))
-  pc := pc + 4.U
+  val R          = new RegFile("RISCV32")
+  val pc         = RegInit("h80000000".U(32.W))
+  val snpc, dnpc = Wire(UInt(32.W))
+  snpc         := pc + 4.U
+  dnpc         := pc + 4.U
+  pc           := dnpc
+  io.diff.dnpc := dnpc
+  io.diff.snpc := snpc
   //fetch inst
   io.IMem.rAddr := pc
   val inst = Wire(UInt(32.W))
@@ -77,20 +96,23 @@ class top(isa_info: String = "RISCV32") extends Module {
   //   }
 
   // })
-  RVIInstr.table(0)._1 === inst
-  inst === RVIInstr.table(0)._1
 
-  RVIInstr.table.foreach((t: Tuple2[BitPat, Any]) => {
-    prefix(s"InstMatch_${getVariableName(t._1)}") {
-      when(t._1 === inst) {
-        if (t._1 == RV32I_ALUInstr.ADDI) {
-          printf("ADDI\n")
-        }
-        printf(p"Inst_Decode:${(t._1)}\n");
-      }
-    }
-  })
 
+  // RVIInstr.table(0)._1 === inst
+  // inst === RVIInstr.table(0)._1
+
+  // RVIInstr.table.foreach((t: Tuple3[BitPat, Any, Object => Object]) => {
+  //   prefix(s"InstMatch_${getVariableName(t._1)}") {
+  //     when(t._1 === inst) {
+  //       if (t._1 == RV32I_ALUInstr.ADDI) {
+  //         printf("ADDI\n")
+  //       }
+  //       printf(p"Inst_Decode:${(t._1)}\n");
+  //     }
+  //   }
+  // })
+
+  val Decoder=new ExecEnv(inst,pc,R,io.DMem)
 //RVIInstr.table.map((t:Tuple2[BitPat,Any])=>if(t._1===inst) )
   //first inst:addi
   val rs1, rs2, rd, src1, src2, imm = Wire(UInt())
@@ -103,8 +125,18 @@ class top(isa_info: String = "RISCV32") extends Module {
   println(rs1)
   println(src1)
 
+  def p  (fun: (UInt,UInt,UInt)  => UInt ) : Unit = {
+    fun(R(rd),src1,src2)
+  } 
+
+     println(RVIInstr.table(0)._2) 
+     //Out: RV32I_ALUInstr$$$Lambda$548/0x00007fc79c332f20@7cedfa63
+     RVIInstr.table(0)._2.asInstanceOf[(ExecEnv)=>Unit](Decoder)
+
   //addi exec
-  R(rd)         := src1 + imm
+
+  //R(rd)         :=add_exec(src1,imm)
+  //R(rd)         := (src1.asSInt + imm.asSInt).asUInt
   io.DMem.wData := R(rd)
 
   val ebreakDpi = Module(new ebreakDpi)
@@ -112,7 +144,7 @@ class top(isa_info: String = "RISCV32") extends Module {
 
   io.diff.pc   := pc
   io.diff.regs := R.reg
-  printf("%x\n", io.IMem.rAddr)
+  printf("io.IMem.rAddr=%x\n", io.IMem.rAddr)
   printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)}\n")
   printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")
 }

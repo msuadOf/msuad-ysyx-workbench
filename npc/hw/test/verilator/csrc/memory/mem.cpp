@@ -1,6 +1,6 @@
 #include "mem.h"
 
-static uint8_t pmem[0x8000000] __attribute((aligned(4096))) = {0x13,0x01,0xc1,0xff ,0x73,0x00,0x10,0x00};
+uint8_t pmem[0x8000000] __attribute((aligned(4096))) ={0x13,0x01,0xc1,0xff ,0x73,0x00,0x10,0x00};
 
 static inline word_t host_read(void *addr, int len) {
   switch (len) {
@@ -36,7 +36,7 @@ static void pmem_write(paddr_t addr, int len, word_t data) {
 }
 
 static void out_of_bound(paddr_t addr) {
-  panic("address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] " ,
+  panic("> nemu\n address = " FMT_PADDR " is out of bound of pmem [" FMT_PADDR ", " FMT_PADDR "] " ,
       addr, PMEM_LEFT, PMEM_RIGHT);
 }
 

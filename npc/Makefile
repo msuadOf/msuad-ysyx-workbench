@@ -24,3 +24,4 @@ clean-chisel clean-c:
 distclean:clean clean-chisel
 
 .DEFAULT_GOAL = verilator-binary
+.PHONY: verilator-binary clean
