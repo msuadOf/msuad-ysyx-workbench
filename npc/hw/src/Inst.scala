@@ -107,7 +107,7 @@ object ALUExec {
 object BRUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
   def JAL  = (e: ExecEnv) => {e.Rrd := e.pc + 4.U ; e.pc:=e.pc + e.immJ; }
-  def JALR = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def JALR = (e: ExecEnv) => {e.pc:=(e.src1 + e.immI)&(-1.S(32.W)).asUInt; e.Rrd:= e.pc + 4.U} //s->dnpc = (src1 + imm) & ~(word_t)1; R(rd)= s->pc + 4 ); 
   def BEQ  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
   def BNE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
   def BLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
