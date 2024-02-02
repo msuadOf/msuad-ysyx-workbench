@@ -159,11 +159,11 @@ void exec_once(VerilatedVcdC* tfp) {
   top->io_IMem_rData=paddr_read(top->io_IMem_rAddr,4);
   //DMem read
   Log("before postedge: top->io_DMem_ren=%d",top->io_DMem_ren);
-  //if(top->io_DMem_ren==1){
+  if(in_pmem(top->io_DMem_rAddr)){
     top->io_DMem_rData=paddr_read(top->io_DMem_rAddr,4);
-  // }else{
-  //   top->io_DMem_rData=0xFFFFFFFF;
-  // }
+  }else{
+    top->io_DMem_rData=0xFFFFFFFF;
+  }
   //DMem write
   if(top->io_DMem_wen==1){
     paddr_write(top->io_DMem_wAddr,4,top->io_DMem_wData);
