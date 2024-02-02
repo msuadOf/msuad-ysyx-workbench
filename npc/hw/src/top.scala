@@ -14,58 +14,37 @@ object getVariableName {
   }
 }
 
-class RegFile(val ISet: String) {
-  val regNum = ISet match {
-    case "RISCV32E" => 16
-    case "RISCV32"  => 32
-    case "RISCV64"  => 64
-    case _: String => throw new IllegalArgumentException("RegFile() args should be [RISCV32E] [RISCV32] [RISCV64]")
-  }
-  val reg = RegInit(VecInit(Seq.tabulate(regNum)(i => 0.U(32.W))))
-  def apply(idx: Int): UInt = {
-    reg(idx)
-  }
-  def apply(idx: UInt): UInt = {
-    reg(idx)
-  }
-  import chisel3.experimental.{prefix, SourceInfo}
-  // final def :=(that: => Data)(implicit sourceInfo: SourceInfo): Unit = {
-  //     this.:=(that)(sourceInfo)
-  // }
+class MemIO extends Bundle {
+  val rAddr = Output(UInt(32.W))
+  val rData = Input(UInt(32.W))
+  val ren   = Output(UInt(1.W))
+  val wAddr = Output(UInt(32.W))
+  val wData = Output(UInt(32.W))
+  val wen   = Output(UInt(1.W))
 }
-class ExecEnv(inst:UInt,pc:UInt,R:RegFile) {
-  val rs1, rs2, rd, src1, src2, imm ,Rrd = Wire(UInt())
-  rs1  := inst(19, 15)
-  rs2  := inst(24, 20)
-  imm  := inst(31, 20)
-  rd   := inst(11, 7)
-  src1 := R(rs1)
-  src2 := R(rs2) 
-  Rrd  := R(rd)
-}
-class top(isa_info: String = "RISCV32") extends Module  {
+
+class top(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {
     val IMem = new Bundle {
       val rAddr = Output(UInt(32.W))
       val rData = Input(UInt(32.W))
     }
 
-    val DMem = new Bundle {
-      val rAddr = Output(UInt(32.W))
-      val rData = Input(UInt(32.W))
-      val wAddr = Output(UInt(32.W))
-      val wData = Output(UInt(32.W))
-    }
+    val DMem = new MemIO
 
     val diff = new Bundle {
       val pc   = Output(UInt(32.W))
       val dnpc = Output(UInt(32.W))
       val snpc = Output(UInt(32.W))
-      val regs = Output(Vec(32, UInt(32.W)))
+      val regs = Output(Vec(33, UInt(32.W)))
     }
   })
+
   io.DMem.rAddr := 0.U
   io.DMem.wAddr := 0.U
+  io.DMem.wData := Fill(32, 1.U) //FFFF FFFF
+  io.DMem.wen   := 0.U
+  io.DMem.ren   := 0.U
 
   val R          = new RegFile("RISCV32")
   val pc         = RegInit("h80000000".U(32.W))
@@ -94,7 +73,6 @@ class top(isa_info: String = "RISCV32") extends Module  {
 
   // })
 
-
   // RVIInstr.table(0)._1 === inst
   // inst === RVIInstr.table(0)._1
 
@@ -109,31 +87,37 @@ class top(isa_info: String = "RISCV32") extends Module  {
   //   }
   // })
 
+  val Decoder = new ExecEnv(inst, pc, R, io.DMem)
 //RVIInstr.table.map((t:Tuple2[BitPat,Any])=>if(t._1===inst) )
   //first inst:addi
-  val rs1, rs2, rd, src1, src2, imm = Wire(UInt())
-  rs1  := inst(19, 15)
-  rs2  := inst(24, 20)
-  imm  := inst(31, 20)
-  rd   := inst(11, 7)
-  src1 := R(rs1)
-  src2 := R(rs2)
-  println(rs1)
-  println(src1)
+  val rs1, rs2, rd, imm = Wire(UInt())
+  rs1 := inst(19, 15)
+  rs2 := inst(24, 20)
+  imm := inst(31, 20)
+  rd  := inst(11, 7)
+  // src1 := R(rs1)
+  // src2 := R(rs2)
 
-  def p  (fun: (UInt,UInt,UInt)  => UInt ) : Unit = {
-    fun(R(rd),src1,src2)
-  } 
-
-     println(RVIInstr.table(0)._2) 
-     //Out: RV32I_ALUInstr$$$Lambda$548/0x00007fc79c332f20@7cedfa63
-     RVIInstr.table(0)._2.asInstanceOf[(UInt,UInt,UInt)=>Unit](R(rd), src1, imm)
+  RVIInstr.table
+    .asInstanceOf[Array[((BitPat, Any), ExecEnv => Any)]]
+    .foreach((t: ((BitPat, Any), ExecEnv => Any)) => {
+      prefix(s"InstMatch_${getVariableName(t._1._1)}") {
+        when(t._1._1 === inst) {
+          Decoder.IDLE()
+          t._2(Decoder)
+          if (t._1._1 == RV32I_ALUInstr.ADDI) {
+            printf("ADDI\n")
+          }
+          printf(p"Inst_Decode:${(t._1)}\n");
+        }
+      }
+    })
 
   //addi exec
 
   //R(rd)         :=add_exec(src1,imm)
   //R(rd)         := (src1.asSInt + imm.asSInt).asUInt
-  io.DMem.wData := R(rd)
+  //io.DMem.wData := R(rd)
 
   val ebreakDpi = Module(new ebreakDpi)
   ebreakDpi.io.inst := inst
@@ -141,6 +125,6 @@ class top(isa_info: String = "RISCV32") extends Module  {
   io.diff.pc   := pc
   io.diff.regs := R.reg
   printf("io.IMem.rAddr=%x\n", io.IMem.rAddr)
-  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)}\n")
+//  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)},s0=${R(8)}\n")
   printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")
 }

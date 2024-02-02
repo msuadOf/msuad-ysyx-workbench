@@ -96,7 +96,7 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   Log("Differential testing: %s", ANSI_FMT("ON", ANSI_FG_GREEN));
   Log("The result of every instruction will be compared with %s. ", ref_so_file);
 
-  ref_difftest_init(NULL);
+  ref_difftest_init(0);
 
   ref_difftest_regcpy(s, DIFFTEST_TO_REF);
   ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), CONFIG_MSIZE, DIFFTEST_TO_REF);
@@ -174,7 +174,7 @@ void checkregs(CPU_state_diff_t *ref, vaddr_t pc) {
 void difftest_step(CPU_state_diff_t* s,CPU_state_diff_t* s_bak) {
   CPU_state_diff_t ref_r={0};
 
-  ref_difftest_regcpy(s_bak, DIFFTEST_TO_REF);
+  //ref_difftest_regcpy(s_bak, DIFFTEST_TO_REF);
 
 uint32_t _ibuf=10;
   ref_difftest_memcpy(s->dnpc, &_ibuf, 4, DIFFTEST_TO_DUT);

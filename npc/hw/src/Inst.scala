@@ -78,30 +78,55 @@ object LSUOpType { //TODO: refactor LSU fuop
 }
 
 object ALUExec {
-  
-  
-  def SLLI  = BitPat("b0000000_?????_?????_001_?????_0010011")
-  def SLTI  = BitPat("b???????_?????_?????_010_?????_0010011")
-  def SLTIU = BitPat("b???????_?????_?????_011_?????_0010011")
-  def XORI  = BitPat("b???????_?????_?????_100_?????_0010011")
-  def SRLI  = BitPat("b0000000_?????_?????_101_?????_0010011")
-  def ORI   = BitPat("b???????_?????_?????_110_?????_0010011")
-  def ANDI  = BitPat("b???????_?????_?????_111_?????_0010011")
-  def SRAI  = BitPat("b0100000_?????_?????_101_?????_0010011")
+  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
+  def ADDI  = (e: ExecEnv) => e.Rrd := e.src1 + e.immI
+  def SLLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SLTI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SLTIU = (e: ExecEnv) => e.Rrd := e.src1 < e.immI
+  def XORI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SRLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def ORI   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def ANDI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SRAI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
 
-  def ADD  = BitPat("b0000000_?????_?????_000_?????_0110011")
-  def SLL  = BitPat("b0000000_?????_?????_001_?????_0110011")
-  def SLT  = BitPat("b0000000_?????_?????_010_?????_0110011")
-  def SLTU = BitPat("b0000000_?????_?????_011_?????_0110011")
-  def XOR  = BitPat("b0000000_?????_?????_100_?????_0110011")
-  def SRL  = BitPat("b0000000_?????_?????_101_?????_0110011")
-  def OR   = BitPat("b0000000_?????_?????_110_?????_0110011")
-  def AND  = BitPat("b0000000_?????_?????_111_?????_0110011")
-  def SUB  = BitPat("b0100000_?????_?????_000_?????_0110011")
-  def SRA  = BitPat("b0100000_?????_?????_101_?????_0110011")
+  def ADD  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SLL  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SLTU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def XOR  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SRL  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def OR   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def AND  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SUB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SRA  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
 
-  def AUIPC = BitPat("b????????????????????_?????_0010111")
-  def LUI   = BitPat("b????????????????????_?????_0110111")
+  def AUIPC = (e: ExecEnv) => { printf(p"auipc:pc=${e.pc},immU=${e.immU}\n"); e.Rrd := e.pc + e.immU }
+  def LUI   = (e: ExecEnv) => e.Rrd:=e.immU
+}
+
+object BRUExec {
+  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
+  def JAL  = (e: ExecEnv) => { e.Rrd := e.pc + 4.U; e.pc := e.pc + e.immJ; }
+  def JALR = (e: ExecEnv) => { e.pc := (e.src1 + e.immI) & (-1.S(32.W)).asUInt; e.Rrd := e.pc + 4.U }
+  //s->dnpc = (src1 + imm) & ~(word_t)1; R(rd)= s->pc + 4 );
+  def BEQ  = (e: ExecEnv) => when(e.src1 === e.src2){e.pc := e.pc+e.immB}
+  def BNE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def BLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def BGE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def BLTU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def BGEU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+
+}
+object LSUExec {
+  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
+  def LB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def LH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def LW  = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 4)
+  def LBU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def LHU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SW  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 4, e.src2)
 
 }
 object RV32I_ALUInstr {
@@ -129,32 +154,28 @@ object RV32I_ALUInstr {
   def AUIPC = BitPat("b????????????????????_?????_0010111")
   def LUI   = BitPat("b????????????????????_?????_0110111")
 
-  def ADDI_exec = (Rrd: UInt, src1: UInt, imm: UInt) => {
-    Rrd := (src1.asSInt + imm.asSInt).asUInt
-  }
-
   val table = Array(
-    Tuple2( (ADDI -> List(Inst.I, FuType.alu, ALUOpType.add) ) ,ADDI_exec),
-    SLLI -> List(Inst.I, FuType.alu, ALUOpType.sll),
-    SLTI -> List(Inst.I, FuType.alu, ALUOpType.slt),
-    SLTIU -> List(Inst.I, FuType.alu, ALUOpType.sltu),
-    XORI -> List(Inst.I, FuType.alu, ALUOpType.xor),
-    SRLI -> List(Inst.I, FuType.alu, ALUOpType.srl),
-    ORI -> List(Inst.I, FuType.alu, ALUOpType.or),
-    ANDI -> List(Inst.I, FuType.alu, ALUOpType.and),
-    SRAI -> List(Inst.I, FuType.alu, ALUOpType.sra),
-    ADD -> List(Inst.R, FuType.alu, ALUOpType.add),
-    SLL -> List(Inst.R, FuType.alu, ALUOpType.sll),
-    SLT -> List(Inst.R, FuType.alu, ALUOpType.slt),
-    SLTU -> List(Inst.R, FuType.alu, ALUOpType.sltu),
-    XOR -> List(Inst.R, FuType.alu, ALUOpType.xor),
-    SRL -> List(Inst.R, FuType.alu, ALUOpType.srl),
-    OR -> List(Inst.R, FuType.alu, ALUOpType.or),
-    AND -> List(Inst.R, FuType.alu, ALUOpType.and),
-    SUB -> List(Inst.R, FuType.alu, ALUOpType.sub),
-    SRA -> List(Inst.R, FuType.alu, ALUOpType.sra),
-    AUIPC -> List(Inst.U, FuType.alu, ALUOpType.add),
-    LUI -> List(Inst.U, FuType.alu, ALUOpType.add)
+    ADDI -> List(Inst.I, FuType.alu, ALUOpType.add) -> ALUExec.ADDI,
+    SLLI -> List(Inst.I, FuType.alu, ALUOpType.sll) -> ALUExec.SLLI,
+    SLTI -> List(Inst.I, FuType.alu, ALUOpType.slt) -> ALUExec.SLTI,
+    SLTIU -> List(Inst.I, FuType.alu, ALUOpType.sltu) -> ALUExec.SLTIU,
+    XORI -> List(Inst.I, FuType.alu, ALUOpType.xor) -> ALUExec.XORI,
+    SRLI -> List(Inst.I, FuType.alu, ALUOpType.srl) -> ALUExec.SRLI,
+    ORI -> List(Inst.I, FuType.alu, ALUOpType.or) -> ALUExec.ORI,
+    ANDI -> List(Inst.I, FuType.alu, ALUOpType.and) -> ALUExec.ANDI,
+    SRAI -> List(Inst.I, FuType.alu, ALUOpType.sra) -> ALUExec.SRAI,
+    ADD -> List(Inst.R, FuType.alu, ALUOpType.add) -> ALUExec.ADD,
+    SLL -> List(Inst.R, FuType.alu, ALUOpType.sll) -> ALUExec.SLL,
+    SLT -> List(Inst.R, FuType.alu, ALUOpType.slt) -> ALUExec.SLT,
+    SLTU -> List(Inst.R, FuType.alu, ALUOpType.sltu) -> ALUExec.SLTU,
+    XOR -> List(Inst.R, FuType.alu, ALUOpType.xor) -> ALUExec.XOR,
+    SRL -> List(Inst.R, FuType.alu, ALUOpType.srl) -> ALUExec.SRL,
+    OR -> List(Inst.R, FuType.alu, ALUOpType.or) -> ALUExec.OR,
+    AND -> List(Inst.R, FuType.alu, ALUOpType.and) -> ALUExec.AND,
+    SUB -> List(Inst.R, FuType.alu, ALUOpType.sub) -> ALUExec.SUB,
+    SRA -> List(Inst.R, FuType.alu, ALUOpType.sra) -> ALUExec.SRA,
+    AUIPC -> List(Inst.U, FuType.alu, ALUOpType.add) -> ALUExec.AUIPC,
+    LUI -> List(Inst.U, FuType.alu, ALUOpType.add) -> ALUExec.LUI
   )
 }
 
@@ -170,14 +191,14 @@ object RV32I_BRUInstr {
   def BGEU = BitPat("b???????_?????_?????_111_?????_1100011")
 
   val table = Array(
-    JAL -> List(Inst.J, FuType.bru, ALUOpType.jal),
-    JALR -> List(Inst.I, FuType.bru, ALUOpType.jalr),
-    BEQ -> List(Inst.B, FuType.bru, ALUOpType.beq),
-    BNE -> List(Inst.B, FuType.bru, ALUOpType.bne),
-    BLT -> List(Inst.B, FuType.bru, ALUOpType.blt),
-    BGE -> List(Inst.B, FuType.bru, ALUOpType.bge),
-    BLTU -> List(Inst.B, FuType.bru, ALUOpType.bltu),
-    BGEU -> List(Inst.B, FuType.bru, ALUOpType.bgeu)
+    JAL -> List(Inst.J, FuType.bru, ALUOpType.jal) -> BRUExec.JAL,
+    JALR -> List(Inst.I, FuType.bru, ALUOpType.jalr) -> BRUExec.JALR,
+    BEQ -> List(Inst.B, FuType.bru, ALUOpType.beq) -> BRUExec.BEQ,
+    BNE -> List(Inst.B, FuType.bru, ALUOpType.bne) -> BRUExec.BNE,
+    BLT -> List(Inst.B, FuType.bru, ALUOpType.blt) -> BRUExec.BLT,
+    BGE -> List(Inst.B, FuType.bru, ALUOpType.bge) -> BRUExec.BGE,
+    BLTU -> List(Inst.B, FuType.bru, ALUOpType.bltu) -> BRUExec.BLTU,
+    BGEU -> List(Inst.B, FuType.bru, ALUOpType.bgeu) -> BRUExec.BGEU
   )
 
 }
@@ -193,14 +214,14 @@ object RV32I_LSUInstr {
   def SW  = BitPat("b???????_?????_?????_010_?????_0100011")
 
   val table = Array(
-    LB -> List(Inst.I, FuType.lsu, LSUOpType.lb),
-    LH -> List(Inst.I, FuType.lsu, LSUOpType.lh),
-    LW -> List(Inst.I, FuType.lsu, LSUOpType.lw),
-    LBU -> List(Inst.I, FuType.lsu, LSUOpType.lbu),
-    LHU -> List(Inst.I, FuType.lsu, LSUOpType.lhu),
-    SB -> List(Inst.S, FuType.lsu, LSUOpType.sb),
-    SH -> List(Inst.S, FuType.lsu, LSUOpType.sh),
-    SW -> List(Inst.S, FuType.lsu, LSUOpType.sw)
+    LB -> List(Inst.I, FuType.lsu, LSUOpType.lb) -> LSUExec.LB,
+    LH -> List(Inst.I, FuType.lsu, LSUOpType.lh) -> LSUExec.LH,
+    LW -> List(Inst.I, FuType.lsu, LSUOpType.lw) -> LSUExec.LW,
+    LBU -> List(Inst.I, FuType.lsu, LSUOpType.lbu) -> LSUExec.LBU,
+    LHU -> List(Inst.I, FuType.lsu, LSUOpType.lhu) -> LSUExec.LHU,
+    SB -> List(Inst.S, FuType.lsu, LSUOpType.sb) -> LSUExec.SB,
+    SH -> List(Inst.S, FuType.lsu, LSUOpType.sh) -> LSUExec.SH,
+    SW -> List(Inst.S, FuType.lsu, LSUOpType.sw) -> LSUExec.SW
   )
 }
 
