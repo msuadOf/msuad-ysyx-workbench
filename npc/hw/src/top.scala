@@ -109,6 +109,8 @@ class top(isa_info: String = "RISCV32") extends Module {
             printf("ADDI\n")
           }
           printf(p"Inst_Decode:${(t._1)}\n");
+        }.otherwise{
+           Decoder.IDLE()
         }
       }
     })
