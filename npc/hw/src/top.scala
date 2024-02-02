@@ -87,7 +87,22 @@ class top(isa_info: String = "RISCV32") extends Module {
   //   }
   // })
 
-  val Decoder = new ExecEnv(inst, pc, R, io.DMem)
+  val DMemWire=Wire(new MemIO)
+  DMemWire.rAddr :=0.U
+  DMemWire.rData :=0.U
+  DMemWire.ren   :=0.U
+  DMemWire.wAddr :=0.U
+  DMemWire.wData :=0.U
+  DMemWire.wen   :=0.U
+
+  io.DMem.rAddr := DMemWire.rAddr 
+  DMemWire.rData := io.DMem.rData
+  io.DMem.ren   := DMemWire.ren
+  io.DMem.wAddr := DMemWire.wAddr 
+  io.DMem.wData := DMemWire.wData
+  io.DMem.wen   := DMemWire.wen
+
+  val Decoder = new ExecEnv(inst, pc, R, DMemWire)
 //RVIInstr.table.map((t:Tuple2[BitPat,Any])=>if(t._1===inst) )
   //first inst:addi
   val rs1, rs2, rd, imm = Wire(UInt())
