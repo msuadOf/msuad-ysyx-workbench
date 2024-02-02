@@ -82,7 +82,7 @@ object ALUExec {
   def ADDI  = (e: ExecEnv) => e.Rrd := e.src1 + e.immI
   def SLLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
   def SLTI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def SLTIU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SLTIU = (e: ExecEnv) => e.Rrd := e.src1 < e.immI
   def XORI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
   def SRLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
   def ORI   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
