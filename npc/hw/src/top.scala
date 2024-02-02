@@ -101,8 +101,7 @@ class top(isa_info: String = "RISCV32") extends Module {
   RVIInstr.table
     .asInstanceOf[Array[((BitPat, Any), ExecEnv => Any)]]
     .foreach((t: ((BitPat, Any), ExecEnv => Any)) => {
-      prefix(s"InstMatch_${getVariableName(t._1)}") {
-        //Decoder.IDLE()
+      prefix(s"InstMatch_${getVariableName(t._1._1)}") {
         when(t._1._1 === inst) {
           Decoder.IDLE()
           t._2(Decoder)
