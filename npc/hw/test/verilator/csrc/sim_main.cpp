@@ -158,6 +158,7 @@ void exec_once(VerilatedVcdC* tfp) {
   //IMem read
   top->io_IMem_rData=paddr_read(top->io_IMem_rAddr,4);
   //DMem read
+  Log("before postedge: top->io_DMem_ren=%d",top->io_DMem_ren);
   if(top->io_DMem_ren==1){
     top->io_DMem_rData=paddr_read(top->io_DMem_rAddr,4);
   }else{
@@ -178,6 +179,7 @@ void exec_once(VerilatedVcdC* tfp) {
   top->eval(); 
 	tfp->dump(main_time);
   main_time ++;
+  Log("after postedge: top->io_DMem_ren=%d",top->io_DMem_ren);
 }
 extern "C" void ebreak(){
     puts(ANSI_FG_GREEN);
