@@ -160,6 +160,8 @@ void exec_once(VerilatedVcdC* tfp) {
   //DMem read
   if(top->io_DMem_ren==1){
     top->io_DMem_rData=paddr_read(top->io_DMem_rAddr,4);
+  }else{
+    top->io_DMem_rData=0xFFFFFFFF;
   }
   //DMem write
   if(top->io_DMem_wen==1){
