@@ -39,6 +39,7 @@ class top(isa_info: String = "RISCV32") extends Module {
       val regs = Output(Vec(33, UInt(32.W)))
     }
   })
+
   io.DMem.rAddr := 0.U
   io.DMem.wAddr := 0.U
   io.DMem.wData := Fill(32, 1.U) //FFFF FFFF
