@@ -30,7 +30,6 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
       DMem.wen   := 0.U
     }
     def rIDLE() = {
-      DMem.rAddr := Fill(32,1.U)
       DMem.ren   := 0.U
     }
     def IDLE() = {

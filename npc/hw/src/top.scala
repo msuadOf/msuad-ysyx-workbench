@@ -104,9 +104,9 @@ class top(isa_info: String = "RISCV32") extends Module {
         when(t._1._1 === inst) {
           Decoder.IDLE()
           t._2(Decoder)
-          // if (t._1._1 == RV32I_ALUInstr.ADDI) {
-          //   printf("ADDI\n")
-          // }
+          if (t._1._1 == RV32I_ALUInstr.ADDI) {
+            printf("ADDI\n")
+          }
           printf(p"Inst_Decode:${(t._1)}\n");
         }
       }
