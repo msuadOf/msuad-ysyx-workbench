@@ -96,7 +96,7 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   Log("Differential testing: %s", ANSI_FMT("ON", ANSI_FG_GREEN));
   Log("The result of every instruction will be compared with %s. ", ref_so_file);
 
-  ref_difftest_init(NULL);
+  ref_difftest_init(0);
 
   ref_difftest_regcpy(s, DIFFTEST_TO_REF);
   ref_difftest_memcpy(RESET_VECTOR, guest_to_host(RESET_VECTOR), CONFIG_MSIZE, DIFFTEST_TO_REF);
