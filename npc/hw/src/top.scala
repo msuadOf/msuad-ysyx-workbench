@@ -102,6 +102,7 @@ class top(isa_info: String = "RISCV32") extends Module {
     .asInstanceOf[Array[((BitPat, Any), ExecEnv => Any)]]
     .foreach((t: ((BitPat, Any), ExecEnv => Any)) => {
       prefix(s"InstMatch_${getVariableName(t._1)}") {
+        Decoder.IDLE()
         when(t._1._1 === inst) {
           Decoder.IDLE()
           t._2(Decoder)
@@ -109,8 +110,6 @@ class top(isa_info: String = "RISCV32") extends Module {
             printf("ADDI\n")
           }
           printf(p"Inst_Decode:${(t._1)}\n");
-        }.otherwise{
-           Decoder.IDLE()
         }
       }
     })
