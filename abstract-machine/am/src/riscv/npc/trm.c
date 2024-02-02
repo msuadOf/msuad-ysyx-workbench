@@ -18,6 +18,7 @@ void putch(char ch) {
 }
 
 void halt(int code) {
+  nemu_trap(code);
   while (1);
 }
 
