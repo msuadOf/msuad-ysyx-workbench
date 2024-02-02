@@ -15,15 +15,15 @@ object getVariableName {
 }
 
 class MemIO extends Bundle {
-      val rAddr = Output(UInt(32.W))
-      val rData = Input(UInt(32.W))
-      val ren=Output(UInt(1.W))
-      val wAddr = Output(UInt(32.W))
-      val wData = Output(UInt(32.W))
-      val wen   = Output(UInt(1.W))
+  val rAddr = Output(UInt(32.W))
+  val rData = Input(UInt(32.W))
+  val ren   = Output(UInt(1.W))
+  val wAddr = Output(UInt(32.W))
+  val wData = Output(UInt(32.W))
+  val wen   = Output(UInt(1.W))
 }
 
-class top(isa_info: String = "RISCV32") extends Module  {
+class top(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {
     val IMem = new Bundle {
       val rAddr = Output(UInt(32.W))
@@ -41,9 +41,9 @@ class top(isa_info: String = "RISCV32") extends Module  {
   })
   io.DMem.rAddr := 0.U
   io.DMem.wAddr := 0.U
-  io.DMem.wData := Fill(32,1.U) //FFFF FFFF
-  io.DMem.wen:=0.U
-  io.DMem.ren:=0.U
+  io.DMem.wData := Fill(32, 1.U) //FFFF FFFF
+  io.DMem.wen   := 0.U
+  io.DMem.ren   := 0.U
 
   val R          = new RegFile("RISCV32")
   val pc         = RegInit("h80000000".U(32.W))
@@ -72,7 +72,6 @@ class top(isa_info: String = "RISCV32") extends Module  {
 
   // })
 
-
   // RVIInstr.table(0)._1 === inst
   // inst === RVIInstr.table(0)._1
 
@@ -87,34 +86,31 @@ class top(isa_info: String = "RISCV32") extends Module  {
   //   }
   // })
 
-  val Decoder=new ExecEnv(inst,pc,R,io.DMem)
+  val Decoder = new ExecEnv(inst, pc, R, io.DMem)
 //RVIInstr.table.map((t:Tuple2[BitPat,Any])=>if(t._1===inst) )
   //first inst:addi
   val rs1, rs2, rd, imm = Wire(UInt())
-  rs1  := inst(19, 15)
-  rs2  := inst(24, 20)
-  imm  := inst(31, 20)
-  rd   := inst(11, 7)
+  rs1 := inst(19, 15)
+  rs2 := inst(24, 20)
+  imm := inst(31, 20)
+  rd  := inst(11, 7)
   // src1 := R(rs1)
   // src2 := R(rs2)
 
-
-
-
-
-
-  RVIInstr.table.asInstanceOf[Array[((BitPat,Any),ExecEnv=>Any)]].foreach((t: ((BitPat,Any),ExecEnv=>Any)) => {
-    prefix(s"InstMatch_${getVariableName(t._1)}") {
-      when(t._1._1 === inst) {
-        Decoder.IDLE()
-        t._2(Decoder)
-        if (t._1._1 == RV32I_ALUInstr.ADDI) {
-          printf("ADDI\n")
+  RVIInstr.table
+    .asInstanceOf[Array[((BitPat, Any), ExecEnv => Any)]]
+    .foreach((t: ((BitPat, Any), ExecEnv => Any)) => {
+      prefix(s"InstMatch_${getVariableName(t._1)}") {
+        when(t._1._1 === inst) {
+          Decoder.IDLE()
+          t._2(Decoder)
+          // if (t._1._1 == RV32I_ALUInstr.ADDI) {
+          //   printf("ADDI\n")
+          // }
+          printf(p"Inst_Decode:${(t._1)}\n");
         }
-        printf(p"Inst_Decode:${(t._1)}\n");
       }
-    }
-  })
+    })
 
   //addi exec
 
