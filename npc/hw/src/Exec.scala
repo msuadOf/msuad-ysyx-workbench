@@ -24,15 +24,28 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
   val immB = ( (   (inst( 31, 31) << 12) | inst( 30, 25)<<5 | (inst( 11, 8) << 1) | (inst( 7, 7) << 11)  ).asSInt + 0.S(32.W) ).asUInt //*imm = SEXT((   (inst( 31, 31) << 12) | BITS(i, 30, 25)<<5 | (BITS(i, 11, 8) << 1) | (BITS(i, 7, 7) << 11) ) , 13);
 
   object Mem {
-    def IDLE() = {
+      def wIDLE() = {
       DMem.wAddr := Fill(32,1.U)
       DMem.wData := Fill(32,1.U)
       DMem.wen   := 0.U
+    }
+    def rIDLE() = {
+      DMem.rAddr := Fill(32,1.U)
+      DMem.ren   := 0.U
+    }
+    def IDLE() = {
+      wIDLE()
+      rIDLE()
     }
     def write(addr: UInt, len: Int, data: UInt) = {
     DMem.wAddr := addr
     DMem.wData := data
     DMem.wen   := 1.U
+    }
+    def read(addr: UInt, len: Int) :UInt = {
+      DMem.rAddr := addr
+      DMem.ren   := 1.U
+      DMem.rData 
     }
   }
   object Reg {
@@ -44,4 +57,5 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
 
   def IDLE() = {Mem.IDLE();Reg.IDLE()}
   def Mw(addr: UInt, len: Int, data: UInt) = Mem.write(addr,len,data)
+  def Mr(addr: UInt, len: Int) :UInt = Mem.read(addr,len)
 }
