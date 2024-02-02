@@ -80,51 +80,51 @@ object LSUOpType { //TODO: refactor LSU fuop
 object ALUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
   def ADDI = (e: ExecEnv) => e.Rrd := e.src1+ e.immI
-  def SLLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SLTI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SLTIU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def XORI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SRLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def ORI   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def ANDI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SRAI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SLLI  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SLTI  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SLTIU = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def XORI  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SRLI  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def ORI   = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def ANDI  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SRAI  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
 
-  def ADD  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SLL  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SLTU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def XOR  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SRL  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def OR   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def AND  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SUB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
-  def SRA  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def ADD  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SLL  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SLT  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SLTU = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def XOR  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SRL  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def OR   = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def AND  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SUB  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
+  def SRA  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
 
   def AUIPC = (e: ExecEnv) => e.Rrd := e.pc + e.immU
-  def LUI   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n")
+  def LUI   = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n")
 }
 
 object BRUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
   def JAL  = (e: ExecEnv) => {e.Rrd := e.pc + 4.U ; e.pc:=e.pc + e.immJ; }
   def JALR = (e: ExecEnv) => {e.pc:=(e.src1 + e.immI)&(-1.S(32.W)).asUInt; e.Rrd:= e.pc + 4.U} //s->dnpc = (src1 + imm) & ~(word_t)1; R(rd)= s->pc + 4 ); 
-  def BEQ  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-  def BNE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-  def BLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-  def BGE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-  def BLTU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-  def BGEU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def BEQ  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def BNE  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def BLT  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def BGE  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def BLTU = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
+  def BGEU = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
 
 }
 object LSUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-def LB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def LH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def LW  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def LBU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def LHU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def SB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
-def SH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!"+"\n") 
+def LB  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
+def LH  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
+def LW  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
+def LBU = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
+def LHU = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
+def SB  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
+def SH  = (e: ExecEnv) => printf( "[Error]:The inst is not be impleted!!!!"+"\n") 
 def SW  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 4, e.src2) 
 
 }
