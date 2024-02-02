@@ -157,13 +157,7 @@ void exec_once(VerilatedVcdC* tfp) {
   //paddr_read()
   //IMem read
   top->io_IMem_rData=paddr_read(top->io_IMem_rAddr,4);
-  //DMem read
-  Log("before postedge: top->io_DMem_ren=%d,addr=%08x",top->io_DMem_ren,top->io_DMem_rAddr);
-  if(in_pmem(top->io_DMem_rAddr)){
-    top->io_DMem_rData=paddr_read(top->io_DMem_rAddr,4);
-  }else{
-    top->io_DMem_rData=0xFFFFFFFF;
-  }
+
   //DMem write
   if(top->io_DMem_wen==1){
     paddr_write(top->io_DMem_wAddr,4,top->io_DMem_wData);
@@ -171,6 +165,16 @@ void exec_once(VerilatedVcdC* tfp) {
 
   int pc=top->io_IMem_rAddr;
   Log_level_1("pc=%08x\n",pc);
+
+
+    //DMem read
+      top->eval();
+  Log("before postedge: top->io_DMem_ren=%d,addr=%08x",top->io_DMem_ren,top->io_DMem_rAddr);
+  if(in_pmem(top->io_DMem_rAddr)){
+    top->io_DMem_rData=paddr_read(top->io_DMem_rAddr,4);
+  }else{
+    top->io_DMem_rData=0xFFFFFFFF;
+  }
   //====== cpu exec body ends  ======
 
   main_time ++;
