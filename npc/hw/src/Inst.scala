@@ -101,7 +101,7 @@ object ALUExec {
   def SRA  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
 
   def AUIPC = (e: ExecEnv) => { printf(p"auipc:pc=${e.pc},immU=${e.immU}\n"); e.Rrd := e.pc + e.immU }
-  def LUI   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def LUI   = (e: ExecEnv) => e.Rrd:=e.immU
 }
 
 object BRUExec {
