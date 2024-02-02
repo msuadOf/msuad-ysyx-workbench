@@ -1,6 +1,6 @@
 #include "trap.h"
 
 int main() {
-    check(0);
+    check(1);
   return 0;
 }
