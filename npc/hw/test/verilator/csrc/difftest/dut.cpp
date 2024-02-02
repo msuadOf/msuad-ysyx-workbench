@@ -174,7 +174,7 @@ void checkregs(CPU_state_diff_t *ref, vaddr_t pc) {
 void difftest_step(CPU_state_diff_t* s,CPU_state_diff_t* s_bak) {
   CPU_state_diff_t ref_r={0};
 
-  ref_difftest_regcpy(s_bak, DIFFTEST_TO_REF);
+  //ref_difftest_regcpy(s_bak, DIFFTEST_TO_REF);
 
 uint32_t _ibuf=10;
   ref_difftest_memcpy(s->dnpc, &_ibuf, 4, DIFFTEST_TO_DUT);
