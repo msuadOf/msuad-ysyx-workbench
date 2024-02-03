@@ -158,7 +158,10 @@ void exec_once(VerilatedVcdC* tfp) {
   //IMem read
   top->io_IMem_rData=paddr_read(top->io_IMem_rAddr,4);
 
-
+  //DMem write
+  if(top->io_DMem_wen==1){
+    paddr_write(top->io_DMem_wAddr,top->io_DMem_wWidth,top->io_DMem_wData);
+  }
 
   int pc=top->io_IMem_rAddr;
   Log_level_1("pc=%08x\n",pc);
@@ -181,11 +184,6 @@ void exec_once(VerilatedVcdC* tfp) {
   top->eval(); 
 	tfp->dump(main_time);
   main_time ++;
-  
-    //DMem write
-  if(top->io_DMem_wen==1){
-    paddr_write(top->io_DMem_wAddr,top->io_DMem_wWidth,top->io_DMem_wData);
-  }
   Log("after postedge: top->io_DMem_ren=%d,addr=0x%08x,data=0x%08x",top->io_DMem_ren,top->io_DMem_rAddr,top->io_DMem_rData );
 }
 extern "C" void ebreak(){
