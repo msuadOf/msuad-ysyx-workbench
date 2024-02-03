@@ -15,7 +15,8 @@ paddr_t addr;
 mtrace_t Mem_op[MEM_OP_LEN]={0};
 
 word_t mtrace_paddr_read(uint32_t inst,uint32_t pc,paddr_t addr, int len){
-    paddr_read(addr,len);
+    
+    return paddr_read(addr,len);
 }
 void mtrace_paddr_write(uint32_t inst,uint32_t pc,paddr_t addr, int len, word_t data) {
   paddr_write(addr,len,data);
