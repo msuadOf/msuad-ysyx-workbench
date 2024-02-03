@@ -80,28 +80,28 @@ object LSUOpType { //TODO: refactor LSU fuop
 object ALUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
   def ADDI  = (e: ExecEnv) => e.Rrd := e.src1 + e.immI
-  def SLLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def SLTI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def SLLI  = (e: ExecEnv) => e.Rrd := e.src1 << e.immI(5, 0)
+  def SLTI  = (e: ExecEnv) => e.Rrd := e.src1.asSInt < e.immI.asSInt
   def SLTIU = (e: ExecEnv) => e.Rrd := e.src1 < e.immI
-  def XORI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def SRLI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def ORI   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def ANDI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def SRAI  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def XORI  = (e: ExecEnv) => e.Rrd := e.src1 ^ e.immI
+  def SRLI  = (e: ExecEnv) => e.Rrd := e.src1 >> e.immI(5, 0)
+  def ORI   = (e: ExecEnv) => e.Rrd := e.src1 | e.immI
+  def ANDI  = (e: ExecEnv) => e.Rrd := e.src1 & e.immI
+  def SRAI  = (e: ExecEnv) => e.Rrd := (e.src1.asSInt >> e.immI(5, 0).asUInt).asUInt(31,0)
 
-  def ADD  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def SLL  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def SLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def SLTU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def XOR  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def SRL  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def OR   = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def AND  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def SUB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def SRA  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def ADD  = (e: ExecEnv) => e.Rrd := e.src1 + e.src2
+  def SLL  = (e: ExecEnv) => e.Rrd := e.src1 << e.src2(4, 0)
+  def SLT  = (e: ExecEnv) => e.Rrd := e.src1.asSInt < e.src2.asSInt //.asUInt
+  def SLTU = (e: ExecEnv) => e.Rrd := e.src1 < e.src2
+  def XOR  = (e: ExecEnv) => e.Rrd := e.src1 ^ e.src2
+  def SRL  = (e: ExecEnv) => e.Rrd := e.src1 >> e.src2(4, 0)
+  def OR   = (e: ExecEnv) => e.Rrd := e.src1 | e.src2
+  def AND  = (e: ExecEnv) => e.Rrd := e.src1 & e.src2
+  def SUB  = (e: ExecEnv) => e.Rrd := e.src1 - e.src2
+  def SRA = (e: ExecEnv) =>  e.Rrd := (e.src1.asSInt >> e.src2.asUInt(4,0)).asUInt(31,0)
 
-  def AUIPC = (e: ExecEnv) => { printf(p"auipc:pc=${e.pc},immU=${e.immU}\n"); e.Rrd := e.pc + e.immU }
-  def LUI   = (e: ExecEnv) => e.Rrd:=e.immU
+  def AUIPC = (e: ExecEnv) => e.Rrd := e.pc + e.immU
+  def LUI   = (e: ExecEnv) => e.Rrd := e.immU
 }
 
 object BRUExec {
@@ -109,23 +109,23 @@ object BRUExec {
   def JAL  = (e: ExecEnv) => { e.Rrd := e.pc + 4.U; e.pc := e.pc + e.immJ; }
   def JALR = (e: ExecEnv) => { e.pc := (e.src1 + e.immI) & (-1.S(32.W)).asUInt; e.Rrd := e.pc + 4.U }
   //s->dnpc = (src1 + imm) & ~(word_t)1; R(rd)= s->pc + 4 );
-  def BEQ  = (e: ExecEnv) => when(e.src1 === e.src2){e.pc := e.pc+e.immB}
-  def BNE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def BLT  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def BGE  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def BLTU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def BGEU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def BEQ  = (e: ExecEnv) => when(e.src1 === e.src2) { e.pc := e.pc + e.immB }
+  def BNE  = (e: ExecEnv) => when(e.src1 =/= e.src2) { e.pc := e.pc + e.immB }
+  def BLT  = (e: ExecEnv) => when(e.src1.asSInt < e.src2.asSInt) { e.pc := e.pc + e.immB }
+  def BGE  = (e: ExecEnv) => when(e.src1.asSInt >= e.src2.asSInt) { e.pc := e.pc + e.immB }
+  def BLTU = (e: ExecEnv) => when(e.src1 < e.src2) { e.pc := e.pc + e.immB }
+  def BGEU = (e: ExecEnv) => when(e.src1 >= e.src2) { e.pc := e.pc + e.immB }
 
 }
 object LSUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-  def LB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def LH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def LB  = (e: ExecEnv) => e.Rrd := ( e.Mr(e.src1 + e.immI, 4).asUInt(8-1,0).asSInt + 0.S(32.W) ).asUInt
+  def LH  = (e: ExecEnv) => e.Rrd := ( e.Mr(e.src1 + e.immI, 4).asUInt(16-1,0).asSInt + 0.S(32.W) ).asUInt
   def LW  = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 4)
-  def LBU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def LHU = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def SB  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
-  def SH  = (e: ExecEnv) => chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n")
+  def LBU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 1)
+  def LHU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 2)
+  def SB  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 1, e.src2)
+  def SH  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 2, e.src2)
   def SW  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 4, e.src2)
 
 }

@@ -187,7 +187,7 @@ void exec_once(VerilatedVcdC* tfp) {
 }
 extern "C" void ebreak(){
     puts(ANSI_FG_GREEN);
-    puts("excute the ebreak inst\n");
+    puts("npc:excute the ebreak inst\n");
     puts(ANSI_NONE);
     hit_exit(0);
 }
