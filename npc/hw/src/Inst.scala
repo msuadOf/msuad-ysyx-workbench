@@ -87,8 +87,7 @@ object ALUExec {
   def SRLI  = (e: ExecEnv) => e.Rrd := e.src1 >> e.immI(5, 0)
   def ORI   = (e: ExecEnv) => e.Rrd := e.src1 | e.immI
   def ANDI  = (e: ExecEnv) => e.Rrd := e.src1 & e.immI
-  def SRAI = (e: ExecEnv) =>
-    chisel3.assert(0.B, "[Error]:The inst SRAI is not be impleted!!!!" + "\n") //e.Rrd := e.src1.asSInt >> e.immI(5, 0);
+  def SRAI  = (e: ExecEnv) => e.Rrd := e.src1.asSInt >> e.immI(5, 0);
 
   def ADD  = (e: ExecEnv) => e.Rrd := e.src1 + e.src2
   def SLL  = (e: ExecEnv) => e.Rrd := e.src1 << e.src2(4, 0)
