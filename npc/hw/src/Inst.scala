@@ -87,7 +87,7 @@ object ALUExec {
   def SRLI  = (e: ExecEnv) => e.Rrd := e.src1 >> e.immI(5, 0)
   def ORI   = (e: ExecEnv) => e.Rrd := e.src1 | e.immI
   def ANDI  = (e: ExecEnv) => e.Rrd := e.src1 & e.immI
-  def SRAI  = (e: ExecEnv) => e.Rrd := e.src1.asSInt >> e.immI(5, 0);
+  def SRAI  = (e: ExecEnv) => e.Rrd := e.src1.asSInt >> e.immI(5, 0).asUInt;
 
   def ADD  = (e: ExecEnv) => e.Rrd := e.src1 + e.src2
   def SLL  = (e: ExecEnv) => e.Rrd := e.src1 << e.src2(4, 0)
@@ -98,8 +98,7 @@ object ALUExec {
   def OR   = (e: ExecEnv) => e.Rrd := e.src1 | e.src2
   def AND  = (e: ExecEnv) => e.Rrd := e.src1 & e.src2
   def SUB  = (e: ExecEnv) => e.Rrd := e.src1 - e.src2
-  def SRA = (e: ExecEnv) =>
-    chisel3.assert(0.B, "[Error]:The inst is not be impleted!!!!" + "\n") //e.Rrd := e.src1.asSInt >> e.src2
+  def SRA = (e: ExecEnv) =>  e.Rrd := e.src1.asSInt >> e.src2.asUInt(4,0)
 
   def AUIPC = (e: ExecEnv) => e.Rrd := e.pc + e.immU
   def LUI   = (e: ExecEnv) => e.Rrd := e.immU
