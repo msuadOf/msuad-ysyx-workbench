@@ -47,22 +47,26 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
       //DMem.wData := data
 
       DMem.wData := (len match {
-        case 1 => data(8 - 1, 0)
-        case 2 => data(8 * 2 - 1, 0)
-        case 4 => data(8 * 4 - 1, 0)
+        case 1 => { DMem.wWidth := 1.U;data(8 - 1, 0) }
+        case 2 => { DMem.wWidth := 1.U;data(8 * 2 - 1, 0) }
+        case 4 => { DMem.wWidth := 1.U;data(8 * 4 - 1, 0) }
         case _: Int => throw new IllegalArgumentException("write(addr,len,data) args \"len\" should be [1] [2] [4]")
       })
+
+      DMem.wWidth := len.asUInt
+
     }
     def read(addr: UInt, len: Int): UInt = {
       DMem.ren   := 1.U
       DMem.rAddr := addr
       //DMem.rData
       (len match {
-        case 1 => DMem.rData(8 - 1, 0)
-        case 2 => DMem.rData(8 * 2 - 1, 0)
-        case 4 => DMem.rData(8 * 4 - 1, 0)
+        case 1 => { DMem.rWidth := 1.U;DMem.rData(8 - 1, 0)}
+        case 2 => { DMem.rWidth := 1.U;DMem.rData(8 * 2 - 1, 0) }
+        case 4 => { DMem.rWidth := 1.U;DMem.rData(8 * 4 - 1, 0) }
         case _: Int => throw new IllegalArgumentException("write(addr,len,data) args \"len\" should be [1] [2] [4]")
       })
+
     }
   }
   object Reg {

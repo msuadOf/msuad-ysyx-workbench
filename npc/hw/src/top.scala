@@ -18,9 +18,22 @@ class MemIO extends Bundle {
   val rAddr = Output(UInt(32.W))
   val rData = Input(UInt(32.W))
   val ren   = Output(UInt(1.W))
+  val rWidth= Output(UInt(4.W))
+
   val wAddr = Output(UInt(32.W))
   val wData = Output(UInt(32.W))
   val wen   = Output(UInt(1.W))
+  val wWidth= Output(UInt(4.W))
+
+  def IOinit()={
+  this.rAddr := 0.U
+  this.wAddr := 0.U
+  this.wData := Fill(32, 1.U) //FFFF FFFF
+  this.wen   := 0.U
+  this.ren   := 0.U
+  this.wWidth := 4.U
+  this.rWidth := 4.U
+  }
 }
 
 class top(isa_info: String = "RISCV32") extends Module {
@@ -46,11 +59,7 @@ class top(isa_info: String = "RISCV32") extends Module {
     })
     ddd.aba := (ddd.bab.asSInt>>ddd.bab(4,0)).asUInt
 
-  io.DMem.rAddr := 0.U
-  io.DMem.wAddr := 0.U
-  io.DMem.wData := Fill(32, 1.U) //FFFF FFFF
-  io.DMem.wen   := 0.U
-  io.DMem.ren   := 0.U
+io.DMem.IOinit()
 
   val R          = new RegFile("RISCV32")
   val pc         = RegInit("h80000000".U(32.W))

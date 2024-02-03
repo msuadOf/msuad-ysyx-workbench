@@ -160,7 +160,7 @@ void exec_once(VerilatedVcdC* tfp) {
 
   //DMem write
   if(top->io_DMem_wen==1){
-    paddr_write(top->io_DMem_wAddr,4,top->io_DMem_wData);
+    paddr_write(top->io_DMem_wAddr,top->io_DMem_wWidth,top->io_DMem_wData);
   }
 
   int pc=top->io_IMem_rAddr;
@@ -171,7 +171,7 @@ void exec_once(VerilatedVcdC* tfp) {
       top->eval();
   
   if(in_pmem(top->io_DMem_rAddr)){
-    top->io_DMem_rData=paddr_read(top->io_DMem_rAddr,4);
+    top->io_DMem_rData=paddr_read(top->io_DMem_rAddr,top->io_DMem_rWidth);
   }else{
     top->io_DMem_rData=0xFFFFFFFF;
   }
