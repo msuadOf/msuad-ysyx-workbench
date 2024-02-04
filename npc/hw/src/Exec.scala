@@ -48,8 +48,8 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
 
       DMem.wData := (len match {
         case 1 => { DMem.wWidth := 1.U;data(8 - 1, 0) }
-        case 2 => { DMem.wWidth := 1.U;data(8 * 2 - 1, 0) }
-        case 4 => { DMem.wWidth := 1.U;data(8 * 4 - 1, 0) }
+        case 2 => { DMem.wWidth := 2.U;data(8 * 2 - 1, 0) }
+        case 4 => { DMem.wWidth := 4.U;data(8 * 4 - 1, 0) }
         case _: Int => throw new IllegalArgumentException("write(addr,len,data) args \"len\" should be [1] [2] [4]")
       })
 
@@ -62,8 +62,8 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
       //DMem.rData
       (len match {
         case 1 => { DMem.rWidth := 1.U;DMem.rData(8 - 1, 0)}
-        case 2 => { DMem.rWidth := 1.U;DMem.rData(8 * 2 - 1, 0) }
-        case 4 => { DMem.rWidth := 1.U;DMem.rData(8 * 4 - 1, 0) }
+        case 2 => { DMem.rWidth := 2.U;DMem.rData(8 * 2 - 1, 0) }
+        case 4 => { DMem.rWidth := 4.U;DMem.rData(8 * 4 - 1, 0) }
         case _: Int => throw new IllegalArgumentException("write(addr,len,data) args \"len\" should be [1] [2] [4]")
       })
 
