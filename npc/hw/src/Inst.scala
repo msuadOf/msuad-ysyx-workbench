@@ -87,7 +87,7 @@ object ALUExec {
   def SRLI  = (e: ExecEnv) => e.Rrd := e.src1 >> e.immI(5, 0)
   def ORI   = (e: ExecEnv) => e.Rrd := e.src1 | e.immI
   def ANDI  = (e: ExecEnv) => e.Rrd := e.src1 & e.immI
-  def SRAI  = (e: ExecEnv) => e.Rrd := e.src1.asSInt >> e.immI(5, 0).asUInt;
+  def SRAI  = (e: ExecEnv) => e.Rrd := (e.src1.asSInt >> e.immI(5, 0).asUInt).asUInt(31,0)
 
   def ADD  = (e: ExecEnv) => e.Rrd := e.src1 + e.src2
   def SLL  = (e: ExecEnv) => e.Rrd := e.src1 << e.src2(4, 0)
@@ -98,7 +98,7 @@ object ALUExec {
   def OR   = (e: ExecEnv) => e.Rrd := e.src1 | e.src2
   def AND  = (e: ExecEnv) => e.Rrd := e.src1 & e.src2
   def SUB  = (e: ExecEnv) => e.Rrd := e.src1 - e.src2
-  def SRA = (e: ExecEnv) =>  e.Rrd := e.src1.asSInt >> e.src2.asUInt(4,0)
+  def SRA = (e: ExecEnv) =>  e.Rrd := (e.src1.asSInt >> e.src2.asUInt(4,0)).asUInt(31,0)
 
   def AUIPC = (e: ExecEnv) => e.Rrd := e.pc + e.immU
   def LUI   = (e: ExecEnv) => e.Rrd := e.immU
@@ -124,7 +124,7 @@ object LSUExec {
   def LW  = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 4)
   def LBU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 1)
   def LHU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 2)
-  def SB  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 1, e.src2)
+  def SB  = (e: ExecEnv) => {e.Mw(e.src1 + e.immS, 1, e.src2);printf("[SB]:ADDR=%x,src1=%x,immS=%x}\n",e.src1 + e.immS,e.src1 ,e.immS)}
   def SH  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 2, e.src2)
   def SW  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 4, e.src2)
 
