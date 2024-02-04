@@ -124,7 +124,7 @@ object LSUExec {
   def LW  = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 4)
   def LBU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 1)
   def LHU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 2)
-  def SB  = (e: ExecEnv) => {e.Mw(e.src1 + e.immS, 1, e.src2);printf("[SB]:ADDR=%x,src1=%x,immS=%x}\n",e.src1 + e.immS,e.src1 ,e.immS)}
+  def SB  = (e: ExecEnv) => {e.Mw(e.src1 + e.immS, 1, e.src2);printf("[SB]:ADDR=%x,src1=%x,immS=%x}\n",e.src1.asSInt + e.immS.asSInt,e.src1 ,e.immS)}
   def SH  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 2, e.src2)
   def SW  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 4, e.src2)
 
