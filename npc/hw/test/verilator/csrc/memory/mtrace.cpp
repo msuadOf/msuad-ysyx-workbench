@@ -27,7 +27,7 @@ static void add_wlog(uint32_t inst, uint32_t pc, paddr_t addr, int len, word_t d
 }
 void display_wlog(){
     for(int i=0;i<=mtrace_head;i++){
-        printf("(npc)total write ops:[%d] addr=%08x data\n",i);
+        printf("(npc)total write ops:[%d] addr=%08x data\n",i,Mem_wops[mtrace_head].addr);
     }
 }
 word_t mtrace_paddr_read(uint32_t inst, uint32_t pc, paddr_t addr, int len)
