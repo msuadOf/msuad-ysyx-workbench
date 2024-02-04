@@ -19,7 +19,7 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
 
   val immI = (inst(31, 20).asSInt + 0.S(32.W)).asUInt //imm = SEXT(BITS(i, 31, 20), 12);
   val immU = ((inst(31, 12) << 12).asSInt + 0.S(32.W)).asUInt //imm = SEXT(BITS(i, 31, 12), 20) << 12;
-  val immS = (inst(31, 25).asSInt << 5.U).asUInt | inst(11, 7) //imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7);
+  val immS = ((  (inst(31, 25).asSInt << 5.U).asUInt | inst(11, 7)  ).asSInt+0.S(32.W)).asUInt //imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7);
   val immJ =
     (((inst(31) << 19 | inst(19, 12) << 11 | inst(20) << 10 | inst(30, 21)) << 1).asSInt + 0.S(
       32.W
