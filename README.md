@@ -27,3 +27,11 @@ git fetch -all
 git push --all origin -u
 git push
 ```
+
+Rename Branch name
+```shell
+git branch -m main master
+git fetch origin
+git branch -u origin/master master
+git remote set-head origin -a
+```

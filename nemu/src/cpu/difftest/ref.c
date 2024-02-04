@@ -18,16 +18,77 @@
 #include <difftest-def.h>
 #include <memory/paddr.h>
 
+#include <difftest-def.h>
+
+//enum { DIFFTEST_TO_DUT, DIFFTEST_TO_REF };
+void init_disasm(const char *triple);
+void print_mem(){
+  Log("0x%08x:0x%08x\n",cpu.pc,paddr_read(cpu.pc,4));
+}
 __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction) {
-  assert(0);
+  word_t* _buf=(word_t*)buf;
+  
+  assert(n>=0);
+  n=n/4 ;
+  //Log("n=%ld,buf[0]=0x%08x",n,((uint32_t*)buf)[0]);
+
+  if(direction==DIFFTEST_TO_DUT){
+    for(size_t i=0;i<n;i++){
+      _buf[i]=paddr_read(addr+i*4,4);
+    }
+  }
+  else if (direction==DIFFTEST_TO_REF){
+    for(size_t i=0;i<n;i++){
+      paddr_write(addr+i*4,4,_buf[i]);
+    }
+  }else{
+    Log(ANSI_FG_RED "difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction): direction error");
+    assert(0);
+  }
+
 }
 
+typedef struct CPU_state_diff_t {
+  vaddr_t pc;
+  vaddr_t snpc; // static next pc
+  vaddr_t dnpc; // dynamic next pc
+  word_t regs[33];
+} CPU_state_diff_t;
 __EXPORT void difftest_regcpy(void *dut, bool direction) {
+  CPU_state_diff_t* s=(CPU_state_diff_t*)dut;
+
+  if(direction==DIFFTEST_TO_DUT){
+    for(int i=0;i<32;i++){
+      s->regs[i]=cpu.gpr[i];
+    }
+    s->regs[32]=cpu.pc;
+    s->pc=cpu.pc;
+    //s->dnpc=cpu.dnpc;
+    //printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_DUT (nemu)pc=%x (dut)pc=%x\n" ANSI_NONE,cpu.pc,s->pc);
+    return;
+  }
+  if(direction==DIFFTEST_TO_REF){
+    for(int i=0;i<32;i++){
+      cpu.gpr[i]=s->regs[i];
+    }
+    cpu.pc=s->regs[32];
+    cpu.pc=s->pc; 
+    //cpu.dnpc=s->dnpc; 
+    //printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_REF (nemu)pc=%x (dut)pc=%x\n" ANSI_NONE,cpu.pc,s->pc);
+    return;
+  }
   assert(0);
 }
 
 __EXPORT void difftest_exec(uint64_t n) {
-  assert(0);
+  //printf("\n===========difftest_exec begin,n=%ld===========\n",n);
+  //print_mem();
+  cpu_exec(n);
+  //printf("===========difftest_exec end===========\n");
+}
+
+__EXPORT void difftest_reg_display() {
+  isa_reg_display();
 }
 
 __EXPORT void difftest_raise_intr(word_t NO) {
@@ -39,4 +100,14 @@ __EXPORT void difftest_init(int port) {
   init_mem();
   /* Perform ISA dependent initialization. */
   init_isa();
+  #ifndef CONFIG_ISA_loongarch32r
+  IFDEF(CONFIG_ITRACE, init_disasm(
+    MUXDEF(CONFIG_ISA_x86,     "i686",
+    MUXDEF(CONFIG_ISA_mips32,  "mipsel",
+    MUXDEF(CONFIG_ISA_riscv,
+      MUXDEF(CONFIG_RV64,      "riscv64",
+                               "riscv32"),
+                               "bad"))) "-pc-linux-gnu"
+  ));
+#endif
 }

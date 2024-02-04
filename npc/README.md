@@ -1,37 +1,20 @@
-Chisel Project Template
-=======================
+NPC
+=========
+           
+## 简介
 
-Another version of the [Chisel template](https://github.com/ucb-bar/chisel-template) supporting mill.
-mill is another Scala/Java build tool without obscure DSL like SBT. It is much faster than SBT.
+相信大家都知道一生一芯，那么一生一芯究竟是怎么回事呢？下面就。。。（误）
 
-Contents at a glance:
+## Get Start
 
-* `.gitignore` - helps Git ignore junk like generated files, build products, and temporary files.
-* `build.sc` - instructs mill to build the Chisel project
-* `Makefile` - rules to call mill
-* `playground/src/GCD.scala` - GCD source file
-* `playground/src/DecoupledGCD.scala` - another GCD source file
-* `playground/src/Elaborate.scala` - wrapper file to call chisel command with the GCD module
-* `playground/test/src/GCDSpec.scala` - GCD tester
+## 目录结构
 
-Feel free to rename or delete files under `playground/` or use them as a reference/template.
-
-## Getting Started
-
-First, install mill by referring to the documentation [here](https://com-lihaoyi.github.io/mill).
-
-To run all tests in this design (recommended for test-driven development):
-```bash
-make test
-```
-
-To generate Verilog:
-```bash
-make verilog
-```
-
-## Change FIRRTL Compiler
-
-You can change the FIRRTL compiler between SFC (Scala-based FIRRTL compiler) and
-MFC (MLIR-based FIRRTL compiler) by modifying the `useMFC` variable in `playground/src/Elaborate.scala`.
-The latter one requires `firtool`, which is included under `utils/`.
+1. 本项目为ysyx-workbench子项目
+2. Makfile为构建用
+3. Chisel_Startup.md为chisel6.0官方仓库档的
+4. utils/目录存放了firtool工具，为Xiangshan-playground（Chisel的模版）使用的，本来是放在makefile里面的，不放在编译chisel的时候会报firtool的错，但按照chisel官网的方法，下载firtool包然后加到环境变量一次解决，我觉得更好
+5. hw/为项目源码
+   1. hw/src/为硬件设计的HDL代码
+   2. hw/test/为硬件测试用代码，测试可分为chiseltest和verilator仿真测试
+      1. hw/test/src Chisel
+      2. hw/test/verilator目录下，csrc放diff-test相关，源自于nemu代码，vsrc会放辅助仿真使用的一些verilog代码

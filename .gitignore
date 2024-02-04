@@ -1,5 +1,9 @@
 *.*
 *
+.*/
+.vscode/
+.metals/
+
 !*/
 !/nemu/*
 !/nexus-am/*
@@ -11,6 +15,8 @@
 !.gitignore
 !init.sh
 /utils
-/fceux-am
 /nvboard
 !/labs/**
+!/notes/*/am-kernels
+!Dockerfile
+!README*/fceux-am

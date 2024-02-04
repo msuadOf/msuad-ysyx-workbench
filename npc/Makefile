@@ -1,40 +1,27 @@
-BUILD_DIR = ./build
+BUILD_DIR ?= ./build
 
 export PATH := $(PATH):$(abspath ./utils)
 
-test:
-	mill -i __.test
+default: all
 
-verilog:
-	$(call git_commit, "generate verilog")
-	# mkdir -p $(BUILD_DIR)
-	# mill -i __.test.runMain Elaborate -td $(BUILD_DIR)
-	mill -i __.test.runMain Elaborate
+all: verilog compile bsp reformat checkformat
 
-help:
-	mill -i __.test.runMain Elaborate --help
+include scripts/build.mk
 
-compile:
-	mill -i __.compile
-
-bsp:
-	mill -i mill.bsp.BSP/install
-
-reformat:
-	mill -i __.reformat
-
-checkformat:
-	mill -i __.checkFormat
-
-clean:
-	-rm -rf $(BUILD_DIR)
-
-.PHONY: test verilog help compile bsp reformat checkformat clean
-
-sim:verilog
-	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
-	make run-nvboard
-	
+sim run:verilator-binary $(DIFF_REF_SO)
+	$(call git_commit, "sim npc") # DO NOT REMOVE THIS LINE!!!
+	@echo "-- RUN ---------------------"
+	@rm -rf logs
+	$(VERI_BUILD_DIR)/Vtop $(VERI_RUNNING_ARGS) +trace
 
 -include ../Makefile
--include ./scripts/nvboard.mk
+clean:
+	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat build
+clean-verilator clean-v vclean:
+	cp build/top.v top.v.bak._tmp && rm -rf build/* && mv top.v.bak._tmp build/top.v
+clean-chisel clean-c:
+	-rm -rf out
+distclean:clean clean-chisel
+
+.DEFAULT_GOAL = verilator-binary
+.PHONY: verilator-binary clean

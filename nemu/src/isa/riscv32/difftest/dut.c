@@ -18,7 +18,22 @@
 #include "../local-include/reg.h"
 
 bool isa_difftest_checkregs(CPU_state *ref_r, vaddr_t pc) {
-  return false;
+  int state=true;
+  int reg_num = ARRLEN(cpu.gpr);
+  for (int i = 0; i < reg_num; i++) {
+    if (ref_r->gpr[i] != cpu.gpr[i]) {
+      printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"%s\" is diffrent: (nemu-false)= %08x ,(qemu-yes)= %08x.\n",reg_name(i),cpu.gpr[i],ref_r->gpr[i]);
+      state=false;
+      //return false;
+    }
+  }
+  if (ref_r->pc != cpu.pc) {
+    printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"pc\" is diffrent: (nemu-false)= %08x ,(qemu-yes)= %08x.\n",cpu.pc,ref_r->pc);
+    state=false;
+    //return false;
+  }
+  return state;
+  //return true;
 }
 
 void isa_difftest_attach() {

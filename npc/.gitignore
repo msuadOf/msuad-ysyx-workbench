@@ -2,6 +2,7 @@
 *
 !*/
 !Makefile
+!*Makefile*
 !*.mk
 !*.scala
 !*.[cSh]
@@ -12,11 +13,27 @@
 !.scalafmt.conf
 !build.sc
 !README.md
-build/
+!Chisel_Startup.md
+!utils/*
+
 
 # mill
 out/
 .bsp/
+.bloop/
 .idea/
 .idea_modules/
+.vscode/
+.metals/
 test_run_dir/
+
+# verilator
+*.dmp
+*.log
+*.csrc
+*.vcd
+obj_*
+logs
+
+build/*.v
+build/*
