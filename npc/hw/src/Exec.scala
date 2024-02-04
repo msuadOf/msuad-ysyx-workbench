@@ -53,7 +53,7 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
         case _: Int => throw new IllegalArgumentException("write(addr,len,data) args \"len\" should be [1] [2] [4]")
       })
 
-      DMem.wWidth := len.asUInt
+      //DMem.wWidth := len.asUInt
 
     }
     def read(addr: UInt, len: Int): UInt = {
