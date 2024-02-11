@@ -19,7 +19,10 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
 
   val immI = (inst(31, 20).asSInt + 0.S(32.W)).asUInt //imm = SEXT(BITS(i, 31, 20), 12);
   val immU = ((inst(31, 12) << 12).asSInt + 0.S(32.W)).asUInt //imm = SEXT(BITS(i, 31, 12), 20) << 12;
-  val immS = ((  (inst(31, 25).asSInt << 5.U).asUInt | inst(11, 7)  ).asSInt+0.S(32.W)).asUInt //imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7);
+  val immS =
+    (((inst(31, 25).asSInt << 5.U).asUInt | inst(11, 7)).asSInt + 0.S(
+      32.W
+    )).asUInt //imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7);
   val immJ =
     (((inst(31) << 19 | inst(19, 12) << 11 | inst(20) << 10 | inst(30, 21)) << 1).asSInt + 0.S(
       32.W
@@ -47,9 +50,9 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
       //DMem.wData := data
 
       DMem.wData := (len match {
-        case 1 => { DMem.wWidth := 1.U;data(8 - 1, 0) }
-        case 2 => { DMem.wWidth := 2.U;data(8 * 2 - 1, 0) }
-        case 4 => { DMem.wWidth := 4.U;data(8 * 4 - 1, 0) }
+        case 1 => { DMem.wWidth := 1.U; data(8 - 1, 0) }
+        case 2 => { DMem.wWidth := 2.U; data(8 * 2 - 1, 0) }
+        case 4 => { DMem.wWidth := 4.U; data(8 * 4 - 1, 0) }
         case _: Int => throw new IllegalArgumentException("write(addr,len,data) args \"len\" should be [1] [2] [4]")
       })
 
@@ -61,9 +64,9 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val DMem: MemIO) {
       DMem.rAddr := addr
       //DMem.rData
       (len match {
-        case 1 => { DMem.rWidth := 1.U;DMem.rData(8 - 1, 0)}
-        case 2 => { DMem.rWidth := 2.U;DMem.rData(8 * 2 - 1, 0) }
-        case 4 => { DMem.rWidth := 4.U;DMem.rData(8 * 4 - 1, 0) }
+        case 1 => { DMem.rWidth := 1.U; DMem.rData(8 - 1, 0) }
+        case 2 => { DMem.rWidth := 2.U; DMem.rData(8 * 2 - 1, 0) }
+        case 4 => { DMem.rWidth := 4.U; DMem.rData(8 * 4 - 1, 0) }
         case _: Int => throw new IllegalArgumentException("write(addr,len,data) args \"len\" should be [1] [2] [4]")
       })
 
