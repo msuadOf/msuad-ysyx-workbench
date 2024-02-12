@@ -43,9 +43,10 @@ void init_alarm() {
   Assert(ret == 0, "Can not set signal handler");
 
   struct itimerval it = {};
+  struct itimerval it_old = {};
   it.it_value.tv_sec = 0;
   it.it_value.tv_usec = 1000000 / TIMER_HZ;
   it.it_interval = it.it_value;
-  ret = setitimer(ITIMER_VIRTUAL, &it, NULL);
+  ret = setitimer(ITIMER_VIRTUAL, &it, &it_old);
   Assert(ret == 0, "Can not set timer");
 }
