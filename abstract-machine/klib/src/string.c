@@ -101,7 +101,33 @@ void *memmove(void *dst, const void *src, size_t n) {
   
   return dst;
 }
+char* strchr(const char *str, int c) {
+    if (str == NULL) {
+        return NULL;
+    }
 
+    while (*str) {
+        if ((char)*str == (char)c) {
+            return (char*)str;
+        }
+        str++;
+    }
+
+    // 如果没有找到指定的字符，则返回NULL
+    return NULL;
+}
+void* memchr(const void *ptr, int value, size_t num) {
+    const unsigned char* byte_ptr = (const unsigned char*)ptr;
+
+    for (size_t i = 0; i < num; i++) {
+        if (byte_ptr[i] == (unsigned char)value) {
+            return (void*)(byte_ptr + i);
+        }
+    }
+
+    // 如果没有找到指定的字符，则返回NULL
+    return NULL;
+}
 void *memcpy(void *out, const void *in, size_t n) {
   unsigned char *o = out;
   const unsigned char *i = in;
