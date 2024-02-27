@@ -41,7 +41,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 do{
                   if(!is_addr_valid((const void*)s)){
                     putstr("vsprintf failed at:==[");putstr(out);putstr("]==\n");
-                    itoa((int)s,out,16); putstr("==["); putstr(out);putstr("]==\n");
+                    itoa((long int)s,out,16); putstr("==["); putstr(out);putstr("]==\n");
                       panic("addr is not avaliable\n");
                    }
 }while (0);

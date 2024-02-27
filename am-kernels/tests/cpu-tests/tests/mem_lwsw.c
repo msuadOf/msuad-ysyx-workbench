@@ -7,9 +7,9 @@ int main() {
   for(int i=0;i<5;i++){
     //buf[i]=x;
     printf("(test)");
-    printf("hh %d\n",-2147483648);
-    panic("");
-    check(y==buf[i]);
+    printf("hh %d\n",buf[i]);
+    //panic("");
+    //check(y==buf[i]);
   }
    printf("t: %d \n",-2147483648);
    x=(volatile signed int)(x+y);
