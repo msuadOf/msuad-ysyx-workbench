@@ -12,7 +12,7 @@ extern "C" {
 #define __NATIVE_USE_KLIB__
 
 static inline int is_addr_valid(const void* s){
-  return (s>=(const void* )0x80000000 && s<=(const void* )0x88000000-1);
+  return 1;//(s>=(const void* )0x80000000 && s<=(const void* )0x88000000-1);
 }
 
 

@@ -4,10 +4,10 @@
 File: CoreMark
 
 Topic: Welcome
-Copyright � 2009 EEMBC All rights reserved. 
+Copyright 锟� 2009 EEMBC All rights reserved. 
 CoreMark is a trademark of EEMBC and EEMBC is a registered trademark of the Embedded Microprocessor Benchmark Consortium.
 
-CoreMark�s primary goals are simplicity and providing a method for testing only a processor�s core features. 
+CoreMark锟絪 primary goals are simplicity and providing a method for testing only a processor锟絪 core features. 
 
 For more information about EEMBC's comprehensive embedded benchmark suites, please see www.eembc.org.
 

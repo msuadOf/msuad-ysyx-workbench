@@ -78,6 +78,12 @@ static void exec_once(Decode *s, vaddr_t pc) {
 static void execute(uint64_t n) {
   Decode s;
   for (;n > 0; n --) {
+
+#ifdef CONFIG_ITRACE
+    extern void isa_reg_display_info_update();
+    isa_reg_display_info_update();
+#endif // DEBUG
+
     exec_once(&s, cpu.pc);
     g_nr_guest_inst ++;
     trace_and_difftest(&s, cpu.pc);
@@ -98,6 +104,7 @@ static void statistic() {
 extern void  display_inst();
 void assert_fail_msg() {
   display_inst();
+  isa_reg_display_last();
   isa_reg_display();
   statistic();
 }

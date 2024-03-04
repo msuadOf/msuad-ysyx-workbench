@@ -29,6 +29,26 @@ void isa_reg_displayByIndex(int i)
 {
   printf("%-8s%-#20x%-20d\n", regs[i], isa_reg_getValueByIndex(i), isa_reg_getValueByIndex(i));
 }
+
+uint32_t regs_last[33]={0};
+void isa_reg_display_info_update(){
+    int i = 0;
+  for (i = 0; i < 32; i++)
+  {
+    regs_last[i]=gpr(i);
+  }
+  regs_last[32]=cpu.pc;
+}
+void isa_reg_display_last(){
+  puts("> [last] nemu reg display:\n");
+  int i = 0;
+  for (i = 0; i < 32; i++)
+  {
+    printf("%-8s%-#20x%-20d\n", regs[i], regs_last[i], regs_last[i]);
+  }
+  printf("%-8s%-#20x%-20d\n", "pc", regs_last[32], regs_last[32]);
+  putchar('\n');
+}
 void isa_reg_display()
 {
   puts("> nemu reg display:\n");
