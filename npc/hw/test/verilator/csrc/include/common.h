@@ -25,7 +25,9 @@
 #include <macro.h>
 #include <assert.h>
 
-#define CONFIG_DIFFTEST
+//#define CONFIG_DIFFTEST 1
+//#define CONFIG_MTRACE 1
+#define CONFIG_LOG 1
 
 typedef MUXDEF(CONFIG_ISA64, uint64_t, uint32_t) word_t;
 typedef MUXDEF(CONFIG_ISA64, int64_t, int32_t)  sword_t;

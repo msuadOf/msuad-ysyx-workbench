@@ -9,7 +9,12 @@
 extern "C" {
 #endif
 
-//#define __NATIVE_USE_KLIB__
+#define __NATIVE_USE_KLIB__
+
+static inline int is_addr_valid(const void* s){
+  return 1;//(s>=(const void* )0x80000000 && s<=(const void* )0x88000000-1);
+}
+
 
 // string.h
 void  *memset    (void *s, int c, size_t n);
@@ -23,6 +28,9 @@ char  *strncpy   (char *dst, const char *src, size_t n);
 int    strcmp    (const char *s1, const char *s2);
 int    strncmp   (const char *s1, const char *s2, size_t n);
 
+char* strchr(const char *str, int c);
+void* memchr(const void *ptr, int value, size_t num);
+
 // stdlib.h
 void   srand     (unsigned int seed);
 int    rand      (void);
@@ -30,6 +38,7 @@ void  *malloc    (size_t size);
 void   free      (void *ptr);
 int    abs       (int x);
 int    atoi      (const char *nptr);
+int    itoa      (int n, char *s,int base);
 
 // stdio.h
 int    printf    (const char *format, ...);

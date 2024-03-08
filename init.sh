@@ -1,7 +1,7 @@
 #!/bin/bash
 
-git clone git@github.com:msuadOf/ysyx_scripts.git utils
-chmod +x utils/*.sh
+#git clone git@github.com:msuadOf/ysyx_scripts.git utils
+#chmod +x utils/*.sh
 
 # usage: addenv env_name path
 function addenv() {

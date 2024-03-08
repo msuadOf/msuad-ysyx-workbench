@@ -172,7 +172,7 @@ void exec_once(VerilatedVcdC* tfp) {
   }else{
     top->io_DMem_rData=0xFFFFFFFF;
   }
-  Log("before postedge: top->io_DMem_ren=%d,addr=%08x,data=0x%08x",top->io_DMem_ren,top->io_DMem_rAddr, top->io_DMem_rData);
+  Log_level_2("before postedge: top->io_DMem_ren=%d,addr=%08x,data=0x%08x",top->io_DMem_ren,top->io_DMem_rAddr, top->io_DMem_rData);
   //====== cpu exec body ends  ======
 
   main_time ++;
@@ -186,7 +186,7 @@ void exec_once(VerilatedVcdC* tfp) {
   if(top->io_DMem_wen==1){
     paddr_write(top->io_DMem_wAddr,top->io_DMem_wWidth,top->io_DMem_wData);
   }
-  Log("after postedge: top->io_DMem_ren=%d,addr=0x%08x,data=0x%08x",top->io_DMem_ren,top->io_DMem_rAddr,top->io_DMem_rData );
+  Log_level_2("after postedge: top->io_DMem_ren=%d,addr=0x%08x,data=0x%08x",top->io_DMem_ren,top->io_DMem_rAddr,top->io_DMem_rData );
 }
 extern "C" void ebreak(){
     puts(ANSI_FG_GREEN);
@@ -196,13 +196,7 @@ extern "C" void ebreak(){
 }
 
 extern void difftest_step(CPU_state_diff_t* s,CPU_state_diff_t* s_bak);
-void cpu_exec(uint64_t n) {
-  Log_level_2("cpu_exec(%ld)",n);
-    //寄了以后就别运行了
-      if(npc_state.state==NPC_ABORT || npc_state.state==NPC_END){
-        Log("Program execution has ended. To restart the program, exit NPC and run again.\n");
-      return;
-      }
+void execute(uint64_t n) {
 
   for(int i; i < n; i++){
       #ifdef CONFIG_DIFFTEST
@@ -225,8 +219,34 @@ void cpu_exec(uint64_t n) {
       }
   
   }
-}
 
+}
+void cpu_exec(uint64_t n){
+  Log_level_2("cpu_exec(%ld)",n);
+    //寄了以后就别运行了
+      if(npc_state.state==NPC_ABORT || npc_state.state==NPC_END){
+        Log("Program execution has ended. To restart the program, exit NPC and run again.\n");
+      return;
+      }
+
+      execute(n);
+
+
+  
+  switch (npc_state.state) {
+  case NPC_RUNNING: npc_state.state = NPC_STOP; break;
+
+    case NPC_END: case NPC_ABORT:
+      Log("nemu: %s at pc = " FMT_WORD,
+          (npc_state.state == NPC_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) :
+           (npc_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) :
+            ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
+          npc_state.halt_pc);
+      // fall through
+    case NPC_QUIT: Log("NPC Quited");
+  }
+
+}
 ///=======cpu run time [ends]==================/
 
 int main(int argc, char** argv) {
