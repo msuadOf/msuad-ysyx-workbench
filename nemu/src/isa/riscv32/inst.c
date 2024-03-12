@@ -61,7 +61,6 @@ static vaddr_t *csr_register(word_t imm) {
   default: panic("Unknown csr");
   }
 }
-
 #define ECALL(dnpc) { bool success; dnpc = (isa_raise_intr(isa_reg_str2val(MUXDEF(CONFIG_RVE, "a5", "a7"), &success), s->pc));cpu.csr.mcause=0xb; }
 #define CSR(i) *csr_register(i)
 #define MRET { \
