@@ -6,6 +6,7 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 static char sprintf_buf[1024];
+// #include <stdio.h>
 int printf(const char *fmt, ...) {
   va_list args;
   int n;
@@ -38,13 +39,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
                 break;
       case 's': char *s = va_arg(ap,char *);
 
-do{
-                  if(!is_addr_valid((const void*)s)){
-                    putstr("vsprintf failed at:==[");putstr(out);putstr("]==\n");
-                    itoa((long int)s,out,16); putstr("==["); putstr(out);putstr("]==\n");
-                      panic("addr is not avaliable\n");
-                   }
-}while (0);
+
 
                 strcpy(out,s);
                 out += strlen(out);

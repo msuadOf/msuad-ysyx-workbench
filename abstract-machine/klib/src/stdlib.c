@@ -20,9 +20,6 @@ int abs(int x) {
 }
 
 int atoi(const char* nptr) {
-  if(!is_addr_valid((const void*)nptr)){
-    panic("addr is not avaliable\n");
-  }
   int x = 0;
   while (*nptr == ' ') { nptr ++; }
   while (*nptr >= '0' && *nptr <= '9') {
@@ -49,9 +46,6 @@ static void reverse(char *s,int len)
 
 int itoa(int n,char *s, int base)
 {
-  if(!is_addr_valid((const void*)s)){
-    panic("addr is not avaliable\n");
-  }
     assert(base<=16);
     int i = 0;
     int sign = n<0 ? -1 : 1;

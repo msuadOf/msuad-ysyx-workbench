@@ -35,10 +35,17 @@ static debug_module_config_t difftest_dm_config = {
   .support_haltgroups = true,
   .support_impebreak = true
 };
-
+typedef struct {
+  word_t mcause;
+  vaddr_t mepc;
+  word_t mstatus;
+  word_t mtvec;
+} riscv_CSRs;
 struct diff_context_t {
   word_t gpr[MUXDEF(CONFIG_RVE, 16, 32)];
   word_t pc;
+  // control and status registers
+  riscv_CSRs csr;
 };
 
 static sim_t* s = NULL;
@@ -60,6 +67,11 @@ void sim_t::diff_get_regs(void* diff_context) {
     ctx->gpr[i] = state->XPR[i];
   }
   ctx->pc = state->pc;
+  
+  ctx->csr.mtvec   = state->mtvec->read();  
+  ctx->csr.mstatus = state->mstatus->read();
+  ctx->csr.mepc    = state->mepc->read();    
+  ctx->csr.mcause  = state->mcause->read();  
 }
 
 void sim_t::diff_set_regs(void* diff_context) {
@@ -68,6 +80,11 @@ void sim_t::diff_set_regs(void* diff_context) {
     state->XPR.write(i, (sword_t)ctx->gpr[i]);
   }
   state->pc = ctx->pc;
+
+  state->mtvec->write(ctx->csr.mtvec);
+  state->mstatus->write(ctx->csr.mstatus);
+  state->mepc->write(ctx->csr.mepc);
+  state->mcause->write(ctx->csr.mcause);
 }
 
 void sim_t::diff_memcpy(reg_t dest, void* src, size_t n) {
