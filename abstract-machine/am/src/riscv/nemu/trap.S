@@ -53,7 +53,7 @@ __am_asm_trap:
   STORE t2, OFFSET_EPC(sp)
 
   # set mstatus.MPRV to pass difftest
-  _debug: li a0, (1 << 17)
+  li a0, (1 << 17)
   or t1, t1, a0
   csrw mstatus, t1
 
@@ -64,7 +64,7 @@ __am_asm_trap:
   # changed the stack
   mv sp, a0
 
-  LOAD t1, OFFSET_STATUS(sp)
+  _debug: LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
   csrw mstatus, t1
   addi t2,t2,4 # for mret: mepc+=4
