@@ -72,7 +72,7 @@ static vaddr_t *csr_register(word_t imm) {
   cpu.csr.mstatus &= ~((1<<11)+(1<<12)); \
   /* 切换模式 */ \
   /* 跳转pc */ \
-  s->dnpc=cpu.csr.mepc;\
+  s->dnpc=cpu.csr.mepc+4;\
 }
 
 static int decode_exec(Decode *s) {
