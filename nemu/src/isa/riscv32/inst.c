@@ -64,6 +64,16 @@ static vaddr_t *csr_register(word_t imm) {
 
 #define ECALL(dnpc) { bool success; dnpc = (isa_raise_intr(isa_reg_str2val(MUXDEF(CONFIG_RVE, "a5", "a7"), &success), s->pc));cpu.csr.mcause=0xb; }
 #define CSR(i) *csr_register(i)
+#define MRET { \
+  /* 恢复状态 */ \
+  cpu.csr.mstatus &= ~(1<<3); \
+  cpu.csr.mstatus |= ((cpu.mstatus&(1<<7))>>4); \
+  cpu.csr.mstatus |= (1<<7); \
+  cpu.csr.mstatus &= ~((1<<11)+(1<<12)); \
+  /* 切换模式 */ \
+  /* 跳转pc */ \
+  cpu.dnpc=cpu.csr.mepc;\
+}
 
 static int decode_exec(Decode *s) {
   int rd = 0;
@@ -145,6 +155,7 @@ INSTPAT("0000001 ????? ????? 111 ????? 01100 11", remu   , R, R(rd) = src1 % src
 INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw  , I, R(rd) = CSR(imm); CSR(imm) = src1);
 INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs  , I, R(rd) = CSR(imm); CSR(imm) |= src1);
 INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall  , I, ECALL(s->dnpc));
+
 
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
   INSTPAT("??????? ????? ????? ??? ????? ????? ??", inv    , N, INV(s->pc));
