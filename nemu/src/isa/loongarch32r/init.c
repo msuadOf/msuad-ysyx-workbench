@@ -32,6 +32,9 @@ static void restart() {
 
   /* The zero register is always 0. */
   cpu.gpr[0] = 0;
+
+  /* init mstatus.MPP=11(M mode) */
+  IFDEF(CONFIG_ISA_riscv, cpu.csr.mstatus=0x1800);
 }
 
 void init_isa() {
