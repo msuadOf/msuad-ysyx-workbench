@@ -20,41 +20,42 @@ int printf(const char *fmt, ...) {
 
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-  char *start = out;
+  // char *start = out;
 
-  for(; *fmt != '\0'; ++fmt)
-  {
-    if(*fmt != '%')
-    {
-      *out = *fmt;
-      ++out;
-    }else 
-    {
-      switch (*(++fmt))
-      {
-      case '%': *out = *fmt;
-                ++out; 
-                break;
-      case 'd': out += itoa(va_arg(ap,int),out,10);
-                break;
-      case 's': char *s = va_arg(ap,char *);
+  // for(; *fmt != '\0'; ++fmt)
+  // {
+  //   if(*fmt != '%')
+  //   {
+  //     *out = *fmt;
+  //     ++out;
+  //   }else 
+  //   {
+  //     switch (*(++fmt))
+  //     {
+  //     case '%': *out = *fmt;
+  //               ++out; 
+  //               break;
+  //     case 'd': out += itoa(va_arg(ap,int),out,10);
+  //               break;
+  //     case 's': char *s = va_arg(ap,char *);
 
 
 
-                strcpy(out,s);
-                out += strlen(out);
-                break;
-      case 'c': char c = va_arg(ap,int);
-                *out++ = c;
-                // out += strlen(out);
-                break;
-      default:
-        break;
-      }
-    }
-  }  
-  *out = '\0';
-  return out - start;
+  //               strcpy(out,s);
+  //               out += strlen(out);
+  //               break;
+  //     case 'c': char c = va_arg(ap,int);
+  //               *out++ = c;
+  //               // out += strlen(out);
+  //               break;
+  //     default:
+  //       break;
+  //     }
+  //   }
+  // }  
+  // *out = '\0';
+  // return out - start;
+  return 0;
 }
 
 
