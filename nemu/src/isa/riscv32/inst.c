@@ -65,7 +65,6 @@ static vaddr_t *csr_register(word_t imm) {
 #define CSR(i) *csr_register(i)
 #define MRET { \
   /* 恢复状态 */ \
-    Log("[before]mstatus=0x%08x",cpu.csr.mstatus);\
   cpu.csr.mstatus &= ~(1<<3); \
   cpu.csr.mstatus |= ((cpu.csr.mstatus&(1<<7))>>4); \
   cpu.csr.mstatus |= (1<<7); \
@@ -73,7 +72,6 @@ static vaddr_t *csr_register(word_t imm) {
   /* 切换模式 */ \
   /* 跳转pc */ \
   s->dnpc=cpu.csr.mepc;\
-  Log("[after]mstatus=0x%08x",cpu.csr.mstatus);\
 }
 
 static int decode_exec(Decode *s) {
@@ -163,9 +161,7 @@ INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , R, MRET );
   INSTPAT_END();
 
   R(0) = 0; // reset $zero to 0
-static word_t tmp=0x1800;
-if(cpu.csr.mstatus!=tmp) Log("changed %08x->%08x pc=%08x",tmp,cpu.csr.mstatus,cpu.pc);
-tmp=cpu.csr.mstatus;
+
   return 0;
 }
 
