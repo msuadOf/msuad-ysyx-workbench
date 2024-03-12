@@ -61,10 +61,11 @@ static vaddr_t *csr_register(word_t imm) {
   default: panic("Unknown csr");
   }
 }
-#define ECALL(dnpc) { bool success; dnpc = (isa_raise_intr(isa_reg_str2val(MUXDEF(CONFIG_RVE, "a5", "a7"), &success), s->pc));cpu.csr.mcause=0xb;cpu.csr.mstatus=0x1800; }
+#define ECALL(dnpc) { bool success; dnpc = (isa_raise_intr(isa_reg_str2val(MUXDEF(CONFIG_RVE, "a5", "a7"), &success), s->pc));cpu.csr.mcause=0xb; }
 #define CSR(i) *csr_register(i)
 #define MRET { \
   /* 恢复状态 */ \
+    Log("[before]mstatus=0x%08x",cpu.csr.mstatus);\
   cpu.csr.mstatus &= ~(1<<3); \
   cpu.csr.mstatus |= ((cpu.csr.mstatus&(1<<7))>>4); \
   cpu.csr.mstatus |= (1<<7); \
@@ -72,6 +73,7 @@ static vaddr_t *csr_register(word_t imm) {
   /* 切换模式 */ \
   /* 跳转pc */ \
   s->dnpc=cpu.csr.mepc;\
+  Log("[after]mstatus=0x%08x",cpu.csr.mstatus);\
 }
 
 static int decode_exec(Decode *s) {
