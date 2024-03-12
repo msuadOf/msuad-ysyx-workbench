@@ -164,7 +164,7 @@ INSTPAT("0011000 00010 00000 000 00000 11100 11", mret   , R, MRET );
 
   R(0) = 0; // reset $zero to 0
 static word_t tmp;
-if(cpu.csr.mstatus!=tmp) Log("changed %08x->%08x",tmp,cpu.csr.mstatus);
+if(cpu.csr.mstatus!=tmp) Log("changed %08x->%08x pc=%08x",tmp,cpu.csr.mstatus,cpu.pc);
 tmp=cpu.csr.mstatus;
   return 0;
 }
