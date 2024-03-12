@@ -21,7 +21,7 @@ void hello_intr() {
   iset(1);
   int j=0;
   while (1) {
-    for (volatile int i = 0; i < 1000000; i++) ;
+    for (volatile int i = 0; i < 100000; i++) ;
     yield();
     printf("\nyied=%d\n",j++);
   }
