@@ -62,7 +62,7 @@ static vaddr_t *csr_register(word_t imm) {
   }
 }
 
-#define ECALL(dnpc) { bool success; dnpc = (isa_raise_intr(isa_reg_str2val(MUXDEF(CONFIG_RVE, "a5", "a7"), &success), s->pc)); }
+#define ECALL(dnpc) { bool success; dnpc = (isa_raise_intr(isa_reg_str2val(MUXDEF(CONFIG_RVE, "a5", "a7"), &success), s->pc));cpu.csr.mcause=0xb; cpu.csr.mstatus=0x1800; }
 #define CSR(i) *csr_register(i)
 
 static int decode_exec(Decode *s) {
