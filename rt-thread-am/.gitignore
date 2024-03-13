@@ -52,4 +52,4 @@ tags
 cmake-build-debug
 !*.mk
 
-!*/*/*.md
+!*.md
