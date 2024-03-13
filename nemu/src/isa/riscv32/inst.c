@@ -106,7 +106,7 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
   }
 }
 
-static vaddr_t *csr_register(word_t imm)
+static inline vaddr_t *csr_register(word_t imm)
 {
   switch (imm)
   {
@@ -122,6 +122,22 @@ static vaddr_t *csr_register(word_t imm)
     panic("Unknown csr");
   }
 }
+static inline word_t CSR_READ(word_t imm)
+{
+  return *csr_register(imm);
+}
+static inline void CSR_WRITE(word_t imm, word_t val)
+{
+  *csr_register(imm) = val;
+  switch (imm)
+  {
+  case 0x341: cpu.csr.mepc&=~0x1;break; //return &(cpu.csr.mepc);
+  case 0x342: ;// return &(cpu.csr.mcause);
+  case 0x300: ;// return &(cpu.csr.mstatus);
+  case 0x305: ;// return &(cpu.csr.mtvec);
+  default: ;
+  }
+}
 #define ECALL(dnpc)                                                                            \
   {                                                                                            \
     bool success;                                                                              \
@@ -129,16 +145,17 @@ static vaddr_t *csr_register(word_t imm)
     cpu.csr.mcause = 0xb;                                                                      \
   }
 #define CSR(i) *csr_register(i)
-#define MRET { \
-  /* 恢复状态 */ \
-  cpu.csr.mstatus &= ~(1<<3); \
-  cpu.csr.mstatus |= ((cpu.csr.mstatus&(1<<7))>>4); \
-  cpu.csr.mstatus |= (1<<7); \
-  cpu.csr.mstatus &= ~((1<<11)+(1<<12)); \
-  /* 切换模式 */ \
-  /* 跳转pc */ \
-  s->dnpc=cpu.csr.mepc;\
-}
+#define MRET                                                \
+  {                                                         \
+    /* 恢复状态 */                                      \
+    cpu.csr.mstatus &= ~(1 << 3);                           \
+    cpu.csr.mstatus |= ((cpu.csr.mstatus & (1 << 7)) >> 4); \
+    cpu.csr.mstatus |= (1 << 7);                            \
+    cpu.csr.mstatus &= ~((1 << 11) + (1 << 12));            \
+    /* 切换模式 */                                      \
+    /* 跳转pc */                                          \
+    s->dnpc = cpu.csr.mepc;                                 \
+  }
 #undef MRET
 #define get_field(reg, mask) \
   (((reg) & (word_t)(mask)) / ((mask) & ~((mask) << 1)))
@@ -269,8 +286,8 @@ static int decode_exec(Decode *s)
   INSTPAT("0000001 ????? ????? 111 ????? 01100 11", remu, R, R(rd) = src1 % src2);
 
   //
-  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw, I, R(rd) = CSR(imm); CSR(imm) = src1);
-  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs, I, R(rd) = CSR(imm); CSR(imm) |= src1);
+  INSTPAT("??????? ????? ????? 001 ????? 11100 11", csrrw, I, R(rd) = CSR_READ(imm); CSR_WRITE(imm,src1) );
+  INSTPAT("??????? ????? ????? 010 ????? 11100 11", csrrs, I, R(rd) = CSR_READ(imm); CSR_WRITE(imm,CSR_READ(imm)|src1) );
   INSTPAT("0000000 00000 00000 000 00000 11100 11", ecall, I, ECALL(s->dnpc));
   INSTPAT("0011000 00010 00000 000 00000 11100 11", mret, R, MRET);
 

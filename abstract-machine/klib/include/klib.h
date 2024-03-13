@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-#define __NATIVE_USE_KLIB__
+// #define __NATIVE_USE_KLIB__
 
 
 
@@ -27,6 +27,7 @@ int    strcmp    (const char *s1, const char *s2);
 int    strncmp   (const char *s1, const char *s2, size_t n);
 
 char* strchr(const char *str, int c);
+char *strrchr(const char *s, int c);
 void* memchr(const void *ptr, int value, size_t num);
 
 // stdlib.h
@@ -35,8 +36,7 @@ int    rand      (void);
 void  *malloc    (size_t size);
 void   free      (void *ptr);
 int    abs       (int x);
-int    atoi      (const char *nptr);
-int    itoa      (int n, char *s,int base);
+
 
 // stdio.h
 int    printf    (const char *format, ...);
