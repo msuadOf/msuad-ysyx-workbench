@@ -18,6 +18,7 @@
 #include <cpu/ifetch.h>
 #include <cpu/decode.h>
 #include <common.h>
+#include "local-include/encoding.h"
 
 #define R(i) gpr(i)
 #define Mr vaddr_read
@@ -61,6 +62,12 @@ static vaddr_t *csr_register(word_t imm) {
   default: panic("Unknown csr");
   }
 }
+#define get_field(reg, mask) \
+  (((reg) & (word_t)(mask)) / ((mask) & ~((mask) << 1)))
+
+#define set_field(reg, mask, val) \
+  (((reg) & ~(word_t)(mask)) | (((word_t)(val) * ((mask) & ~((mask) << 1))) & (word_t)(mask)))
+
 #define ECALL(dnpc) { bool success; dnpc = (isa_raise_intr(isa_reg_str2val(MUXDEF(CONFIG_RVE, "a5", "a7"), &success), s->pc));cpu.csr.mcause=0xb; }
 #define CSR(i) *csr_register(i)
 #define MRET { \
