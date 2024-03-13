@@ -14,7 +14,17 @@ Context* __am_irq_handle(Context *c) {
 
     c = user_handler(ev, c);
     assert(c != NULL);
+
+    c->mepc+=1;
+
+    if(ev.event == EVENT_ERROR){
+      assert(c != NULL);//只写了yield,没有对错误操作的处理，不应该到这里
+    }
   }
+  else{
+    assert(c != NULL);//只写了有user_handler的情况，不应该到这里
+  }
+
 
   return c;
 }
