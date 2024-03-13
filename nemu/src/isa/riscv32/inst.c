@@ -149,7 +149,7 @@ static vaddr_t *csr_register(word_t imm)
 static inline word_t MISA_INITVAL()
 {
   return (0xFFFFFFFF & (0 // allow MAFDQCHV bits in MISA to be modified
-                        | (1L << ('M' - 'A')) | (1L << ('A' - 'A')) | (1L << ('F' - 'A')) | (1L << ('D' - 'A')) | (1L << ('Q' - 'A')) | (1L << ('C' - 'A')) | (1L << ('H' - 'A')) | (1L << ('V' - 'A'))));
+                        | (1L << ('M' - 'A')) | (1L << ('A' - 'A')) | (1L << ('F' - 'A')) | (1L << ('D' - 'A')) | (1L << ('Q' - 'A')) | (1L << ('C' - 'A')) | (1L << ('H' - 'A')) | (1L << ('U' - 'A')) | (1L << ('V' - 'A'))));
 }
 static inline bool extension_enabled(unsigned char ext)
 {
