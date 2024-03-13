@@ -15,7 +15,7 @@ Context* __am_irq_handle(Context *c) {
     c = user_handler(ev, c);
     assert(c != NULL);
 
-    c->mepc=(uintptr_t)((uint8_t)(c->mepc)+4);
+    c->mepc=(uintptr_t)((uint8_t*)(c->mepc)+4*sizeof(uint8_t));
     // c->mepc+=1;
     // c->mepc&=~0x1;
 
