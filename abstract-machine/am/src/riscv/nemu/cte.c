@@ -15,7 +15,10 @@ Context* __am_irq_handle(Context *c) {
     c = user_handler(ev, c);
     assert(c != NULL);
 
+    //ps:神奇，三种都行，第三种是trap.S里面 addi t2,t2,4 # for mret: mepc+=4
+    /* 法一 */
     c->mepc=(uintptr_t)((uint8_t*)(c->mepc)+4*sizeof(uint8_t));
+    /* 法二 */
     // c->mepc+=1;
     // c->mepc&=~0x1;
 
