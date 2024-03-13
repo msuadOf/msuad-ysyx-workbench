@@ -48,6 +48,8 @@ tags
 *.code-workspace
 *.eide.*
 .history
-CMakeLists.txt
+!CMakeLists.txt
 cmake-build-debug
-*.mk
+!*.mk
+
+!*/*/*.md
