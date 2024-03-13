@@ -5,6 +5,56 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+// static int atoi(const char* nptr) {
+//   int x = 0;
+//   while (*nptr == ' ') { nptr ++; }
+//   while (*nptr >= '0' && *nptr <= '9') {
+//     x = x * 10 + *nptr - '0';
+//     nptr ++;
+//   }
+//   return x;
+// }
+
+static void reverse(char *s,int len)
+{
+  char *end = s + len - 1;
+  char tmp;
+  while(s < end)
+  {
+    tmp = *s;
+    *s = *end;
+    *end = tmp;
+    s++;end--;
+  }  
+}
+
+static int itoa(int n,char *s, int base)
+{
+    assert(base<=16);
+    int i = 0;
+    int sign = n<0 ? -1 : 1;
+    int bit;
+    n = n * sign;
+    while(n!=0)
+    {
+        bit = n % base;
+        n /= base;
+        if(bit > 9) *s = bit - 10 + 'A';
+        else *s = bit + '0';
+        s++;
+        i++;
+    }
+    if(sign == -1)
+    {
+        *s++ = '-';
+        i++;
+    }
+    reverse(s-i,i);
+    *s = '\0';
+    return i;
+}
+
+
 static char sprintf_buf[1024];
 // #include <stdio.h>
 int printf(const char *fmt, ...) {

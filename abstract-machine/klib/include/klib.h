@@ -36,8 +36,7 @@ int    rand      (void);
 void  *malloc    (size_t size);
 void   free      (void *ptr);
 int    abs       (int x);
-int    atoi      (const char *nptr);
-int    itoa      (int n, char *s,int base);
+
 
 // stdio.h
 int    printf    (const char *format, ...);
