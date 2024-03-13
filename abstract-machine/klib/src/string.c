@@ -116,6 +116,18 @@ char* strchr(const char *str, int c) {
     // 如果没有找到指定的字符，则返回NULL
     return NULL;
 }
+char *strrchr(const char *s, int c) {
+    const char *p = s + strlen(s);
+    // 从字符串末尾向前查找
+    while (p != s) {
+        if (*(p - 1) == (char)c) {
+            return (char *)(p - 1);
+        }
+        p--;
+    }
+    // 如果在整个字符串中都没有找到指定字符，则返回NULL
+    return NULL;
+}
 void* memchr(const void *ptr, int value, size_t num) {
     const unsigned char* byte_ptr = (const unsigned char*)ptr;
 
