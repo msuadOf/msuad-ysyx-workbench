@@ -6,7 +6,7 @@
 
 #include "debug.h"
 
-#define STACK_ADDR (0)
+#define STACK_ADDR (0x80000350)
 // #define STACK_ADDR 0x800229C8UL
 #define STACK_OFFSET(p) ((void*) (p) -(void*)STACK_ADDR)
 
