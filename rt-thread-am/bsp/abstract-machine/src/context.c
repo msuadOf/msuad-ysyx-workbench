@@ -53,8 +53,13 @@ void rt_hw_context_switch_to(rt_ubase_t to) {
 
 void rt_hw_context_switch(rt_ubase_t from, rt_ubase_t to) {
   // assert(0);
+
   __global_rt_to=(Context**)to;
   __global_rt_from=(Context**)from;
+
+    if(from<=0x80000000||to<=0x80000000||__global_rt_to<=(Context**)0x80000000||__global_rt_from<=(Context**)0x80000000){
+      assert(0);
+    }
 
   yield();
 }
