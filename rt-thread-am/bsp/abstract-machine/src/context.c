@@ -41,7 +41,7 @@ void rt_hw_context_switch_to(rt_ubase_t to) {
     //  sp=*(uintptr_t**)to;
     // // Context* to_c= sp;
     Log("to=%d",*(uintptr_t*)to);
-
+    __global_rt_to=*(Context**)to;
     // CSR_WRITE(mepc,to_c->mepc);
 
     // asm("lw a0,0(a0)");
