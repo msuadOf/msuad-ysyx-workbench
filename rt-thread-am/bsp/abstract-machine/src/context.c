@@ -95,7 +95,7 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
   i++;
   wrap_func_params_t *p = (wrap_func_params_t *)params;
 
-  if(p->debug==0x9559) {Log("=====0x9559!====="); assert(0);}
+  if(p->debug!=0x9559) {Log("=====0x9559!====="); assert(0);}
 
 Log("before tentry:%d",i);
   p->tentry(p->parameter); // 调用入口函数
