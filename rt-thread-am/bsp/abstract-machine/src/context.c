@@ -17,6 +17,7 @@ typedef struct _wrap_func_params
   void (*tentry)(void *parameter);
   void *parameter;
   void (*texit)(void);
+  int debug;
 } wrap_func_params_t;
 
 static Context *ev_handler(Event e, Context *c)
@@ -27,7 +28,6 @@ static Context *ev_handler(Event e, Context *c)
     if (__global_rt_from != (Context **)NULL)
       *__global_rt_from = c;
     c = *__global_rt_to;
-    printf("ctx=%d\n", STACK_OFFSET(c));
     break;
   default:
     printf("Unhandled event ID = %d\n", e.event);
@@ -94,6 +94,7 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
   static int i=0;
   i++;
   wrap_func_params_t *p = (wrap_func_params_t *)params;
+  if(p->debug!=0x9559) assert(0);
 Log("before tentry:%d",i);
   p->tentry(p->parameter); // 调用入口函数
   asm("wrap_entry_texit:");
@@ -118,6 +119,7 @@ rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_ad
   params_location->tentry = tentry;
    params_location->parameter = parameter;
     params_location->texit = texit;
+    params_location->debug = 0x9559;
   //memcpy(params_location, &params, sizeof(params)); // 将参数复制到堆栈上的指定位置
 
   Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, wrap_entry, params_location);
