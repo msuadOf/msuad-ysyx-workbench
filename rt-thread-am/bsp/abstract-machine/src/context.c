@@ -52,7 +52,7 @@ void rt_hw_context_switch_to(rt_ubase_t to) {
 }
 
 void rt_hw_context_switch(rt_ubase_t from, rt_ubase_t to) {
-  // assert(0);
+  assert(0);
 
   __global_rt_to=(Context**)to;
   __global_rt_from=(Context**)from;
