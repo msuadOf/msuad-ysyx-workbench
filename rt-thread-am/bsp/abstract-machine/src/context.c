@@ -89,7 +89,7 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
 #define CONTEXT_SIZE ((sizeof(uintptr_t) * 32) + sizeof(uintptr_t) * 4 /* + sizeof(wrap_func_params_t) */)
 
 
-__attribute__((unused)) static void wrap_entry(void *params)
+/* __attribute__((unused)) */ static void wrap_entry(void *params)
 {
   static int i=0;
   i++;
