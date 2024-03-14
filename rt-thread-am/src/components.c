@@ -257,10 +257,10 @@ int rtthread_startup(void)
     /* signal system initialization */
     rt_system_signal_init();
 #endif /* RT_USING_SIGNALS */
-rt_kprintf("=========\n");
+
     /* create init_thread */
     rt_application_init();
-
+rt_kprintf("=========\n");
     /* timer thread initialization */
     rt_system_timer_thread_init();
 
