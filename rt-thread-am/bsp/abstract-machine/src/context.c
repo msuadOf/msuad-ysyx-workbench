@@ -95,6 +95,7 @@ __attribute__((unused)) static void wrap_entry(void *params)
 
   p->tentry(p->parameter); // 调用入口函数
 asm("wrap_entry_texit:");
+assert(0);
   p->texit();              // 在tentry返回后调用退出函数
 
   while (1)
