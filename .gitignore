@@ -10,6 +10,7 @@
 !/nanos-lite/*
 !/navy-apps/*
 !/npc/*
+!/rt-thread-am/*
 !Makefile
 !README.md
 !.gitignore
