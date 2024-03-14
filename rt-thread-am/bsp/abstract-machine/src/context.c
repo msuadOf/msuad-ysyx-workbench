@@ -29,10 +29,11 @@ void __am_cte_init() {
     asm volatile ("csrw " # csr ", %0" : :  "r"(value))
 
 void rt_hw_context_switch_to(rt_ubase_t to) {
-     void* sp=(*(void**)to);
-    Context* to_c= sp;
-    Log("to=%d",to_c->mepc);
-    CSR_WRITE(mepc,to_c->mepc);
+     uintptr_t** sp;
+     sp=(uintptr_t**)to;
+    // Context* to_c= sp;
+    Log("to=%d",*sp);
+    // CSR_WRITE(mepc,to_c->mepc);
 
     //asm("mv sp,a0");
     // 触发一次自陷，以便在事件处理回调函数中进行上下文切换
