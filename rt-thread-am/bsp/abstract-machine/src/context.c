@@ -112,11 +112,11 @@ rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_ad
   rt_uint8_t *aligned_stack_addr = (rt_uint8_t *)(((uintptr_t)unaligned_stack_addr + sizeof(uintptr_t) - 1) & ~(sizeof(uintptr_t) - 1));
 
   // wraper
-  aligned_stack_addr -= sizeof(wrap_func_params_t);
+  aligned_stack_addr = (rt_uint8_t *)((uint8_t *)aligned_stack_addr - sizeof(wrap_func_params_t)+1);
   wrap_func_params_t *params_location = (wrap_func_params_t *)((uint8_t *)aligned_stack_addr);
   // 初始化包装函数参数并保存到堆栈中
-  wrap_func_params_t params = {.tentry = tentry, .parameter = parameter, .texit = texit};
-  memcpy(params_location, &params, sizeof(params)); // 将参数复制到堆栈上的指定位置
+  *params_location = (wrap_func_params_t){.tentry = tentry, .parameter = parameter, .texit = texit};
+  //memcpy(params_location, &params, sizeof(params)); // 将参数复制到堆栈上的指定位置
 
   Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, wrap_entry, params_location);
 // Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, tentry, parameter);
