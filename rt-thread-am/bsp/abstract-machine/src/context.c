@@ -91,10 +91,13 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
 
 __attribute__((unused)) static void wrap_entry(void *params)
 {
+  static int i=0;
+  i++;
   wrap_func_params_t *p = (wrap_func_params_t *)params;
-Log("wrap_entry");
+Log("before tentry:%d",i);
   p->tentry(p->parameter); // 调用入口函数
   asm("wrap_entry_texit:");
+  Log("after tentry:%d",i);
   assert(0);
   p->texit();              // 在tentry返回后调用退出函数
 
