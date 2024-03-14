@@ -29,11 +29,10 @@ void __am_cte_init() {
     asm volatile ("csrw " # csr ", %0" : :  "r"(value))
 
 void rt_hw_context_switch_to(rt_ubase_t to) {
-  asm("yyyy:lw a0,0(a0)");
     //  uintptr_t* sp;
     //  sp=*(uintptr_t**)to;
     // // Context* to_c= sp;
-    Log("to=%d",to);
+    Log("to=%d",*(uintptr_t*)to);
 
     // CSR_WRITE(mepc,to_c->mepc);
 
