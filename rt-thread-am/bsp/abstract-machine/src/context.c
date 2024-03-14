@@ -10,7 +10,7 @@
 // #define STACK_ADDR 0x800229C8UL
 #define STACK_OFFSET(p) ((void*) (p) -(void*)STACK_ADDR)
 
-Context *__global_rt_to,*__global_rt_from;
+Context **__global_rt_to,**__global_rt_from;
 
 typedef struct _wrap_func_params {
     void (*tentry)(void *parameter);
@@ -20,7 +20,7 @@ typedef struct _wrap_func_params {
 
 static Context* ev_handler(Event e, Context *c) {
   switch (e.event) {
-    case EVENT_YIELD:__global_rt_from=c;c=__global_rt_to;printf("ctx=%d\n",STACK_OFFSET(c)); break;
+    case EVENT_YIELD:*__global_rt_from=c;c=*__global_rt_to;printf("ctx=%d\n",STACK_OFFSET(c)); break;
     default: printf("Unhandled event ID = %d\n", e.event); assert(0);
   }
   return c;
@@ -41,7 +41,7 @@ void rt_hw_context_switch_to(rt_ubase_t to) {
     //  sp=*(uintptr_t**)to;
     // // Context* to_c= sp;
     Log("to=%d",*(uintptr_t*)to);
-    __global_rt_to=*(Context**)to;
+    __global_rt_to=(Context**)to;
     // CSR_WRITE(mepc,to_c->mepc);
 
     // asm("lw a0,0(a0)");
@@ -52,8 +52,8 @@ void rt_hw_context_switch_to(rt_ubase_t to) {
 
 void rt_hw_context_switch(rt_ubase_t from, rt_ubase_t to) {
   // assert(0);
-  __global_rt_to=*(Context**)to;
-  __global_rt_from=*(Context**)from;
+  __global_rt_to=(Context**)to;
+  __global_rt_from=(Context**)from;
 
   yield();
 }
