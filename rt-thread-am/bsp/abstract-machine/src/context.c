@@ -10,7 +10,13 @@
 // #define STACK_ADDR 0x800229C8UL
 #define STACK_OFFSET(p) ((void*) (p) -(void*)STACK_ADDR)
 
-Context *rt_to,*rt_from;
+Context *__global_rt_to,*__global_rt_from;
+
+typedef struct _wrap_func_params {
+    void (*tentry)(void *parameter);
+    void *parameter;
+    void (*texit)(void);
+} wrap_func_params_t;
 
 static Context* ev_handler(Event e, Context *c) {
   switch (e.event) {
@@ -55,11 +61,7 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
 // 假设每个gpr占用8字节（uintptr_t大小），NR_REGS为寄存器数量，额外加上wrap_func_params_t结构体的大小
 #define CONTEXT_SIZE ((sizeof(uintptr_t) * 32) + sizeof(uintptr_t) * 4 /* + sizeof(wrap_func_params_t) */)
 
-/* typedef struct _wrap_func_params {
-    void (*tentry)(void *parameter);
-    void *parameter;
-    void (*texit)(void);
-} wrap_func_params_t;
+
 
 static void wrap_entry(void *params)
 {
@@ -68,18 +70,39 @@ static void wrap_entry(void *params)
     p->tentry(p->parameter); // 调用入口函数
     p->texit();              // 在tentry返回后调用退出函数
 
-    // 为了满足不从texit返回的要求，可以进入无限循环或者触发异常等操作
     while (1) {}
-} */
+}
 rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_addr, void *texit) {
   //对齐stack
   rt_uint8_t *unaligned_stack_addr = stack_addr; // 原始堆栈地址
   rt_uint8_t *aligned_stack_addr = (rt_uint8_t *)(((uintptr_t)unaligned_stack_addr + sizeof(uintptr_t) - 1) & ~(sizeof(uintptr_t) - 1));
 
-  Context *ctx = kcontext((Area){.start=aligned_stack_addr , .end=aligned_stack_addr},tentry,parameter);
+//wraper
+  aligned_stack_addr-=sizeof(wrap_func_params_t);
+    wrap_func_params_t *params_location = (wrap_func_params_t *)((uint8_t *)aligned_stack_addr);
+    // 初始化包装函数参数并保存到堆栈中
+    wrap_func_params_t params = { .tentry = tentry, .parameter = parameter, .texit = texit };
+    memcpy(params_location, &params, sizeof(params)); // 将参数复制到堆栈上的指定位置
+
+
+  Context *ctx = kcontext((Area){.start=aligned_stack_addr , .end=aligned_stack_addr},wrap_entry,params_location);
+
 
     Log("aligned_stack_addr=%d ,stack_addr=%d ,ctx=%d,CONTEXT_SIZE=%d",STACK_OFFSET(aligned_stack_addr),STACK_OFFSET(stack_addr),STACK_OFFSET(ctx),CONTEXT_SIZE);
     return (rt_uint8_t *)ctx; 
+    
+    /**
+     * @brief stack:
+     *            
+     *            Context   <---sp & ctx
+     *             ...
+     *           sizeof(Context)
+     *             ...
+     *            wrap_func_params_t  <--- params_location
+     *             ...
+     *             xxxx  <---end
+     * 
+     */
 }
 /* chatgpt 写的 */
 /* typedef struct _wrap_func_params {
