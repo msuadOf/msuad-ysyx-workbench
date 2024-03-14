@@ -113,8 +113,8 @@ rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_ad
   wrap_func_params_t params = {.tentry = tentry, .parameter = parameter, .texit = texit};
   memcpy(params_location, &params, sizeof(params)); // 将参数复制到堆栈上的指定位置
 
-  //Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, wrap_entry, params_location);
-Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, tentry, parameter);
+  Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, wrap_entry, params_location);
+// Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, tentry, parameter);
 
   Log("aligned_stack_addr=%d ,stack_addr=%d ,ctx=%d,CONTEXT_SIZE=%d", STACK_OFFSET(aligned_stack_addr), STACK_OFFSET(stack_addr), STACK_OFFSET(ctx), CONTEXT_SIZE);
   return (rt_uint8_t *)ctx;
