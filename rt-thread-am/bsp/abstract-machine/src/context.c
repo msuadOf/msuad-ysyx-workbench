@@ -20,7 +20,7 @@ typedef struct _wrap_func_params {
 
 static Context* ev_handler(Event e, Context *c) {
   switch (e.event) {
-    case EVENT_YIELD:printf("ctx=%d\n",STACK_OFFSET(c)); break;
+    case EVENT_YIELD:c=__global_rt_to;printf("ctx=%d\n",STACK_OFFSET(c)); break;
     default: printf("Unhandled event ID = %d\n", e.event); assert(0);
   }
   return c;
