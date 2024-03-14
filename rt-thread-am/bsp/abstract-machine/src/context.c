@@ -20,7 +20,7 @@ typedef struct _wrap_func_params {
 
 static Context* ev_handler(Event e, Context *c) {
   switch (e.event) {
-    case EVENT_YIELD:*__global_rt_from=c;c=*__global_rt_to;printf("ctx=%d\n",STACK_OFFSET(c)); break;
+    case EVENT_YIELD:if(__global_rt_from!=(Context**)NULL) *__global_rt_from=c;c=*__global_rt_to;printf("ctx=%d\n",STACK_OFFSET(c)); break;
     default: printf("Unhandled event ID = %d\n", e.event); assert(0);
   }
   return c;
@@ -42,6 +42,7 @@ void rt_hw_context_switch_to(rt_ubase_t to) {
     // // Context* to_c= sp;
     Log("to=%d",*(uintptr_t*)to);
     __global_rt_to=(Context**)to;
+    __global_rt_from=(Context**)NULL;
     // CSR_WRITE(mepc,to_c->mepc);
 
     // asm("lw a0,0(a0)");
