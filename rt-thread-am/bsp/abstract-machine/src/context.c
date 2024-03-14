@@ -10,6 +10,8 @@
 // #define STACK_ADDR 0x800229C8UL
 #define STACK_OFFSET(p) ((void*) (p) -(void*)STACK_ADDR)
 
+Context *rt_to,*rt_from;
+
 static Context* ev_handler(Event e, Context *c) {
   switch (e.event) {
     case EVENT_YIELD:printf("ctx=%d\n",STACK_OFFSET(c)); break;
@@ -74,15 +76,7 @@ rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_ad
   rt_uint8_t *unaligned_stack_addr = stack_addr; // 原始堆栈地址
   rt_uint8_t *aligned_stack_addr = (rt_uint8_t *)(((uintptr_t)unaligned_stack_addr + sizeof(uintptr_t) - 1) & ~(sizeof(uintptr_t) - 1));
 
-  aligned_stack_addr=stack_addr;
-  Context *ctx = (Context *)(aligned_stack_addr - CONTEXT_SIZE);
-
-
-    // 设置Context结构体中的其他字段
-    ctx->mepc = (uintptr_t)tentry; 
-    ctx->mstatus = 0x1800; 
-    ctx->mcause = 0; 
-    ctx->pdir = NULL; 
+  Context *ctx = kcontext((Area){.start=aligned_stack_addr , .end=aligned_stack_addr},tentry,parameter);
 
     Log("aligned_stack_addr=%d ,stack_addr=%d ,ctx=%d,CONTEXT_SIZE=%d",STACK_OFFSET(aligned_stack_addr),STACK_OFFSET(stack_addr),STACK_OFFSET(ctx),CONTEXT_SIZE);
     return (rt_uint8_t *)ctx; 
