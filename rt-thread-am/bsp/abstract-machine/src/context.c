@@ -36,8 +36,6 @@ void rt_hw_context_switch_to(rt_ubase_t to) {
 
     // CSR_WRITE(mepc,to_c->mepc);
     asm("yyyy:lw a0,0(a0)");
-    asm("lw a0,0(a0)");
-    asm("lw a0,0(a0)");
     asm("mv sp,a0");
     // 触发一次自陷，以便在事件处理回调函数中进行上下文切换
     yield();
