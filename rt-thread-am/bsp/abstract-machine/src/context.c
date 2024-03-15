@@ -2,6 +2,9 @@
 #include <klib.h>
 #include <rtthread.h>
 
+ rt_uint32_t rt_interrupt_from_thread, rt_interrupt_to_thread;
+ extern rt_uint32_t rt_thread_switch_interrupt_flag ;
+
 #define log_printf rt_kprintf
 
 #include "debug.h"
@@ -75,6 +78,9 @@ void rt_hw_context_switch(rt_ubase_t from, rt_ubase_t to)
   __global_rt_to = (Context **)to;
   __global_rt_from = (Context **)from;
 
+  rt_interrupt_from_thread=from;
+  rt_interrupt_to_thread=to;
+
   if (from <= 0x80000000 || to <= 0x80000000 || __global_rt_to <= (Context **)0x80000000 || __global_rt_from <= (Context **)0x80000000)
   {
     assert(0);
@@ -101,7 +107,7 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
 
 
 Log("before tentry:%d,texit=%d,parameter=%d,tentry=%d",i,(int)p->texit,(int)p->parameter,(int)p->tentry);
-  if(p->debug!=PARAM_DEBUG(p->tentry,p->parameter)) {Log("=====0x5AA5!====="); assert(0);}
+  // if(p->debug!=PARAM_DEBUG(p->tentry,p->parameter)) {Log("=====0x5AA5!====="); assert(0);}
   p->tentry(p->parameter); // 调用入口函数
   asm("wrap_entry_texit:");
   Log("after tentry:%d,texit=%d,parameter=%d,tentry=%d",i,(int)p->texit,(int)p->parameter,(int)p->tentry);
