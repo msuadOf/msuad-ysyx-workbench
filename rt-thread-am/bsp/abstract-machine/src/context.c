@@ -124,7 +124,7 @@ rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_ad
   params_location->tentry = tentry;
    params_location->parameter = parameter;
     params_location->texit = texit;
-    params_location->debug = (int)((int)tentry-(int)parameter+0x5AA5);
+    params_location->debug = PARAM_DEBUG(tentry,parameter);
   //memcpy(params_location, &params, sizeof(params)); // 将参数复制到堆栈上的指定位置
 
   Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, wrap_entry, params_location);
