@@ -98,7 +98,7 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
 
 
 Log("before tentry:%d,texit=%d,parameter=%d,tentry=%d",i,(int)p->texit,(int)p->parameter,(int)p->tentry);
-  if(p->debug!=(int)((int)(p->tentry)+(int)(p->parameter)+0x5AA5)) {Log("=====0x5AA5!====="); assert(0);}
+  if(p->debug!=(int)((int)(p->tentry)+(int)(p->parameter)-0x5AA5)) {Log("=====0x5AA5!====="); assert(0);}
   p->tentry(p->parameter); // 调用入口函数
   asm("wrap_entry_texit:");
   Log("after tentry:%d,texit=%d,parameter=%d,tentry=%d",i,(int)p->texit,(int)p->parameter,(int)p->tentry);
@@ -122,7 +122,7 @@ rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_ad
   params_location->tentry = tentry;
    params_location->parameter = parameter;
     params_location->texit = texit;
-    params_location->debug = (int)((int)tentry+(int)parameter+0x5AA5);
+    params_location->debug = (int)((int)tentry+(int)parameter-0x5AA5);
   //memcpy(params_location, &params, sizeof(params)); // 将参数复制到堆栈上的指定位置
 
   Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, wrap_entry, params_location);
