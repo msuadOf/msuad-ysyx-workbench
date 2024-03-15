@@ -92,7 +92,7 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
 #define CONTEXT_SIZE ((sizeof(uintptr_t) * 32) + sizeof(uintptr_t) * 4 /* + sizeof(wrap_func_params_t) */)
 
 
-__attribute__((unused)) static void wrap_entry(void *params)
+/* __attribute__((unused)) */ static void wrap_entry(void *params)
 {
   static int i=0;
   i++;
@@ -117,7 +117,7 @@ rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_ad
   // 对齐stack
   rt_uint8_t *unaligned_stack_addr = stack_addr; // 原始堆栈地址
   rt_uint8_t *aligned_stack_addr = (rt_uint8_t *)(((uintptr_t)unaligned_stack_addr + sizeof(uintptr_t) - 1) & ~(sizeof(uintptr_t) - 1));
-
+  aligned_stack_addr=(rt_uint8_t *)((uintptr_t)unaligned_stack_addr&-4);
   // wraper
   aligned_stack_addr = (rt_uint8_t *)((uint8_t *)aligned_stack_addr - sizeof(wrap_func_params_t)+1);
   wrap_func_params_t *params_location = (wrap_func_params_t *)((uint8_t *)aligned_stack_addr);
@@ -128,8 +128,8 @@ rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_ad
     params_location->debug = PARAM_DEBUG(tentry,parameter);
   //memcpy(params_location, &params, sizeof(params)); // 将参数复制到堆栈上的指定位置
 
-  // Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, wrap_entry, params_location);
-Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, tentry, parameter);
+  Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, wrap_entry, params_location);
+// Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, tentry, parameter);
 
    return (rt_uint8_t *)ctx;
 
