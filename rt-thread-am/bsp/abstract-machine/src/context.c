@@ -10,7 +10,7 @@
 // #define STACK_ADDR 0x800229C8UL
 #define STACK_OFFSET(p) ((void *)(p) - (void *)STACK_ADDR)
 
-#define PARAM_DEBUG(tentry,parameter) ((int)((int)(tentry)-(int)(parameter)+0x5AA5))
+#define PARAM_DEBUG(tentry,parameter) ((int)((int)(*((uint8_t*)(tentry)))-(int)(*((uint8_t*)(parameter)))+0x5AA5))
 
 Context **__global_rt_to, **__global_rt_from;
 
