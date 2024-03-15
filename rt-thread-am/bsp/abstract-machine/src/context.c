@@ -49,7 +49,7 @@ static Context *ev_handler(Event e, Context *c)
       // (Context*)rt_interrupt_from_thread=c;
     }
     // c=*(Context**)rt_interrupt_to_thread;
-    c=(Context*)rt_interrupt_to_thread;
+    c=*(Context**)rt_interrupt_to_thread;
     // memcpy(c,*(Context**)rt_interrupt_to_thread,sizeof(Context));
   // }
 
