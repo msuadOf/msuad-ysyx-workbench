@@ -41,13 +41,13 @@ static Context *ev_handler(Event e, Context *c)
   }
 
   __PendSV:
-  if(rt_thread_switch_interrupt_flag==1){
+  // if(rt_thread_switch_interrupt_flag==1){
     rt_thread_switch_interrupt_flag=0;
     if(rt_interrupt_from_thread!=0){
       *(Context**)rt_interrupt_from_thread=c;//保存from线程
     }
     c=*(Context**)rt_interrupt_to_thread;
-  }
+  // }
 
   return c;
 }
