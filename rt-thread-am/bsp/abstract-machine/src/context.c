@@ -85,8 +85,8 @@ void rt_hw_context_switch_to(rt_ubase_t to)
 
 void rt_hw_context_switch(rt_ubase_t from, rt_ubase_t to)
 {
-  static int i = 0;
-  if (i++ >= 1){ assert(0);}
+  // static int i = 0;
+  // if (i++ >= 1){ assert(0);}
    
 
   __global_rt_to = (Context **)to;
