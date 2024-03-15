@@ -2,6 +2,9 @@
 #include <klib.h>
 #include <rtthread.h>
 
+ rt_uint32_t rt_interrupt_from_thread, rt_interrupt_to_thread;
+rt_uint32_t rt_thread_switch_interrupt_flag ;
+
 #define log_printf rt_kprintf
 
 #include "debug.h"
@@ -9,6 +12,9 @@
 #define STACK_ADDR (0x80000350)
 // #define STACK_ADDR 0x800229C8UL
 #define STACK_OFFSET(p) ((void *)(p) - (void *)STACK_ADDR)
+
+// #define PARAM_DEBUG(tentry,parameter) ((int)((int)((tentry))-(int)(parameter)+0x5AA5))
+#define PARAM_DEBUG(tentry,parameter) ((int)(0x5AA5))
 
 Context **__global_rt_to, **__global_rt_from;
 
@@ -24,15 +30,27 @@ static Context *ev_handler(Event e, Context *c)
 {
   switch (e.event)
   {
-  case EVENT_YIELD:
-    if (__global_rt_from != (Context **)NULL)
-      *__global_rt_from = c;
-    c = *__global_rt_to;
+  case EVENT_YIELD: goto __PendSV;assert(0);
+    // if (__global_rt_from != (Context **)NULL)
+    //   *__global_rt_from = c;
+    // c = *__global_rt_to;
     break;
   default:
     printf("Unhandled event ID = %d\n", e.event);
     assert(0);
   }
+
+  __PendSV:
+  // if(rt_thread_switch_interrupt_flag==1){
+    rt_thread_switch_interrupt_flag=0;
+    if(rt_interrupt_from_thread!=0){
+       memcpy(*(Context**)rt_interrupt_from_thread,c,sizeof(Context));
+      // *(Context**)rt_interrupt_from_thread=c;//保存from线程
+    }
+    // c=*(Context**)rt_interrupt_to_thread;
+    memcpy(c,*(Context**)rt_interrupt_to_thread,sizeof(Context));
+  // }
+
   return c;
 }
 
@@ -55,6 +73,10 @@ void rt_hw_context_switch_to(rt_ubase_t to)
   Log("to=%d", *(uintptr_t *)to);
   __global_rt_to = (Context **)to;
   __global_rt_from = (Context **)NULL;
+
+  rt_interrupt_from_thread=0;
+  rt_interrupt_to_thread=to;
+  rt_thread_switch_interrupt_flag=1;
   // CSR_WRITE(mepc,to_c->mepc);
 
   // asm("lw a0,0(a0)");
@@ -65,12 +87,17 @@ void rt_hw_context_switch_to(rt_ubase_t to)
 
 void rt_hw_context_switch(rt_ubase_t from, rt_ubase_t to)
 {
-  static int i = 0;
-  if (i++ >= 1)
-    assert(0);
+  // static int i = 0;
+  // if (i++ >= 1){ assert(0);}
+   
 
   __global_rt_to = (Context **)to;
   __global_rt_from = (Context **)from;
+
+if(rt_thread_switch_interrupt_flag!=1){
+  rt_interrupt_from_thread=from;
+}
+  rt_interrupt_to_thread=to;
 
   if (from <= 0x80000000 || to <= 0x80000000 || __global_rt_to <= (Context **)0x80000000 || __global_rt_from <= (Context **)0x80000000)
   {
@@ -95,12 +122,13 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
   i++;
   wrap_func_params_t *p = (wrap_func_params_t *)params;
 
-  if(p->debug!=(int)((int)(p->tentry)+(int)(p->parameter)+0x5AA5)) {Log("=====0x5AA5!====="); assert(0);}
 
-Log("before tentry:%d",i);
+
+Log("before tentry:%d,texit=%d,parameter=%d,tentry=%d",i,(int)p->texit,(int)p->parameter,(int)p->tentry);
+  // if(p->debug!=PARAM_DEBUG(p->tentry,p->parameter)) {Log("=====0x5AA5!====="); assert(0);}
   p->tentry(p->parameter); // 调用入口函数
   asm("wrap_entry_texit:");
-  Log("after tentry:%d",i);
+  Log("after tentry:%d,texit=%d,parameter=%d,tentry=%d",i,(int)p->texit,(int)p->parameter,(int)p->tentry);
 
   p->texit();              // 在tentry返回后调用退出函数
 
@@ -113,6 +141,7 @@ rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_ad
   // 对齐stack
   rt_uint8_t *unaligned_stack_addr = stack_addr; // 原始堆栈地址
   rt_uint8_t *aligned_stack_addr = (rt_uint8_t *)(((uintptr_t)unaligned_stack_addr + sizeof(uintptr_t) - 1) & ~(sizeof(uintptr_t) - 1));
+  aligned_stack_addr=(rt_uint8_t *)((uintptr_t)unaligned_stack_addr&-4);
 
   // wraper
   aligned_stack_addr = (rt_uint8_t *)((uint8_t *)aligned_stack_addr - sizeof(wrap_func_params_t)+1);
@@ -121,14 +150,13 @@ rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_ad
   params_location->tentry = tentry;
    params_location->parameter = parameter;
     params_location->texit = texit;
-    params_location->debug = (int)((int)tentry+(int)parameter+0x5AA5);
+    params_location->debug = PARAM_DEBUG(tentry,parameter);
   //memcpy(params_location, &params, sizeof(params)); // 将参数复制到堆栈上的指定位置
 
   Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, wrap_entry, params_location);
 // Context *ctx = kcontext((Area){.start = aligned_stack_addr, .end = aligned_stack_addr}, tentry, parameter);
 
-  Log("aligned_stack_addr=%d ,stack_addr=%d ,ctx=%d,CONTEXT_SIZE=%d", STACK_OFFSET(aligned_stack_addr), STACK_OFFSET(stack_addr), STACK_OFFSET(ctx), CONTEXT_SIZE);
-  return (rt_uint8_t *)ctx;
+   return (rt_uint8_t *)ctx;
 
   /**
    * @brief stack:
