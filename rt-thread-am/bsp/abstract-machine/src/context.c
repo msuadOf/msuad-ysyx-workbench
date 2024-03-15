@@ -10,6 +10,8 @@
 // #define STACK_ADDR 0x800229C8UL
 #define STACK_OFFSET(p) ((void *)(p) - (void *)STACK_ADDR)
 
+#define PARAM_DEBUG(tentry,parameter) ((int)((int)(tentry)-(int)(parameter)+0x5AA5))
+
 Context **__global_rt_to, **__global_rt_from;
 
 typedef struct _wrap_func_params
@@ -98,7 +100,7 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
 
 
 Log("before tentry:%d,texit=%d,parameter=%d,tentry=%d",i,(int)p->texit,(int)p->parameter,(int)p->tentry);
-  if(p->debug!=(int)((int)(p->tentry)-(int)(p->parameter)+0x5AA5)) {Log("=====0x5AA5!====="); assert(0);}
+  if(p->debug!=PARAM_DEBUG(p->tentry,p->parameter)) {Log("=====0x5AA5!====="); assert(0);}
   p->tentry(p->parameter); // 调用入口函数
   asm("wrap_entry_texit:");
   Log("after tentry:%d,texit=%d,parameter=%d,tentry=%d",i,(int)p->texit,(int)p->parameter,(int)p->tentry);
