@@ -46,9 +46,11 @@ static Context *ev_handler(Event e, Context *c)
     if(rt_interrupt_from_thread!=0){
        memcpy(*(Context**)rt_interrupt_from_thread,c,sizeof(Context));
       // *(Context**)rt_interrupt_from_thread=c;//保存from线程
+      // (Context*)rt_interrupt_from_thread=c;
     }
     // c=*(Context**)rt_interrupt_to_thread;
-    memcpy(c,*(Context**)rt_interrupt_to_thread,sizeof(Context));
+    c=(Context*)rt_interrupt_to_thread;
+    // memcpy(c,*(Context**)rt_interrupt_to_thread,sizeof(Context));
   // }
 
   return c;
