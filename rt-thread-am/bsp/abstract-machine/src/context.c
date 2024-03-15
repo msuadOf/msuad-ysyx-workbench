@@ -103,7 +103,7 @@ Log("before tentry:%d",i);
   Log("after tentry:%d",i);
 
   p->texit();              // 在tentry返回后调用退出函数
-assert(0);
+
   while (1)
   {
   }
