@@ -3,7 +3,7 @@
 #include <rtthread.h>
 
  rt_uint32_t rt_interrupt_from_thread, rt_interrupt_to_thread;
- extern rt_uint32_t rt_thread_switch_interrupt_flag ;
+rt_uint32_t rt_thread_switch_interrupt_flag ;
 
 #define log_printf rt_kprintf
 
@@ -30,15 +30,25 @@ static Context *ev_handler(Event e, Context *c)
 {
   switch (e.event)
   {
-  case EVENT_YIELD:
-    if (__global_rt_from != (Context **)NULL)
-      *__global_rt_from = c;
-    c = *__global_rt_to;
+  case EVENT_YIELD: goto __PendSV;assert(0);
+    // if (__global_rt_from != (Context **)NULL)
+    //   *__global_rt_from = c;
+    // c = *__global_rt_to;
     break;
   default:
     printf("Unhandled event ID = %d\n", e.event);
     assert(0);
   }
+
+  __PendSV:
+  if(rt_thread_switch_interrupt_flag==1){
+    rt_thread_switch_interrupt_flag=0;
+    if(rt_interrupt_from_thread!=0){
+      *(Context**)rt_interrupt_from_thread=c;//保存from线程
+    }
+    c=*(Context**)rt_interrupt_to_thread;
+  }
+
   return c;
 }
 
@@ -61,6 +71,10 @@ void rt_hw_context_switch_to(rt_ubase_t to)
   Log("to=%d", *(uintptr_t *)to);
   __global_rt_to = (Context **)to;
   __global_rt_from = (Context **)NULL;
+
+  rt_interrupt_from_thread=0;
+  rt_interrupt_to_thread=to;
+  rt_thread_switch_interrupt_flag=1;
   // CSR_WRITE(mepc,to_c->mepc);
 
   // asm("lw a0,0(a0)");
@@ -78,7 +92,9 @@ void rt_hw_context_switch(rt_ubase_t from, rt_ubase_t to)
   __global_rt_to = (Context **)to;
   __global_rt_from = (Context **)from;
 
+if(rt_thread_switch_interrupt_flag!=1){
   rt_interrupt_from_thread=from;
+}
   rt_interrupt_to_thread=to;
 
   if (from <= 0x80000000 || to <= 0x80000000 || __global_rt_to <= (Context **)0x80000000 || __global_rt_from <= (Context **)0x80000000)
