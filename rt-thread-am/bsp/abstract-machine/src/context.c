@@ -117,7 +117,8 @@ rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_ad
   // 对齐stack
   rt_uint8_t *unaligned_stack_addr = stack_addr; // 原始堆栈地址
   rt_uint8_t *aligned_stack_addr = (rt_uint8_t *)(((uintptr_t)unaligned_stack_addr + sizeof(uintptr_t) - 1) & ~(sizeof(uintptr_t) - 1));
-  //aligned_stack_addr=(rt_uint8_t *)((uintptr_t)unaligned_stack_addr&-4);
+  aligned_stack_addr=(rt_uint8_t *)((uintptr_t)unaligned_stack_addr&-4);
+
   // wraper
   aligned_stack_addr = (rt_uint8_t *)((uint8_t *)aligned_stack_addr - sizeof(wrap_func_params_t)+1);
   wrap_func_params_t *params_location = (wrap_func_params_t *)((uint8_t *)aligned_stack_addr);
