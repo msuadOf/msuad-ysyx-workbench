@@ -100,7 +100,7 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
 Log("before tentry:%d",i);
   p->tentry(p->parameter); // 调用入口函数
   asm("wrap_entry_texit:");
-  Log("after tentry:%d",i);
+  Log("after tentry:%d,texit=%d",i,(int)p->texit);
 
   p->texit();              // 在tentry返回后调用退出函数
 
