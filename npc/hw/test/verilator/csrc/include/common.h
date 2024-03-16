@@ -30,7 +30,12 @@
 #define CONFIG_LOG 1
 
 //---------------- device ---------------
+#define CONFIG_DEVICE 1
+#if CONFIG_DEVICE
 #define CONFIG_SERIAL_MMIO 0xa00003f8
+
+#endif // CONFIG_DEVICE
+
 
 typedef MUXDEF(CONFIG_ISA64, uint64_t, uint32_t) word_t;
 typedef MUXDEF(CONFIG_ISA64, int64_t, int32_t)  sword_t;
