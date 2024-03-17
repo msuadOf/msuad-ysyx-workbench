@@ -7,7 +7,11 @@ asm("lw a0,0(a1)");
 asm("sw a0,0(a1)");
 asm("lw a0,0(a1)");
 
-asm("li a1,0x8000021c");
+asm("li a0,0x8002021c");
+asm("sw a0,0(a1)");
+asm("lw a0,0(a1)");
+asm("sw a0,0(a1)");
+asm("lw a0,0(a1)");
 
   return 0;
 }
