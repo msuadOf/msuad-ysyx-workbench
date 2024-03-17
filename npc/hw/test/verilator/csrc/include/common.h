@@ -31,11 +31,17 @@
 
 //---------------- device ---------------
 #define CONFIG_DEVICE 1
-#if CONFIG_DEVICE
+
+#ifdef CONFIG_DEVICE
+#define CONFIG_DEVICE_SERIAL 1 //SERIAL
+#endif // CONFIG_DEVICE
+
+//SERIAL
+#ifdef CONFIG_DEVICE_SERIAL
 #define CONFIG_SERIAL_MMIO 0xa00003f8
 #define CONFIG_SERIAL_MMIO_END (CONFIG_SERIAL_MMIO+8)
 
-#endif // CONFIG_DEVICE
+#endif // CONFIG_DEVICE_SERIAL
 
 
 typedef MUXDEF(CONFIG_ISA64, uint64_t, uint32_t) word_t;

@@ -12,11 +12,10 @@
                           return true;\
                         }
 
-// IFDEF(CONFIG_SERIAL_MMIO,DEF_IF_ADDR(SERIAL))
-DEF_IF_ADDR(SERIAL) 
+IFDEF(CONFIG_DEVICE_SERIAL,DEF_IF_ADDR(SERIAL)) 
 
 /* bus interface */
-#define MMIO_IS_AT(DEVICE_NAME) IS_AT(SERIAL)(addr, len)
+#define MMIO_IS_AT(DEVICE_NAME) IS_AT(DEVICE_NAME)(addr, len)
 word_t mmio_read(paddr_t addr, int len) {
   if(MMIO_IS_AT(SERIAL)) assert(0);
 }
