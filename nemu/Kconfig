@@ -10,7 +10,7 @@ choice
   prompt "Base ISA"
   default ISA_riscv
 config ISA_x86
-  bool "x86"
+  bool "d"
 config ISA_mips32
   bool "mips32"
 config ISA_riscv
@@ -21,7 +21,7 @@ endchoice
 
 config ISA
   string
-  default "x86" if ISA_x86
+  default "d" if ISA_x86
   default "mips32" if ISA_mips32
   default "riscv32" if ISA_riscv && !RV64
   default "riscv64" if ISA_riscv &&  RV64

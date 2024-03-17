@@ -25,9 +25,32 @@
 #include <macro.h>
 #include <assert.h>
 
-#define CONFIG_DIFFTEST 1
+// #define CONFIG_DIFFTEST 1
 //#define CONFIG_MTRACE 1
 #define CONFIG_LOG 1
+
+//---------------- device ---------------
+#define CONFIG_DEVICE 1
+
+#ifdef CONFIG_DEVICE
+#define CONFIG_DEVICE_SERIAL 1 //SERIAL
+#define CONFIG_DEVICE_RTC 1 //RTC
+#endif // CONFIG_DEVICE
+
+//SERIAL
+#ifdef CONFIG_DEVICE_SERIAL
+#define CONFIG_SERIAL_MMIO 0xa00003f8
+#define CONFIG_SERIAL_MMIO_END (CONFIG_SERIAL_MMIO+8)
+
+#endif // CONFIG_DEVICE_SERIAL
+
+//RTC
+#ifdef CONFIG_DEVICE_RTC
+#define CONFIG_RTC_MMIO 0xa000048
+#define CONFIG_RTC_MMIO_END (CONFIG_RTC_MMIO+8)
+
+#endif // CONFIG_DEVICE_SERIAL
+
 
 typedef MUXDEF(CONFIG_ISA64, uint64_t, uint32_t) word_t;
 typedef MUXDEF(CONFIG_ISA64, int64_t, int32_t)  sword_t;
