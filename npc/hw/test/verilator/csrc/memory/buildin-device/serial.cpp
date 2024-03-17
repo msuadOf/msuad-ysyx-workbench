@@ -33,6 +33,7 @@ word_t mmio_read_serial(paddr_t addr, int len) {
 
 void mmio_write_serial(paddr_t addr, int len, word_t data) {
   //emmulate register
+  Log("here!");
   if(addr==CONFIG_SERIAL_MMIO) serial_base[0]=data;
   serial_io_handler(addr-CONFIG_SERIAL_MMIO,len,1);
 }
