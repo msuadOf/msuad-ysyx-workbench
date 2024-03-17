@@ -3,7 +3,6 @@
 
 #define IS_AT(DEVICE_NAME) concat(DEVICE_NAME,_mmio_is_at_serial)
 #define DEF_IF_ADDR(DEVICE_NAME) static inline int IS_AT(DEVICE_NAME) (paddr_t addr, int len){\
-Log("%08x %d",addr,len);\
                           if(addr<concat3(CONFIG_,DEVICE_NAME,_MMIO) || addr>concat3(CONFIG_,DEVICE_NAME,_MMIO_END) ){\
                             return 0;\
                           }\
