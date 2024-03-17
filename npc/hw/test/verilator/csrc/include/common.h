@@ -25,7 +25,7 @@
 #include <macro.h>
 #include <assert.h>
 
-#define CONFIG_DIFFTEST 1
+// #define CONFIG_DIFFTEST 1
 //#define CONFIG_MTRACE 1
 #define CONFIG_LOG 1
 
