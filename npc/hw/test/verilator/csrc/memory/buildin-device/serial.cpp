@@ -24,15 +24,7 @@ static void serial_io_handler(uint32_t offset, int len, bool is_write) {
   }
 }
 /* bus interface */
-bool mmio_is_at_serial(paddr_t addr, int len){
-  if(addr>=CONFIG_SERIAL_MMIO || addr<=CONFIG_SERIAL_MMIO_END){
-    return false;
-  }
-  if((addr+(len-1))>=CONFIG_SERIAL_MMIO || (addr+(len-1))<=CONFIG_SERIAL_MMIO_END){
-    return false;
-  }
-  return true;
-}
+
 word_t mmio_read_serial(paddr_t addr, int len) {
   
 }
