@@ -25,7 +25,8 @@ word_t mmio_read(paddr_t addr, int len) {
 void mmio_write(paddr_t addr, int len, word_t data) {
 
     extern void mmio_write_serial(paddr_t addr, int len, word_t data);
-    if(MMIO_IS_AT(SERIAL)) {      Log("here!");  mmio_write_serial(addr, len,data); return; };
+    //if(MMIO_IS_AT(SERIAL)) {  mmio_write_serial(addr, len,data); return; };
+    if(addr==CONFIG_SERIAL_MMIO) {  mmio_write_serial(addr, len,data); return; };
 }
 
 /* 宏定义原型 */
