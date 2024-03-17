@@ -20,7 +20,7 @@ IFDEF(CONFIG_DEVICE_RTC,DEF_IF_ADDR(RTC))
 #define doREAD(DEVICE_NAME) extern word_t mmio_read_SERIAL(paddr_t addr, int len);\
                             if(MMIO_IS_AT(DEVICE_NAME)) { return mmio_read_SERIAL(addr, len); }; 
 
-#define doWRITE(DEVICE_NAME)  extern void mmio_write_SERIAL(paddr_t addr, int len, word_t data);\
+#define doWRITE(DEVICE_NAME) extern void mmio_write_SERIAL(paddr_t addr, int len, word_t data);\
                                         if(MMIO_IS_AT(DEVICE_NAME)) {  mmio_write_SERIAL(addr, len,data); return; };
 
 word_t mmio_read(paddr_t addr, int len) {
