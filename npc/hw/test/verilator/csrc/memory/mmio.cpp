@@ -16,12 +16,15 @@ IFDEF(CONFIG_DEVICE_SERIAL,DEF_IF_ADDR(SERIAL))
 
 /* bus interface */
 #define MMIO_IS_AT(DEVICE_NAME) IS_AT(DEVICE_NAME)(addr, len)
+
 word_t mmio_read(paddr_t addr, int len) {
-  if(MMIO_IS_AT(SERIAL)) assert(0);
+    extern word_t mmio_read_serial(paddr_t addr, int len);
+    if(MMIO_IS_AT(SERIAL)) { return mmio_read_serial(addr, len); };
 }
 
 void mmio_write(paddr_t addr, int len, word_t data) {
-  
+    extern void mmio_write_serial(paddr_t addr, int len, word_t data);
+    if(MMIO_IS_AT(SERIAL)) {  mmio_write_serial(addr, len,data); return; };
 }
 
 /* 宏定义原型 */
