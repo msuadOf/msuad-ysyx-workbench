@@ -172,7 +172,7 @@ void exec_once(VerilatedVcdC* tfp) {
   }else{
     top->io_DMem_rData=0xFFFFFFFF;
   }
-  Log_level_2("before postedge: top->io_DMem_ren=%d,addr=%08x,data=0x%08x",top->io_DMem_ren,top->io_DMem_rAddr, top->io_DMem_rData);
+  Log("before postedge: top->io_DMem_ren=%d,addr=%08x,data=0x%08x",top->io_DMem_ren,top->io_DMem_rAddr, top->io_DMem_rData);
   //====== cpu exec body ends  ======
 
   main_time ++;
