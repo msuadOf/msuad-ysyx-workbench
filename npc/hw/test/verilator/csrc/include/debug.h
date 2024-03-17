@@ -35,7 +35,7 @@
         __FILE__, __LINE__, __func__, ## __VA_ARGS__) )
 
 //IO
-#define CONFIG_Log_level_2 
+#define CONFIG_Log_level_2  1
 #define Log_level_2(format, ...) \
     IFDEF(CONFIG_Log_level_0, _Log(ANSI_FMT("[%s:%d %s] " format, ANSI_FG_BLUE) "\n", \
         __FILE__, __LINE__, __func__, ## __VA_ARGS__) )
