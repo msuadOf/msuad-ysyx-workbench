@@ -1,8 +1,8 @@
 #include "common.h"
 #include "macro.h"
 
-
-#define DEF_IF_ADDR(DEVICE_NAME) static inline bool concat(DEVICE_NAME,_mmio_is_at_serial) (paddr_t addr, int len){\
+#define IF_AT(DEVICE_NAME) concat(DEVICE_NAME,_mmio_is_at_serial)
+#define DEF_IF_ADDR(DEVICE_NAME) static inline bool IF_AT(DEVICE_NAME) (paddr_t addr, int len){\
                           if(addr>=concat3(CONFIG_,DEVICE_NAME,_MMIO) || addr<=concat3(CONFIG_,DEVICE_NAME,_MMIO_END) ){\
                             return false;\
                           }\
