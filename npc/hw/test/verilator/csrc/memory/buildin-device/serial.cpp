@@ -25,18 +25,19 @@ static void serial_io_handler(uint32_t offset, int len, bool is_write) {
 }
 /* bus interface */
 
-word_t mmio_read_serial(paddr_t addr, int len) {
+word_t mmio_read_SERIAL(paddr_t addr, int len) {
   //TODO:getc()
   assert(0);
   serial_io_handler(addr-CONFIG_SERIAL_MMIO,len,0);
 }
 
-void mmio_write_serial(paddr_t addr, int len, word_t data) {
+void mmio_write_SERIAL(paddr_t addr, int len, word_t data) {
   //emmulate register
 
   if(addr==CONFIG_SERIAL_MMIO) serial_base[0]=data;
   serial_io_handler(addr-CONFIG_SERIAL_MMIO,len,1);
 }
+
 void init_serial() {
 
 
