@@ -79,7 +79,7 @@ object LSUOpType { //TODO: refactor LSU fuop
 
 object ALUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-  def ADDI  = (e: ExecEnv) => e.Rrd := e.src1 + e.immI
+  def ADDI  = (e: ExecEnv) => {e.Rrd := e.src1 + e.immI;printf("[ADDI]:ADDR=%x,src1=%x,immI=%x}\n",e.src1 + e.immI,e.src1 ,e.immI) }
   def SLLI  = (e: ExecEnv) => e.Rrd := e.src1 << e.immI(5, 0)
   def SLTI  = (e: ExecEnv) => e.Rrd := e.src1.asSInt < e.immI.asSInt
   def SLTIU = (e: ExecEnv) => e.Rrd := e.src1 < e.immI
