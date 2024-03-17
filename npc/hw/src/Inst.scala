@@ -79,7 +79,7 @@ object LSUOpType { //TODO: refactor LSU fuop
 
 object ALUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-  def ADDI  = (e: ExecEnv) => e.Rrd := e.src1 + e.immI
+  def ADDI  = (e: ExecEnv) => {e.Rrd := e.src1 + e.immI;printf("[ADDI]:ADDR=%x,src1=%x,immI=%x}\n",e.src1 + e.immI,e.src1 ,e.immI) }
   def SLLI  = (e: ExecEnv) => e.Rrd := e.src1 << e.immI(5, 0)
   def SLTI  = (e: ExecEnv) => e.Rrd := e.src1.asSInt < e.immI.asSInt
   def SLTIU = (e: ExecEnv) => e.Rrd := e.src1 < e.immI
@@ -124,7 +124,7 @@ object LSUExec {
   def LW  = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 4)
   def LBU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 1)
   def LHU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 2)
-  def SB  = (e: ExecEnv) => {e.Mw(e.src1 + e.immS, 1, e.src2);printf("[SB]:ADDR=%x,src1=%x,immS=%x}\n",e.src1 + e.immS,e.src1 ,e.immS)}
+  def SB  = (e: ExecEnv) => {e.Mw(e.src1 + e.immS, 1, e.src2);/* printf("[SB]:ADDR=%x,src1=%x,immS=%x}\n",e.src1 + e.immS,e.src1 ,e.immS) */}
   def SH  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 2, e.src2)
   def SW  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 4, e.src2)
 
