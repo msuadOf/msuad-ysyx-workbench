@@ -12,7 +12,7 @@
                           return true;\
                         }
 
-DEF_IF_ADDR(SERIAL)
+IFDEF(CONFIG_SERIAL_MMIO,DEF_IF_ADDR(SERIAL)) 
 
 /* bus interface */
 word_t mmio_read(paddr_t addr, int len) {
