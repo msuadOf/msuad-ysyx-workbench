@@ -85,6 +85,9 @@ verilog:$(CHISEL_GEN_VERILOG_FILE)
 $(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
 	mkdir -p $(BUILD_DIR)
 	mill -i __.runMain Elaborate -td $(BUILD_DIR)
+ifeq ( NODISPLAY , "y" )
+	@echo "NODISPLAY"
+endif
 
 # Input files for Verilator
 VERILATOR_INPUT_FILE += $(C_SRC_FILE) $(CPP_SRC_FILE)
