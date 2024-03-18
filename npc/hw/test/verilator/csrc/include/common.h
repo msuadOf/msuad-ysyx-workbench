@@ -34,10 +34,10 @@
 // #define CONFIG_Log_level_2 1
 
 //---------------- device ---------------
-// #define CONFIG_DEVICE 1
+#define CONFIG_DEVICE 1
 
 #ifdef CONFIG_DEVICE
-#define CONFIG_DEVICE_SERIAL 1 //SERIAL
+// #define CONFIG_DEVICE_SERIAL 1 //SERIAL
 #define CONFIG_DEVICE_RTC 1 //RTC
 #endif // CONFIG_DEVICE
 

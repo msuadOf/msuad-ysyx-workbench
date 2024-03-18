@@ -12,11 +12,13 @@
                           return 1;\
                         }
 
+/* add device addr checker here */
 IFDEF(CONFIG_DEVICE_SERIAL,DEF_IF_ADDR(SERIAL)) 
 IFDEF(CONFIG_DEVICE_RTC,DEF_IF_ADDR(RTC)) 
 
 /* bus interface */
 #define MMIO_IS_AT(DEVICE_NAME) IS_AT(DEVICE_NAME)(addr, len)
+  // eg. ifdef CONFIG_DEVICE_SERIAL
 #define doREAD(DEVICE_NAME) IFDEF(concat(CONFIG_DEVICE_,DEVICE_NAME),\
                               extern word_t mmio_read_SERIAL(paddr_t addr, int len);\
                               if(MMIO_IS_AT(DEVICE_NAME)) { return mmio_read_SERIAL(addr, len); }; \
