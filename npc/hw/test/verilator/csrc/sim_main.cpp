@@ -108,6 +108,10 @@ void isa_reg_display()
   }
   printf("%-8s%-#20x%-20d\n", "pc", s->pc, s->pc);
   printf("%-8s%-#20x%-20d\n", "dnpc", s->dnpc, s->dnpc);
+  printf("%-8s%-#20x%-20d\n", "dnpc", s->csr.mcause, s->csr.mcause);
+  printf("%-8s%-#20x%-20d\n", "dnpc", s->csr.mepc, s->csr.mepc);
+  printf("%-8s%-#20x%-20d\n", "dnpc", s->csr.mstatus, s->csr.mstatus);
+  printf("%-8s%-#20x%-20d\n", "dnpc", s->csr.mtvec, s->csr.mtvec);
   putchar('\n');
 }
 void isa_reg_display(CPU_state_diff_t* s)
