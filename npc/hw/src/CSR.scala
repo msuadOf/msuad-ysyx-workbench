@@ -1,23 +1,17 @@
 import chisel3._
 import chisel3.util._
-import upack.Int64
 
+// private def findBitPositions(value: Long): List[Int] = {
+//   (0 until 64).filter { i =>
+//     // 检查第i位是否为1
+//     ((value >> i) & 1) == 1
+//   }.toList
+// }
 class csr_base() {
   val value:  UInt = RegInit(0.U(32.W))
   def read(): UInt = value
   def write(value: UInt): Unit = { this.value := value }
   def :=(value: UInt) = write(value)
-  private def findBitPositions(value: Long): List[Int] = {
-    (0 until 64).filter { i =>
-      // 检查第i位是否为1
-      ((value >> i) & 1) == 1
-    }.toList
-  }
-  def get_field(mask: Long) = {
-    (((this.read()) & (mask.U(32.W))) / ((mask.U(32.W)) & ~((mask.U(32.W)) << 1)))
-  }
-
-  def set_field(mask: Long, value: UInt) = {}
 
 }
 
@@ -29,6 +23,49 @@ class mepc_csr extends csr_base {
 class mcause_csr extends csr_base {}
 class mstatus_csr extends csr_base {
   override val value: UInt = RegInit(0x1800.U(32.W))
+  def write_UIE(bit: UInt): Unit = { this.value(0) := bit }
+  def write_SIE(bit: UInt): Unit = { this.value(1) := bit }
+  def write_HIE(bit: UInt): Unit = { this.value(2) := bit }
+  def write_MIE(bit: UInt): Unit = { this.value(3) := bit }
+  def write_UPIE(bit: UInt): Unit = { this.value(4) := bit }
+  def write_SPIE(bit: UInt): Unit = { this.value(5) := bit }
+  def write_HPIE(bit: UInt): Unit = { this.value(6) := bit }
+  def write_MPIE(bit: UInt): Unit = { this.value(7) := bit }
+  def write_SPP(bit: UInt): Unit = { this.value(8) := bit }
+  def write_HPP(bit: UInt): Unit = { this.value(10, 9) := bit }
+  def write_VS(bit: UInt): Unit = { write_HPP(bit) }
+  def write_MPP(bit: UInt): Unit = { this.value(12, 11) := bit }
+  def write_FS(bit: UInt): Unit = { this.value(14, 13) := bit }
+  def write_XS(bit: UInt): Unit = { this.value(16, 15) := bit }
+  def write_MPRV(bit: UInt): Unit = { this.value(17) := bit }
+  def write_PUM(bit: UInt): Unit = { this.value(18) := bit }
+  def write_MXR(bit: UInt): Unit = { this.value(19) := bit }
+  def write_TVM(bit: UInt): Unit = { this.value(20) := bit }
+  def write_TW(bit: UInt): Unit = { this.value(21) := bit }
+  def write_TSR(bit: UInt): Unit = { this.value(22) := bit }
+  def write_SD(bit: UInt): Unit = { this.value(31) := bit }     
+
+  def UIE: UInt = { this.value(0)  }
+  def SIE: UInt = { this.value(1)  }
+  def HIE: UInt = { this.value(2)  }
+  def MIE: UInt = { this.value(3)  }
+  def UPIE: UInt = { this.value(4)  }
+  def SPIE: UInt = { this.value(5)  }
+  def HPIE: UInt = { this.value(6)  }
+  def MPIE: UInt = { this.value(7)  }
+  def SPP: UInt = { this.value(8)  }
+  def HPP: UInt = { this.value(10, 9)  }
+  def VS: UInt = { HPP }
+  def MPP: UInt = { this.value(12, 11)  }
+  def FS: UInt = { this.value(14, 13)  }
+  def XS: UInt = { this.value(16, 15)  }
+  def MPRV: UInt = { this.value(17)  }
+  def PUM: UInt = { this.value(18)  }
+  def MXR: UInt = { this.value(19)  }
+  def TVM: UInt = { this.value(20)  }
+  def TW: UInt = { this.value(21)  }
+  def TSR: UInt = { this.value(22)  }
+  def SD: UInt = { this.value(31)  }   
 
 }
 class mtvec_csr extends csr_base {}

@@ -109,23 +109,19 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
     (((reg) & (mask.U(32))) / ((mask.U(32)) & ~((mask.U(32)) << 1)))
   }
 
-  def set_field(reg: UInt, mask: Long, value: UInt):UInt = {
+  def set_field(reg: UInt, mask: Long, value: UInt): UInt = {
     (((reg) & ~((mask.U(32)))) | (((value) * (((mask.U(32))) & ~(((mask.U(32))) << 1))) & ((mask.U(32)))))
   }
   //!!!!
-  def mret_impl():Unit = {
-  pc:= csr.mepc.read()
+  def mret_impl(): Unit = {
+    pc := csr.mepc.read()
 
-  val s = csr.mstatus.read();
-  val prev_prv = get_field(s, MSTATUS_MPP);
-  val s1=(0.U(32.W))
-  // when (prev_prv =/= PRV_M.U){
-  //       s1 := set_field(s, MSTATUS_MPRV, 0.U);
-  // }
-
-  val s2 = set_field(s, MSTATUS_MIE, get_field(s, MSTATUS_MPIE));
-  val s3 = set_field(s, MSTATUS_MPIE, 1.U);
-  val s4 = set_field(s, MSTATUS_MPP, PRV_U.U );
-  csr.mstatus.write(s1|s2|s3|s4) ;
+    // when(csr.mstatus.MPP =/= PRV_M.U) {
+    //   csr.mstatus.write_MPRV(0.U)
+    // }
+    csr.mstatus.write_MPRV( Mux(csr.mstatus.MPP =/= PRV_M.U,0.U,csr.mstatus.MPRV) )
+    csr.mstatus.write_MIE(csr.mstatus.MPIE)
+    csr.mstatus.write_MPIE(1.U)
+    csr.mstatus.write_MPP(PRV_U.U)
   }
 }
