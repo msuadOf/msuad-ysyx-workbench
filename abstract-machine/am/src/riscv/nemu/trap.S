@@ -64,7 +64,7 @@ __am_asm_trap:
   # changed the stack
   mv sp, a0
 
-  _debug: LOAD t1, OFFSET_STATUS(sp)
+  LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
   csrw mstatus, t1
   #addi t2,t2,4 # for mret: mepc+=4
