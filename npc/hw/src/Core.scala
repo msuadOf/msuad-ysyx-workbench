@@ -113,7 +113,7 @@ class Core(isa_info: String = "RISCV32") extends Module {
   // src1 := R(rs1)
   // src2 := R(rs2)
 
-  val decode_success=RegInit(0.U(1.W))
+  val decode_success=RegInit(1.U(1.W))
   decode_success:=0.U
   RVIInstr.table
     .asInstanceOf[Array[((BitPat, Any), ExecEnv => Any)]]
