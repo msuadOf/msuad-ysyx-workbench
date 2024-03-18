@@ -23,14 +23,14 @@ typedef struct {
   vaddr_t mepc;
   word_t mstatus;
   word_t mtvec;
-} MUXDEF(CONFIG_RV64, riscv64_CSRs, riscv32_CSRs);
+} MUXDEF(CONFIG_RV64, riscv64_CSRs_diff, riscv32_CSRs_diff);
 
 typedef struct CPU_state_diff_t {
   vaddr_t pc;
   vaddr_t snpc; // static next pc
   vaddr_t dnpc; // dynamic next pc
   word_t regs[33];
-  MUXDEF(CONFIG_RV64, riscv64_CSRs, riscv32_CSRs) csr;
+  MUXDEF(CONFIG_RV64, riscv64_CSRs_diff, riscv32_CSRs_diff) csr;
 } CPU_state_diff_t;
 
 
