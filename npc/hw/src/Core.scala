@@ -15,24 +15,24 @@ object getVariableName {
 }
 
 class MemIO extends Bundle {
-  val rAddr = Output(UInt(32.W))
-  val rData = Input(UInt(32.W))
-  val ren   = Output(UInt(1.W))
-  val rWidth= Output(UInt(4.W))
+  val rAddr  = Output(UInt(32.W))
+  val rData  = Input(UInt(32.W))
+  val ren    = Output(UInt(1.W))
+  val rWidth = Output(UInt(4.W))
 
-  val wAddr = Output(UInt(32.W))
-  val wData = Output(UInt(32.W))
-  val wen   = Output(UInt(1.W))
-  val wWidth= Output(UInt(4.W))
+  val wAddr  = Output(UInt(32.W))
+  val wData  = Output(UInt(32.W))
+  val wen    = Output(UInt(1.W))
+  val wWidth = Output(UInt(4.W))
 
-  def IOinit()={
-  this.rAddr := 0.U
-  this.wAddr := 0.U
-  this.wData := Fill(32, 1.U) //FFFF FFFF
-  this.wen   := 0.U
-  this.ren   := 0.U
-  this.wWidth := 4.U
-  this.rWidth := 4.U
+  def IOinit() = {
+    this.rAddr  := 0.U
+    this.wAddr  := 0.U
+    this.wData  := Fill(32, 1.U) //FFFF FFFF
+    this.wen    := 0.U
+    this.ren    := 0.U
+    this.wWidth := 4.U
+    this.rWidth := 4.U
   }
 }
 
@@ -53,10 +53,10 @@ class Core(isa_info: String = "RISCV32") extends Module {
     }
   })
 
-
-io.DMem.IOinit()
+  io.DMem.IOinit()
 
   val R          = new RegFile("RISCV32")
+  val csr        = new csr
   val pc         = RegInit("h80000000".U(32.W))
   val snpc, dnpc = Wire(UInt(32.W))
   snpc         := pc + 4.U
@@ -97,7 +97,7 @@ io.DMem.IOinit()
   //   }
   // })
 
-  val Decoder = new ExecEnv(inst, pc, R, io.DMem)
+  val Decoder = new ExecEnv(inst, pc, R,csr, io.DMem)
 //RVIInstr.table.map((t:Tuple2[BitPat,Any])=>if(t._1===inst) )
   //first inst:addi
   val rs1, rs2, rd, imm = Wire(UInt())

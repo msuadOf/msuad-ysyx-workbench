@@ -22,7 +22,6 @@ class top(isa_info: String = "RISCV32") extends Module {
     }
   })
 
-  val core = Module(new Core)
+  val core=Module(new Core)
   core.io<>this.io
 }
- 

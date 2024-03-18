@@ -1,10 +1,6 @@
 #include <utils.h>
 #include <common.h>
 
-#ifdef CONFIG_DEVICE_RTC
-
-
-
 static uint32_t rtc_port_base[2]={0};
 
 //--------get_time--------
@@ -55,5 +51,3 @@ void mmio_write_RTC(paddr_t addr, int len, word_t data) {
 void init_timer() {
 
 }
-
-#endif // CONFIG_DEVICE_RTC
