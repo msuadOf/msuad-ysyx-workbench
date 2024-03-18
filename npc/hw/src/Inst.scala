@@ -161,7 +161,7 @@ object PriviledgedExec {
   def SFANCE_VMA = (e: ExecEnv) => panic("The inst has not been impleted")
 
   def ECALL  = (e: ExecEnv) => panic("The inst has not been impleted")
-  def EBREAK = (e: ExecEnv) => panic("The inst has not been impleted")
+  def EBREAK = (e: ExecEnv) => e.pc:=e.pc //stop npc
   def MRET   = (e: ExecEnv) => panic("The inst has not been impleted")
   def FENCE  = (e: ExecEnv) => panic("The inst has not been impleted")
   def WFI    = (e: ExecEnv) => panic("The inst has not been impleted")
