@@ -2,6 +2,8 @@ NAME=npc
 WORK_DIR  = $(shell pwd)
 BUILD_DIR = $(WORK_DIR)/build
 
+Q := @ 
+
 include scripts/verilator.mk
 include scripts/chisel.mk
 include hw/test/verilator/csrc/difftest/difftest.mk
@@ -82,6 +84,14 @@ CPP_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.cpp) #search all hw/
 C_HEAD_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.h) #search all hw/
 
 verilog:$(CHISEL_GEN_VERILOG_FILE)
+ifeq ($(NODISPLAY),y) 
+	@ echo "display disabled in top.v ...... yes"
+	@ sed -i 's/define PRINTF_COND_ 1/define PRINTF_COND_ 0/g' $(CHISEL_GEN_VERILOG_FILE)
+else
+	@ echo "display disabled in top.v ...... no"
+	@ sed -i 's/define PRINTF_COND_ 0/define PRINTF_COND_ 1/g' $(CHISEL_GEN_VERILOG_FILE)
+endif
+
 $(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
 	mkdir -p $(BUILD_DIR)
 	mill -i __.runMain Elaborate -td $(BUILD_DIR)
@@ -99,11 +109,11 @@ verilator-binary: verilog
 	@echo
 	@echo "-- VERILATE ----------------"
 	@mkdir -p $(VERI_BUILD_DIR)
-	$(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUT) --Mdir $(VERI_BUILD_DIR)
+	$(Q) $(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUT) --Mdir $(VERI_BUILD_DIR)
 
 	@echo
 	@echo "-- BUILD -------------------"
-	CPPFLAGS="$(VERILATOR_CFLAGS)" LDLIBS="$(VERILATOR_LDLIBS)" $(MAKE) -j4 -C $(VERI_BUILD_DIR) -f ../Makefile_obj
+	$(Q) CPPFLAGS="$(VERILATOR_CFLAGS)" LDLIBS="$(VERILATOR_LDLIBS)" $(MAKE) -s -j4 -C $(VERI_BUILD_DIR) -f ../Makefile_obj
 
 verilator-run: verilator-binary
 	@echo
