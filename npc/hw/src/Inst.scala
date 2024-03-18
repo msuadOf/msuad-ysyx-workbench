@@ -148,23 +148,23 @@ object LSUExec {
 
 }
 object ZicsrExec {
-  def CSRRW  = (e: ExecEnv) => panic("The inst has not been impleted")
-  def CSRRS  = (e: ExecEnv) => panic("The inst has not been impleted")
-  def CSRRC  = (e: ExecEnv) => panic("The inst has not been impleted")
-  def CSRRWI = (e: ExecEnv) => panic("The inst has not been impleted")
-  def CSRRSI = (e: ExecEnv) => panic("The inst has not been impleted")
-  def CSRRCI = (e: ExecEnv) => panic("The inst has not been impleted")
+  def CSRRW  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def CSRRS  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def CSRRC  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def CSRRWI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def CSRRSI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def CSRRCI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
 }
 
 object PriviledgedExec {
-  def SRET       = (e: ExecEnv) => panic("The inst has not been impleted")
-  def SFANCE_VMA = (e: ExecEnv) => panic("The inst has not been impleted")
+  def SRET       = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def SFANCE_VMA = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
 
-  def ECALL  = (e: ExecEnv) => panic("The inst has not been impleted")
+  def ECALL  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
   def EBREAK = (e: ExecEnv) => e.pc:=e.pc //stop npc
-  def MRET   = (e: ExecEnv) => panic("The inst has not been impleted")
-  def FENCE  = (e: ExecEnv) => panic("The inst has not been impleted")
-  def WFI    = (e: ExecEnv) => panic("The inst has not been impleted")
+  def MRET   = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def FENCE  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def WFI    = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
 }
 object RV32I_ALUInstr {
   def ADDI  = BitPat("b???????_?????_?????_000_?????_0010011")
