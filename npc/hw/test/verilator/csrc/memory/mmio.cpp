@@ -44,7 +44,7 @@ void mmio_write(paddr_t addr, int len, word_t data) {
     // if(MMIO_IS_AT(SERIAL)) {  mmio_write_SERIAL(addr, len,data); return; };
     doWRITE(SERIAL);
     doWRITE(RTC);
-    panic("[npc]mmio_write should not reach here!");
+    panic("[npc]mmio_write should not reach here! addr=%08x,len=%d,data=%08x",addr,len,data);
 }
 
 /* 宏定义原型 */
