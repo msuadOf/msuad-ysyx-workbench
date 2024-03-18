@@ -1,10 +1,26 @@
 import chisel3._
 import chisel3.util._
+import upack.Int64
 
 class csr_base(){
     protected val value:UInt = RegInit(0.U(32.W))
     def read():UInt = value
     def write(value:UInt):Unit = { this.value:=value }
+    def := (value:UInt) = write(value)
+    private def findBitPositions(value: Long): List[Int] = {
+  (0 until 64).filter { i =>
+    // 检查第i位是否为1
+    ((value >> i) & 1) == 1
+  }.toList
+}
+  def get_field(mask: Long) = {
+    (((this.read()) & (mask.U(32.W))) / ((mask.U(32.W)) & ~((mask.U(32.W)) << 1)))
+  }
+
+  def set_field(mask: Long, value: UInt) = {
+    
+  }
+
 }
 
 class mepc_csr extends csr_base{

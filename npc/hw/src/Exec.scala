@@ -1,7 +1,7 @@
 import chisel3._
 import chisel3.util._
 import upickle.default
-
+import SpikeEncoding.se._
 class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DMem: MemIO) {
   //val rs1, rs2, rd, src1, src2, imm ,Rrd = Wire(UInt())
   val rs1 = inst(19, 15)
@@ -85,7 +85,7 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
   def Mr(addr: UInt, len: Int): UInt = Mem.read(addr, len)
 
   //---CSR--------
-  def CSR_READ(imm: UInt):UInt = {
+  def CSR_READ(imm: UInt): UInt = {
     return MuxCase(
       0.U(32.W),
       Seq(
@@ -96,13 +96,35 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
       )
     )
   }
-  def CSR_WRITE(imm: UInt,value:UInt):Unit = {
-    switch(imm){
-      is(0x341.U){csr.mepc.write(value)}
-      is(0x342.U){csr.mcause.write(value)}
-      is(0x300.U){csr.mstatus.write(value)}
-      is(0x305.U){csr.mtvec.write(value)}
+  def CSR_WRITE(imm: UInt, value: UInt): Unit = {
+    switch(imm) {
+      is(0x341.U) { csr.mepc.write(value) }
+      is(0x342.U) { csr.mcause.write(value) }
+      is(0x300.U) { csr.mstatus.write(value) }
+      is(0x305.U) { csr.mtvec.write(value) }
     }
     return
+  }
+  def get_field(reg: UInt, mask: Long) = {
+    (((reg) & (mask.U(32))) / ((mask.U(32)) & ~((mask.U(32)) << 1)))
+  }
+
+  def set_field(reg: UInt, mask: Long, value: UInt):UInt = {
+    (((reg) & ~((mask.U(32)))) | (((value) * (((mask.U(32))) & ~(((mask.U(32))) << 1))) & ((mask.U(32)))))
+  }
+  def mret_impl(pc:UInt):Unit = {
+  pc:= csr.mepc.read()
+
+  val s = csr.mstatus.read();
+  val prev_prv = get_field(s, MSTATUS_MPP);
+  val s1=Wire(0.U)
+  when (prev_prv =/= PRV_M.U){
+        s1 := set_field(s, MSTATUS_MPRV, 0.U);
+  }
+
+  val s2 = set_field(s, MSTATUS_MIE, get_field(s, MSTATUS_MPIE));
+  val s3 = set_field(s, MSTATUS_MPIE, 1.U);
+  val s4 = set_field(s, MSTATUS_MPP, PRV_U.U );
+  csr.mstatus.write(s1|s2|s3|s4) ;
   }
 }
