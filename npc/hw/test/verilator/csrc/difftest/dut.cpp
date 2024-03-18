@@ -109,7 +109,10 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   //ref_difftest_reg_display();
   //isa_reg_display();
 }
-
+#define CHECKDIFF(p)     if(ref->p!=s->p)\
+                            printf(ANSI_FG_RED);\
+                          printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", p , s->p, s->p, s->p, s->p);\
+                          printf(ANSI_NONE);
 void ref_reg_display(CPU_state_diff_t *s,CPU_state_diff_t *ref)
 {
     printf("\n****************REF_STATE**********************|****************NPC_STATE***************|\n");
@@ -129,6 +132,27 @@ void ref_reg_display(CPU_state_diff_t *s,CPU_state_diff_t *ref)
       printf(ANSI_FG_RED);
     printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", "dnpc", s->dnpc, s->dnpc, s->dnpc, s->dnpc);
     printf(ANSI_NONE);
+
+    if(ref->csr.mcause!=s->csr.mcause)
+      printf(ANSI_FG_RED);
+    printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", "csr.mcause", ref->csr.mcause, ref->csr.mcause, s->csr.mcause, s->csr.mcause);
+    printf(ANSI_NONE);
+
+    if(ref->csr.mepc!=s->csr.mepc)
+      printf(ANSI_FG_RED);
+    printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", "csr.mepc", ref->csr.mepc, ref->csr.mepc, s->csr.mepc, s->csr.mepc);
+    printf(ANSI_NONE);
+
+    if(ref->csr.mstatus!=s->csr.mstatus)
+      printf(ANSI_FG_RED);
+    printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", "csr.mstatus", ref->csr.mstatus, ref->csr.mstatus, s->csr.mstatus, s->csr.mstatus);
+    printf(ANSI_NONE);
+
+    if(ref->csr.mtvec!=s->csr.mtvec)
+      printf(ANSI_FG_RED);
+    printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", "csr.mtvec", ref->csr.mtvec, ref->csr.mtvec, s->csr.mtvec, s->csr.mtvec);
+    printf(ANSI_NONE);
+    
 
     printf("***********************************************|****************************************|\n");
 }
