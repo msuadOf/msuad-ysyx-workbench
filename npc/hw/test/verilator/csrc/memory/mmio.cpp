@@ -36,6 +36,7 @@ word_t mmio_read(paddr_t addr, int len) {
     doREAD(SERIAL);
     doREAD(RTC);
     panic("[npc]mmio_read should not reach here!");
+    return -1;
 }
 
 void mmio_write(paddr_t addr, int len, word_t data) {
