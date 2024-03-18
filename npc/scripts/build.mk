@@ -82,12 +82,13 @@ CPP_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.cpp) #search all hw/
 C_HEAD_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.h) #search all hw/
 
 verilog:$(CHISEL_GEN_VERILOG_FILE)
-$(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
-	mkdir -p $(BUILD_DIR)
-	mill -i __.runMain Elaborate -td $(BUILD_DIR)
 ifeq ( NODISPLAY , "y" )
 	@echo "NODISPLAY"
 endif
+
+$(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
+	mkdir -p $(BUILD_DIR)
+	mill -i __.runMain Elaborate -td $(BUILD_DIR)
 
 # Input files for Verilator
 VERILATOR_INPUT_FILE += $(C_SRC_FILE) $(CPP_SRC_FILE)
