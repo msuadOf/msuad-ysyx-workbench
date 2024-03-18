@@ -130,7 +130,10 @@ class Core(isa_info: String = "RISCV32") extends Module {
         }
       }
     })
-assert(decode_success===1.U)//decode failed
+when(decode_success===0.U)//decode failed
+{
+ chisel3.assert(0.B, p"decode failed @ pc=${pc}\n"+"\n")
+}
   //addi exec
 
   //R(rd)         :=add_exec(src1,imm)
