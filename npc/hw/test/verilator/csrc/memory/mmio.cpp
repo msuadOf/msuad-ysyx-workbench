@@ -1,5 +1,6 @@
 #include "common.h"
 #include "macro.h"
+#include "debug.h"
 
 #define IS_AT(DEVICE_NAME) concat(DEVICE_NAME,_mmio_is_at_serial)
 #define DEF_IF_ADDR(DEVICE_NAME) static inline int IS_AT(DEVICE_NAME) (paddr_t addr, int len){\
@@ -34,6 +35,7 @@ word_t mmio_read(paddr_t addr, int len) {
     // if(MMIO_IS_AT(SERIAL)) { return mmio_read_SERIAL(addr, len); };
     doREAD(SERIAL);
     doREAD(RTC);
+    Assert(0,);
 }
 
 void mmio_write(paddr_t addr, int len, word_t data) {
