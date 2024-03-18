@@ -113,15 +113,15 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
     (((reg) & ~((mask.U(32)))) | (((value) * (((mask.U(32))) & ~(((mask.U(32))) << 1))) & ((mask.U(32)))))
   }
   //!!!!
-  def mret_impl(pc:UInt):Unit = {
+  def mret_impl():Unit = {
   pc:= csr.mepc.read()
 
   val s = csr.mstatus.read();
   val prev_prv = get_field(s, MSTATUS_MPP);
-  val s1=Wire(0.U)
-  when (prev_prv =/= PRV_M.U){
-        s1 := set_field(s, MSTATUS_MPRV, 0.U);
-  }
+  val s1=(0.U(32.W))
+  // when (prev_prv =/= PRV_M.U){
+  //       s1 := set_field(s, MSTATUS_MPRV, 0.U);
+  // }
 
   val s2 = set_field(s, MSTATUS_MIE, get_field(s, MSTATUS_MPIE));
   val s3 = set_field(s, MSTATUS_MPIE, 1.U);

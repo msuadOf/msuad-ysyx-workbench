@@ -162,7 +162,7 @@ object PriviledgedExec {
 
   def ECALL  = (e: ExecEnv) => {e.csr.mcause := 0xb.U; e.csr.mepc:=e.pc; e.pc:=e.csr.mtvec.read(); e.csr.mstatus := ((((e.csr.mstatus.read()&(~(1.U<<7)))|((e.csr.mstatus.read()&(1.U<<3))<<4)) &(~(1.U<<3))))|((1.U<<11)+(1.U<<12)); }
   def EBREAK = (e: ExecEnv) => e.pc:=e.pc //stop npc
-  def MRET   = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def MRET   = (e: ExecEnv) => e.mret_impl()
   def FENCE  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
   def WFI    = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
 }
