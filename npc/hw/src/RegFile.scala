@@ -8,7 +8,7 @@ class RegFile(val ISet: String) {
     case "RISCV64"  => 64
     case _: String => throw new IllegalArgumentException("RegFile() args should be [RISCV32E] [RISCV32] [RISCV64]")
   }
-  val reg = RegInit(VecInit(Seq.tabulate(regNum + 1)(i => 0.U(32.W))))
+  val reg = RegInit(VecInit(Seq.tabulate(regNum)(i => 0.U(32.W))))
 
   def read(idx: UInt) = reg(idx)
 
