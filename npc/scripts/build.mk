@@ -82,6 +82,7 @@ CPP_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.cpp) #search all hw/
 C_HEAD_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.h) #search all hw/
 
 verilog:$(CHISEL_GEN_VERILOG_FILE)
+	@echo "====NODISPLA====="
 ifeq ( ${NODISPLAY} , "y" )
 	@echo "NODISPLAY"
 endif
