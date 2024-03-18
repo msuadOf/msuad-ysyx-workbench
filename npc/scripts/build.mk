@@ -85,6 +85,7 @@ verilog:$(CHISEL_GEN_VERILOG_FILE)
 	@echo "====NODISPLA=====" ${NODISPLAY}
 ifeq ( ${NODISPLAY} , "y" )
 	@echo "NODISPLAY"
+	sed 's/define PRINTF_COND_ 1/define PRINTF_COND_ 0/g' $(CHISEL_GEN_VERILOG_FILE)
 endif
 
 $(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
