@@ -55,6 +55,10 @@ __am_asm_trap:
   mv a0, sp
   jal __am_irq_handle
 
+  # return context in a0 -> sp
+  # changed the stack
+  mv sp, a0
+  
   LOAD t1, OFFSET_STATUS(sp)
   LOAD t2, OFFSET_EPC(sp)
   csrw mstatus, t1

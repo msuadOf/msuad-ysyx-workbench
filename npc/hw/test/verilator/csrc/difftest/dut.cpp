@@ -130,6 +130,27 @@ void ref_reg_display(CPU_state_diff_t *s,CPU_state_diff_t *ref)
     printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", "dnpc", s->dnpc, s->dnpc, s->dnpc, s->dnpc);
     printf(ANSI_NONE);
 
+    if(ref->csr.mcause!=s->csr.mcause)
+      printf(ANSI_FG_RED);
+    printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", "csr.mcause", ref->csr.mcause, ref->csr.mcause, s->csr.mcause, s->csr.mcause);
+    printf(ANSI_NONE);
+
+    if(ref->csr.mepc!=s->csr.mepc)
+      printf(ANSI_FG_RED);
+    printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", "csr.mepc", ref->csr.mepc, ref->csr.mepc, s->csr.mepc, s->csr.mepc);
+    printf(ANSI_NONE);
+
+    if(ref->csr.mstatus!=s->csr.mstatus)
+      printf(ANSI_FG_RED);
+    printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", "csr.mstatus", ref->csr.mstatus, ref->csr.mstatus, s->csr.mstatus, s->csr.mstatus);
+    printf(ANSI_NONE);
+
+    if(ref->csr.mtvec!=s->csr.mtvec)
+      printf(ANSI_FG_RED);
+    printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", "csr.mtvec", ref->csr.mtvec, ref->csr.mtvec, s->csr.mtvec, s->csr.mtvec);
+    printf(ANSI_NONE);
+    
+
     printf("***********************************************|****************************************|\n");
 }
 void ref_reg_display(CPU_state_diff_t s,CPU_state_diff_t ref){
@@ -159,6 +180,14 @@ bool isa_difftest_checkregs(CPU_state_diff_t *ref_r, vaddr_t pc) {
     state=false;
     //return false;
   }
+  #define CHECKDIFF(p) if (ref_r->p != s->p) { \
+  printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"" #p "\" is diffrent: (npc-false)= %08x ,(ref-yes)= %08x.\n",s->p,ref_r->p); \
+  state=false; \
+}
+  CHECKDIFF(csr.mstatus);
+	CHECKDIFF(csr.mcause);
+  CHECKDIFF(csr.mepc);
+  CHECKDIFF(csr.mtvec);
   return state;
   //return true;
 }

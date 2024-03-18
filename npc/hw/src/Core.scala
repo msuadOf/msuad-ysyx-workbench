@@ -50,6 +50,11 @@ class Core(isa_info: String = "RISCV32") extends Module {
       val dnpc = Output(UInt(32.W))
       val snpc = Output(UInt(32.W))
       val regs = Output(Vec(32, UInt(32.W)))
+
+      val mepc =    Output(UInt(32.W))
+      val mcause =  Output(UInt(32.W))  
+      val mstatus = Output(UInt(32.W))   
+      val mtvec =   Output(UInt(32.W)) 
     }
   })
 
@@ -108,11 +113,14 @@ class Core(isa_info: String = "RISCV32") extends Module {
   // src1 := R(rs1)
   // src2 := R(rs2)
 
+  val decode_success=RegInit(1.U(1.W))
+  decode_success:=0.U
   RVIInstr.table
     .asInstanceOf[Array[((BitPat, Any), ExecEnv => Any)]]
     .foreach((t: ((BitPat, Any), ExecEnv => Any)) => {
       prefix(s"InstMatch_${getVariableName(t._1._1)}") {
         when(t._1._1 === inst) {
+          decode_success:=1.U //debug
           Decoder.IDLE()
           t._2(Decoder)
           if (t._1._1 == RV32I_ALUInstr.ADDI) {
@@ -122,7 +130,10 @@ class Core(isa_info: String = "RISCV32") extends Module {
         }
       }
     })
-
+when(decode_success===0.U)//decode failed
+{
+ chisel3.assert(0.B, p"decode failed @ pc=${pc}\n"+"\n")
+}
   //addi exec
 
   //R(rd)         :=add_exec(src1,imm)
@@ -134,6 +145,11 @@ class Core(isa_info: String = "RISCV32") extends Module {
 
   io.diff.pc   := pc
   io.diff.regs := R.reg
+io.diff.mepc   :=csr.mepc.read() 
+io.diff.mcause :=csr.mcause.read() 
+io.diff.mstatus:=csr.mstatus.read() 
+io.diff.mtvec  :=csr.mtvec.read() 
+
   printf("io.IMem.rAddr=%x\n", io.IMem.rAddr)
 //  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)},s0=${R(8)}\n")
   printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")

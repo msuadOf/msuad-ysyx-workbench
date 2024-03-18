@@ -86,10 +86,16 @@ object CSROpType {
   def seti = "b110".U
   def clri = "b111".U
 }
-
+object MOUOpType {
+  def fence      = "b00".U
+  def fencei     = "b01".U
+  def sfence_vma = "b10".U
+}
 object ALUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-  def ADDI  = (e: ExecEnv) => {e.Rrd := e.src1 + e.immI;printf("[ADDI]:ADDR=%x,src1=%x,immI=%x}\n",e.src1 + e.immI,e.src1 ,e.immI) }
+  def ADDI = (e: ExecEnv) => {
+    e.Rrd := e.src1 + e.immI; printf("[ADDI]:ADDR=%x,src1=%x,immI=%x}\n", e.src1 + e.immI, e.src1, e.immI)
+  }
   def SLLI  = (e: ExecEnv) => e.Rrd := e.src1 << e.immI(5, 0)
   def SLTI  = (e: ExecEnv) => e.Rrd := e.src1.asSInt < e.immI.asSInt
   def SLTIU = (e: ExecEnv) => e.Rrd := e.src1 < e.immI
@@ -97,7 +103,7 @@ object ALUExec {
   def SRLI  = (e: ExecEnv) => e.Rrd := e.src1 >> e.immI(5, 0)
   def ORI   = (e: ExecEnv) => e.Rrd := e.src1 | e.immI
   def ANDI  = (e: ExecEnv) => e.Rrd := e.src1 & e.immI
-  def SRAI  = (e: ExecEnv) => e.Rrd := (e.src1.asSInt >> e.immI(5, 0).asUInt).asUInt(31,0)
+  def SRAI  = (e: ExecEnv) => e.Rrd := (e.src1.asSInt >> e.immI(5, 0).asUInt).asUInt(31, 0)
 
   def ADD  = (e: ExecEnv) => e.Rrd := e.src1 + e.src2
   def SLL  = (e: ExecEnv) => e.Rrd := e.src1 << e.src2(4, 0)
@@ -108,7 +114,7 @@ object ALUExec {
   def OR   = (e: ExecEnv) => e.Rrd := e.src1 | e.src2
   def AND  = (e: ExecEnv) => e.Rrd := e.src1 & e.src2
   def SUB  = (e: ExecEnv) => e.Rrd := e.src1 - e.src2
-  def SRA = (e: ExecEnv) =>  e.Rrd := (e.src1.asSInt >> e.src2.asUInt(4,0)).asUInt(31,0)
+  def SRA  = (e: ExecEnv) => e.Rrd := (e.src1.asSInt >> e.src2.asUInt(4, 0)).asUInt(31, 0)
 
   def AUIPC = (e: ExecEnv) => e.Rrd := e.pc + e.immU
   def LUI   = (e: ExecEnv) => e.Rrd := e.immU
@@ -129,15 +135,36 @@ object BRUExec {
 }
 object LSUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-  def LB  = (e: ExecEnv) => e.Rrd := ( e.Mr(e.src1 + e.immI, 4).asUInt(8-1,0).asSInt + 0.S(32.W) ).asUInt
-  def LH  = (e: ExecEnv) => e.Rrd := ( e.Mr(e.src1 + e.immI, 4).asUInt(16-1,0).asSInt + 0.S(32.W) ).asUInt
+  def LB  = (e: ExecEnv) => e.Rrd := (e.Mr(e.src1 + e.immI, 4).asUInt(8 - 1, 0).asSInt + 0.S(32.W)).asUInt
+  def LH  = (e: ExecEnv) => e.Rrd := (e.Mr(e.src1 + e.immI, 4).asUInt(16 - 1, 0).asSInt + 0.S(32.W)).asUInt
   def LW  = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 4)
   def LBU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 1)
   def LHU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 2)
-  def SB  = (e: ExecEnv) => {e.Mw(e.src1 + e.immS, 1, e.src2);/* printf("[SB]:ADDR=%x,src1=%x,immS=%x}\n",e.src1 + e.immS,e.src1 ,e.immS) */}
-  def SH  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 2, e.src2)
-  def SW  = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 4, e.src2)
+  def SB = (e: ExecEnv) => {
+    e.Mw(e.src1 + e.immS, 1, e.src2); /* printf("[SB]:ADDR=%x,src1=%x,immS=%x}\n",e.src1 + e.immS,e.src1 ,e.immS) */
+  }
+  def SH = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 2, e.src2)
+  def SW = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 4, e.src2)
 
+}
+object ZicsrExec {
+  def CSRRW  = (e: ExecEnv) => {e.Rrd := e.CSR_READ(e.immI); e.CSR_WRITE(e.immI,e.src1)}
+  def CSRRS  = (e: ExecEnv) => {e.Rrd := e.CSR_READ(e.immI); e.CSR_WRITE(e.immI,e.CSR_READ(e.immI)|e.src1)}
+  def CSRRC  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def CSRRWI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def CSRRSI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def CSRRCI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+}
+
+object PriviledgedExec {
+  def SRET       = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def SFANCE_VMA = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+
+  def ECALL  = (e: ExecEnv) => {e.csr.mcause := 0xb.U; e.csr.mepc:=e.pc; e.pc:=e.csr.mtvec.read(); e.csr.mstatus := ((((e.csr.mstatus.read()&(~(1.U<<7)))|((e.csr.mstatus.read()&(1.U<<3))<<4)) &(~(1.U<<3))))|((1.U<<11)+(1.U<<12)); }
+  def EBREAK = (e: ExecEnv) => e.pc:=e.pc+4.U //stop npc
+  def MRET   = (e: ExecEnv) => {e.pc := e.csr.mepc.read();    e.csr.mstatus.MPRV:= Mux(e.csr.mstatus.MPP =/= 3.U,0.U,e.csr.mstatus.MPRV) ;e.csr.mstatus.MIE:=e.csr.mstatus.MPIE;e.csr.mstatus.MPIE:=1.U;e.csr.mstatus.MPP:=0.U;}
+  def FENCE  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def WFI    = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
 }
 object RV32I_ALUInstr {
   def ADDI  = BitPat("b???????_?????_?????_000_?????_0010011")
@@ -236,23 +263,46 @@ object RV32I_LSUInstr {
 }
 
 object RVZicsrInstr {
-  def CSRRW   = BitPat("b????????????_?????_001_?????_1110011")
-  def CSRRS   = BitPat("b????????????_?????_010_?????_1110011")
-  def CSRRC   = BitPat("b????????????_?????_011_?????_1110011")
-  def CSRRWI  = BitPat("b????????????_?????_101_?????_1110011")
-  def CSRRSI  = BitPat("b????????????_?????_110_?????_1110011")
-  def CSRRCI  = BitPat("b????????????_?????_111_?????_1110011")
+  def CSRRW  = BitPat("b????????????_?????_001_?????_1110011")
+  def CSRRS  = BitPat("b????????????_?????_010_?????_1110011")
+  def CSRRC  = BitPat("b????????????_?????_011_?????_1110011")
+  def CSRRWI = BitPat("b????????????_?????_101_?????_1110011")
+  def CSRRSI = BitPat("b????????????_?????_110_?????_1110011")
+  def CSRRCI = BitPat("b????????????_?????_111_?????_1110011")
 
   val table = Array(
-    CSRRW          -> List(Inst.I, FuType.csr, CSROpType.wrt),
-    CSRRS          -> List(Inst.I, FuType.csr, CSROpType.set),
-    CSRRC          -> List(Inst.I, FuType.csr, CSROpType.clr),
-    CSRRWI         -> List(Inst.I, FuType.csr, CSROpType.wrti),
-    CSRRSI         -> List(Inst.I, FuType.csr, CSROpType.seti),
-    CSRRCI         -> List(Inst.I, FuType.csr, CSROpType.clri)
+    CSRRW -> List(Inst.I, FuType.csr, CSROpType.wrt) -> ZicsrExec.CSRRW,
+    CSRRS -> List(Inst.I, FuType.csr, CSROpType.set) -> ZicsrExec.CSRRS,
+    CSRRC -> List(Inst.I, FuType.csr, CSROpType.clr) -> ZicsrExec.CSRRC,
+    CSRRWI -> List(Inst.I, FuType.csr, CSROpType.wrti) -> ZicsrExec.CSRRWI,
+    CSRRSI -> List(Inst.I, FuType.csr, CSROpType.seti) -> ZicsrExec.CSRRSI,
+    CSRRCI -> List(Inst.I, FuType.csr, CSROpType.clri) -> ZicsrExec.CSRRCI
   )
 }
+object Priviledged {
+  def ECALL      = BitPat("b000000000000_00000_000_00000_1110011")
+  def EBREAK     = BitPat("b000000000001_00000_000_00000_1110011")
+  def MRET       = BitPat("b001100000010_00000_000_00000_1110011")
+  def SRET       = BitPat("b000100000010_00000_000_00000_1110011")
+  def SFANCE_VMA = BitPat("b0001001_?????_?????_000_00000_1110011")
+  def FENCE      = BitPat("b????????????_?????_000_?????_0001111")
+  def WFI        = BitPat("b0001000_00101_00000_000_00000_1110011")
 
+  val table_s = Array(
+    SRET -> List(Inst.I, FuType.csr, CSROpType.jmp) -> PriviledgedExec.SRET,
+    SFANCE_VMA -> List(Inst.R, FuType.mou, MOUOpType.sfence_vma) -> PriviledgedExec.SFANCE_VMA
+  )
+
+  val table = Array(
+    ECALL -> List(Inst.I, FuType.csr, CSROpType.jmp) -> PriviledgedExec.ECALL,
+    EBREAK -> List(Inst.I, FuType.csr, CSROpType.jmp) -> PriviledgedExec.EBREAK,
+    MRET -> List(Inst.I, FuType.csr, CSROpType.jmp) -> PriviledgedExec.MRET,
+    FENCE -> List(Inst.S, FuType.mou, MOUOpType.fence) -> PriviledgedExec.FENCE, // nop    InstrS -> !wen
+    WFI -> List(Inst.I, FuType.alu, ALUOpType.add) -> PriviledgedExec.WFI // nop
+    // FENCE          -> List(InstrB, FuType.mou, MOUOpType.fencei) -> PriviledgedExec.FENCE
+  ) //++ (if (!Settings.get("MmodeOnly")) table_s else Array.empty)
+}
 object RVIInstr {
-  val table = RV32I_ALUInstr.table ++ RV32I_BRUInstr.table ++ RV32I_LSUInstr.table
+  val table =
+    RV32I_ALUInstr.table ++ RV32I_BRUInstr.table ++ RV32I_LSUInstr.table ++ RVZicsrInstr.table ++ Priviledged.table
 }

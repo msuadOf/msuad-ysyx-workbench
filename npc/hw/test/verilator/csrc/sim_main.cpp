@@ -74,6 +74,10 @@ void diff_cpuInfoUpdate(CPU_state_diff_t* s){
   s->dnpc=top->io_diff_dnpc;
   s->snpc=top->io_diff_snpc;
   s->pc=top->io_diff_pc;
+  s->csr.mcause=top->io_diff_mcause;
+  s->csr.mepc=top->io_diff_mepc;
+  s->csr.mstatus=top->io_diff_mstatus;
+  s->csr.mtvec=top->io_diff_mtvec;
 
 }
 static inline int check_reg_idx(int idx) {
@@ -108,6 +112,10 @@ void isa_reg_display()
   }
   printf("%-8s%-#20x%-20d\n", "pc", s->pc, s->pc);
   printf("%-8s%-#20x%-20d\n", "dnpc", s->dnpc, s->dnpc);
+  printf("%-8s%-#20x%-20d\n", "mcause", s->csr.mcause, s->csr.mcause);
+  printf("%-8s%-#20x%-20d\n", "mepc", s->csr.mepc, s->csr.mepc);
+  printf("%-8s%-#20x%-20d\n", "mstatus", s->csr.mstatus, s->csr.mstatus);
+  printf("%-8s%-#20x%-20d\n", "mtvec", s->csr.mtvec, s->csr.mtvec);
   putchar('\n');
 }
 void isa_reg_display(CPU_state_diff_t* s)
