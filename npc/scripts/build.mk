@@ -82,11 +82,12 @@ CPP_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.cpp) #search all hw/
 C_HEAD_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.h) #search all hw/
 
 verilog:$(CHISEL_GEN_VERILOG_FILE)
-	@echo "====NODISPLA=====" ${NODISPLAY}
-	sed -i 's/define PRINTF_COND_ 1/define PRINTF_COND_ 0/g' $(CHISEL_GEN_VERILOG_FILE)
-ifeq ( ${NODISPLAY} , "y" )
-	@echo "NODISPLAY"
-
+ifeq ($(NODISPLAY),y) 
+	@ echo "display disabled in top.v ...... yes"
+	@ sed -i 's/define PRINTF_COND_ 1/define PRINTF_COND_ 0/g' $(CHISEL_GEN_VERILOG_FILE)
+else
+	@ echo "display disabled in top.v ...... no"
+	@ sed -i 's/define PRINTF_COND_ 0/define PRINTF_COND_ 1/g' $(CHISEL_GEN_VERILOG_FILE)
 endif
 
 $(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
