@@ -48,11 +48,19 @@ __EXPORT void difftest_memcpy(paddr_t addr, void *buf, size_t n, bool direction)
 
 }
 
+typedef struct {
+  word_t mcause;
+  vaddr_t mepc;
+  word_t mstatus;
+  word_t mtvec;
+} MUXDEF(CONFIG_RV64, riscv64_CSRs_diff, riscv32_CSRs_diff);
+
 typedef struct CPU_state_diff_t {
   vaddr_t pc;
   vaddr_t snpc; // static next pc
   vaddr_t dnpc; // dynamic next pc
   word_t regs[33];
+  MUXDEF(CONFIG_RV64, riscv64_CSRs_diff, riscv32_CSRs_diff) csr;
 } CPU_state_diff_t;
 __EXPORT void difftest_regcpy(void *dut, bool direction) {
   CPU_state_diff_t* s=(CPU_state_diff_t*)dut;
@@ -63,6 +71,7 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
     }
     s->regs[32]=cpu.pc;
     s->pc=cpu.pc;
+    memcpy(&(s->csr),&(cpu.csr),sizeof(riscv32_CSRs_diff));
     //s->dnpc=cpu.dnpc;
     //printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_DUT (nemu)pc=%x (dut)pc=%x\n" ANSI_NONE,cpu.pc,s->pc);
     return;
@@ -73,6 +82,7 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
     }
     cpu.pc=s->regs[32];
     cpu.pc=s->pc; 
+    memcpy(&(cpu.csr),&(s->csr),sizeof(riscv32_CSRs_diff));
     //cpu.dnpc=s->dnpc; 
     //printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_REF (nemu)pc=%x (dut)pc=%x\n" ANSI_NONE,cpu.pc,s->pc);
     return;
