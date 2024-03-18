@@ -205,6 +205,7 @@ void execute(uint64_t n) {
       #endif
       exec_once(tfp);
       diff_cpuInfoUpdate(s);
+      Assert(s->pc!=0x800012b0,"ecall!!");
 
       if(npc_state.state==NPC_STOP) break; //inst:ebreak
 
