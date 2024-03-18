@@ -19,6 +19,11 @@ class top(isa_info: String = "RISCV32") extends Module {
       val dnpc = Output(UInt(32.W))
       val snpc = Output(UInt(32.W))
       val regs = Output(Vec(32, UInt(32.W)))
+
+      val mepc =    Output(UInt(32.W))
+      val mcause =  Output(UInt(32.W))  
+      val mstatus = Output(UInt(32.W))   
+      val mtvec =   Output(UInt(32.W)) 
     }
   })
 

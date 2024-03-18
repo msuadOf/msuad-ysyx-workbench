@@ -50,6 +50,11 @@ class Core(isa_info: String = "RISCV32") extends Module {
       val dnpc = Output(UInt(32.W))
       val snpc = Output(UInt(32.W))
       val regs = Output(Vec(32, UInt(32.W)))
+
+      val mepc =    Output(UInt(32.W))
+      val mcause =  Output(UInt(32.W))  
+      val mstatus = Output(UInt(32.W))   
+      val mtvec =   Output(UInt(32.W)) 
     }
   })
 
@@ -134,6 +139,11 @@ class Core(isa_info: String = "RISCV32") extends Module {
 
   io.diff.pc   := pc
   io.diff.regs := R.reg
+io.diff.mepc   :=csr.mepc.read() 
+io.diff.mcause :=csr.mcause.read() 
+io.diff.mstatus:=csr.mstatus.read() 
+io.diff.mtvec  :=csr.mtvec.read() 
+
   printf("io.IMem.rAddr=%x\n", io.IMem.rAddr)
 //  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)},s0=${R(8)}\n")
   printf(p"top.scala: io.DMem.rData=${io.DMem.rData},clk=${clock.asBool},rst=${reset.asBool}\n")
