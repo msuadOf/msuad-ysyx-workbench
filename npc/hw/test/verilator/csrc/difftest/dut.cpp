@@ -109,10 +109,7 @@ void init_difftest(char *ref_so_file, long img_size, int port) {
   //ref_difftest_reg_display();
   //isa_reg_display();
 }
-#define CHECKDIFF(p)     if(ref->p!=s->p)\
-                            printf(ANSI_FG_RED);\
-                          printf("%-15s0x%-15x%-15u|\t0x%-15x%-15u|\n", p , s->p, s->p, s->p, s->p);\
-                          printf(ANSI_NONE);
+
 void ref_reg_display(CPU_state_diff_t *s,CPU_state_diff_t *ref)
 {
     printf("\n****************REF_STATE**********************|****************NPC_STATE***************|\n");
@@ -184,7 +181,7 @@ bool isa_difftest_checkregs(CPU_state_diff_t *ref_r, vaddr_t pc) {
     //return false;
   }
   #define CHECKDIFF(p) if (ref_r->p != s->p) { \
-  printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"" #p "\" is diffrent: (nemu-false)= %08x ,(qemu-yes)= %08x.\n",s->p,ref_r->p); \
+  printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"" #p "\" is diffrent: (npc-false)= %08x ,(ref-yes)= %08x.\n",s->p,ref_r->p); \
   state=false; \
 }
   CHECKDIFF(csr.mstatus);
