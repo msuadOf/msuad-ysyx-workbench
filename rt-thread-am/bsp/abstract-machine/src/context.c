@@ -70,7 +70,7 @@ void rt_hw_context_switch_to(rt_ubase_t to)
   //  uintptr_t* sp;
   //  sp=*(uintptr_t**)to;
   // // Context* to_c= sp;
-  Log("to=%d", *(uintptr_t *)to);
+  // Log("to=%d", *(uintptr_t *)to);
   __global_rt_to = (Context **)to;
   __global_rt_from = (Context **)NULL;
 
@@ -124,11 +124,11 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
 
 
 
-Log("before tentry:%d,texit=%d,parameter=%d,tentry=%d",i,(int)p->texit,(int)p->parameter,(int)p->tentry);
+// Log("before tentry:%d,texit=%d,parameter=%d,tentry=%d",i,(int)p->texit,(int)p->parameter,(int)p->tentry);
   // if(p->debug!=PARAM_DEBUG(p->tentry,p->parameter)) {Log("=====0x5AA5!====="); assert(0);}
   p->tentry(p->parameter); // 调用入口函数
   asm("wrap_entry_texit:");
-  Log("after tentry:%d,texit=%d,parameter=%d,tentry=%d",i,(int)p->texit,(int)p->parameter,(int)p->tentry);
+  // Log("after tentry:%d,texit=%d,parameter=%d,tentry=%d",i,(int)p->texit,(int)p->parameter,(int)p->tentry);
 
   p->texit();              // 在tentry返回后调用退出函数
 

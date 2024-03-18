@@ -121,7 +121,7 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
     // }
     
 
-    csr.mstatus := (set_field(
+    csr.mstatus := 0x80.U /* (set_field(
       csr.mstatus.read(),
       MSTATUS_MPRV,
       Mux((get_field(csr.mstatus.read(), MSTATUS_MPP) =/= PRV_M.U), 0.U, get_field(csr.mstatus.read(), MSTATUS_MPRV))
@@ -133,7 +133,7 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
       csr.mstatus.read(),
       MSTATUS_MPP,
       PRV_U.U
-    ) & MSTATUS_MPP.U);
+    ) & MSTATUS_MPP.U); */
 
     // csr.mstatus.write_MPRV(Mux(csr.mstatus.MPP =/= PRV_M.U, 0.U, csr.mstatus.MPRV))
     // csr.mstatus.write_MIE(csr.mstatus.MPIE)
