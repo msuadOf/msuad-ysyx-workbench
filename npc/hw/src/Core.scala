@@ -113,11 +113,14 @@ class Core(isa_info: String = "RISCV32") extends Module {
   // src1 := R(rs1)
   // src2 := R(rs2)
 
+  val decode_success=RegInit(0.U(1.W))
+  decode_success:=0.U
   RVIInstr.table
     .asInstanceOf[Array[((BitPat, Any), ExecEnv => Any)]]
     .foreach((t: ((BitPat, Any), ExecEnv => Any)) => {
       prefix(s"InstMatch_${getVariableName(t._1._1)}") {
         when(t._1._1 === inst) {
+          decode_success:=1.U //debug
           Decoder.IDLE()
           t._2(Decoder)
           if (t._1._1 == RV32I_ALUInstr.ADDI) {
@@ -127,7 +130,7 @@ class Core(isa_info: String = "RISCV32") extends Module {
         }
       }
     })
-
+assert(decode_success===1.U)//decode failed
   //addi exec
 
   //R(rd)         :=add_exec(src1,imm)
