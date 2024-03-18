@@ -145,10 +145,10 @@ when(decode_success===0.U)//decode failed
 
   io.diff.pc   := pc
   io.diff.regs := R.reg
-io.diff.mepc   :=csr.mepc.value 
-io.diff.mcause :=csr.mcause.value 
-io.diff.mstatus:=csr.mstatus.value 
-io.diff.mtvec  :=csr.mtvec.value 
+io.diff.mepc   :=csr.mepc.read() 
+io.diff.mcause :=csr.mcause.read() 
+io.diff.mstatus:=csr.mstatus.read() 
+io.diff.mtvec  :=csr.mtvec.read() 
 
   printf("io.IMem.rAddr=%x\n", io.IMem.rAddr)
 //  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)},s0=${R(8)}\n")

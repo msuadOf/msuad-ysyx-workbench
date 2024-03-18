@@ -74,6 +74,10 @@ void diff_cpuInfoUpdate(CPU_state_diff_t* s){
   s->dnpc=top->io_diff_dnpc;
   s->snpc=top->io_diff_snpc;
   s->pc=top->io_diff_pc;
+  s->csr.mcause=top->io_diff_mcause;
+  s->csr.mepc=top->io_diff_mepc;
+  s->csr.mstatus=top->io_diff_mstatus;
+  s->csr.mtvec=top->io_diff_mtvec;
 
 }
 static inline int check_reg_idx(int idx) {

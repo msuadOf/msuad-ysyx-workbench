@@ -32,7 +32,7 @@ class mcause_csr extends csr_base{
 
 }
 class mstatus_csr extends csr_base{
-override val value:UInt = RegInit(0x1800.U(32.W))
+override val value:UInt = RegInit(.U(32.W))
 }
 class mtvec_csr extends csr_base{
 
