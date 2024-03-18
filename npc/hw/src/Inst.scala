@@ -77,6 +77,16 @@ object LSUOpType { //TODO: refactor LSU fuop
 
 }
 
+object CSROpType {
+  def jmp  = "b000".U
+  def wrt  = "b001".U
+  def set  = "b010".U
+  def clr  = "b011".U
+  def wrti = "b101".U
+  def seti = "b110".U
+  def clri = "b111".U
+}
+
 object ALUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
   def ADDI  = (e: ExecEnv) => {e.Rrd := e.src1 + e.immI;printf("[ADDI]:ADDR=%x,src1=%x,immI=%x}\n",e.src1 + e.immI,e.src1 ,e.immI) }
@@ -222,6 +232,24 @@ object RV32I_LSUInstr {
     SB -> List(Inst.S, FuType.lsu, LSUOpType.sb) -> LSUExec.SB,
     SH -> List(Inst.S, FuType.lsu, LSUOpType.sh) -> LSUExec.SH,
     SW -> List(Inst.S, FuType.lsu, LSUOpType.sw) -> LSUExec.SW
+  )
+}
+
+object RVZicsrInstr extends HasInstrType {
+  def CSRRW   = BitPat("b????????????_?????_001_?????_1110011")
+  def CSRRS   = BitPat("b????????????_?????_010_?????_1110011")
+  def CSRRC   = BitPat("b????????????_?????_011_?????_1110011")
+  def CSRRWI  = BitPat("b????????????_?????_101_?????_1110011")
+  def CSRRSI  = BitPat("b????????????_?????_110_?????_1110011")
+  def CSRRCI  = BitPat("b????????????_?????_111_?????_1110011")
+
+  val table = Array(
+    CSRRW          -> List(Inst.I, FuType.csr, CSROpType.wrt),
+    CSRRS          -> List(Inst.I, FuType.csr, CSROpType.set),
+    CSRRC          -> List(Inst.I, FuType.csr, CSROpType.clr),
+    CSRRWI         -> List(Inst.I, FuType.csr, CSROpType.wrti),
+    CSRRSI         -> List(Inst.I, FuType.csr, CSROpType.seti),
+    CSRRCI         -> List(Inst.I, FuType.csr, CSROpType.clri)
   )
 }
 
