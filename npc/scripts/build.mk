@@ -2,7 +2,7 @@ NAME=npc
 WORK_DIR  = $(shell pwd)
 BUILD_DIR = $(WORK_DIR)/build
 
-Q:= @ 
+Q := @ 
 
 include scripts/verilator.mk
 include scripts/chisel.mk
@@ -113,7 +113,7 @@ verilator-binary: verilog
 
 	@echo
 	@echo "-- BUILD -------------------"
-	CPPFLAGS="$(VERILATOR_CFLAGS)" LDLIBS="$(VERILATOR_LDLIBS)" $(MAKE) -j4 -C $(VERI_BUILD_DIR) -f ../Makefile_obj
+	$(Q) CPPFLAGS="$(VERILATOR_CFLAGS)" LDLIBS="$(VERILATOR_LDLIBS)" $(MAKE) -j4 -C $(VERI_BUILD_DIR) -f ../Makefile_obj
 
 verilator-run: verilator-binary
 	@echo
