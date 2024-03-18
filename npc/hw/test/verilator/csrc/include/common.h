@@ -34,7 +34,7 @@
 // #define CONFIG_Log_level_2 1
 
 //---------------- device ---------------
-#define CONFIG_DEVICE 1
+// #define CONFIG_DEVICE 1
 
 #ifdef CONFIG_DEVICE
 #define CONFIG_DEVICE_SERIAL 1 //SERIAL

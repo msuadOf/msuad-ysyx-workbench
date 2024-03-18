@@ -2,6 +2,8 @@
 #include <common.h>
 /* http://en.wikibooks.org/wiki/Serial_Programming/8250_UART_Programming */
 // NOTE: this is compatible to 16550
+#ifdef CONFIG_DEVICE_SERIAL
+
 
 #define CH_OFFSET 0
 
@@ -43,3 +45,5 @@ void init_serial() {
 
 
 }
+
+#endif // CONFIG_DEVICE_SERIAL
