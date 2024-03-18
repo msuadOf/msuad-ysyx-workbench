@@ -3,7 +3,7 @@ import chisel3.util._
 import upack.Int64
 
 class csr_base(){
-    protected val value:UInt = RegInit(0.U(32.W))
+    val value:UInt = RegInit(0.U(32.W))
     def read():UInt = value
     def write(value:UInt):Unit = { this.value:=value }
     def := (value:UInt) = write(value)
@@ -32,7 +32,7 @@ class mcause_csr extends csr_base{
 
 }
 class mstatus_csr extends csr_base{
-
+override val value:UInt = RegInit(0x1800.U(32.W))
 }
 class mtvec_csr extends csr_base{
 
