@@ -77,9 +77,9 @@ CHISEL_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.v) #search all hw/
 CHISEL_GEN_VERILOG_FILE=$(BUILD_DIR)/top.v #build/top.v
 
 VERILOG_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.v)
-C_SRC_FILE=$(shell find ./hw -name *.c) #search all hw/
-CPP_SRC_FILE=$(shell find ./hw -name *.cpp) #search all hw/
-C_HEAD_SRC_FILE=$(shell find ./hw -name *.h) #search all hw/
+C_SRC_FILE=$(shell find hw -name *.c) #search all hw/
+CPP_SRC_FILE=$(shell find hw -name *.cpp) #search all hw/
+C_HEAD_SRC_FILE=$(shell find hw -name *.h) #search all hw/
 
 verilog:$(CHISEL_GEN_VERILOG_FILE)
 ifeq ($(NODISPLAY),y) 
