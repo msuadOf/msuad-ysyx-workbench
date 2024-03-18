@@ -83,7 +83,8 @@ __EXPORT void difftest_regcpy(void *dut, bool direction) {
     }
     cpu.pc=s->regs[32];
     cpu.pc=s->pc; 
-    memcpy(&(cpu.csr),&(s->csr),sizeof(riscv32_CSRs_diff));
+    // memcpy(&(cpu.csr),&(s->csr),sizeof(riscv32_CSRs_diff));
+    cpu.csr=(riscv32_CSRs){.mcause=s->csr.mcause,.mepc=s->csr.mepc,.mstatus=s->csr.mstatus,.mtvec=s->csr.mtvec};
     //cpu.dnpc=s->dnpc; 
     //printf(ANSI_FG_BLUE "[nemu]:difftest_regcpy TO_REF (nemu)pc=%x (dut)pc=%x\n" ANSI_NONE,cpu.pc,s->pc);
     return;
