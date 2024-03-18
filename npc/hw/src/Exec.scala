@@ -119,9 +119,25 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
     // when(csr.mstatus.MPP =/= PRV_M.U) {
     //   csr.mstatus.write_MPRV(0.U)
     // }
-    csr.mstatus.write_MPRV( Mux(csr.mstatus.MPP =/= PRV_M.U,0.U,csr.mstatus.MPRV) )
-    csr.mstatus.write_MIE(csr.mstatus.MPIE)
-    csr.mstatus.write_MPIE(1.U)
-    csr.mstatus.write_MPP(PRV_U.U)
+    
+
+    csr.mstatus := (set_field(
+      csr.mstatus.read(),
+      MSTATUS_MPRV,
+      Mux((get_field(csr.mstatus.read(), MSTATUS_MPP) =/= PRV_M.U), 0.U, get_field(csr.mstatus.read(), MSTATUS_MPRV))
+    ) & MSTATUS_MPRV.U) | (set_field(
+      csr.mstatus.read(),
+      MSTATUS_MIE,
+      get_field(csr.mstatus.read(), MSTATUS_MPIE)
+    ) & MSTATUS_MIE.U) | (set_field(csr.mstatus.read(), MSTATUS_MPIE, 1.U) & MSTATUS_MPIE.U) | (set_field(
+      csr.mstatus.read(),
+      MSTATUS_MPP,
+      PRV_U.U
+    ) & MSTATUS_MPP.U);
+
+    // csr.mstatus.write_MPRV(Mux(csr.mstatus.MPP =/= PRV_M.U, 0.U, csr.mstatus.MPRV))
+    // csr.mstatus.write_MIE(csr.mstatus.MPIE)
+    // csr.mstatus.write_MPIE(1.U)
+    // csr.mstatus.write_MPP(PRV_U.U)
   }
 }
