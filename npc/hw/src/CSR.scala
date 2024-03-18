@@ -1,15 +1,15 @@
 import chisel3._
 import chisel3.util._
 
-abstract class csr_base(){
+class csr_base(){
     protected val value:UInt = RegInit(0.U(32.W))
-    def read:UInt = value
+    def read():UInt = value
     def write(value:UInt):Unit = { this.value:=value }
 }
 
 class mepc_csr extends csr_base{
     override def write(value:UInt):Unit = {
-         this.value:= value & -4.U(32.W)
+         this.value:= value & -4.S(32.W).asUInt //!!!!
         }
 }
 class mcause_csr extends csr_base{
@@ -27,9 +27,7 @@ class csr {
     val mstatus = new mstatus_csr
     val mtvec = new mtvec_csr
 }
-object csr{
-    def apply = new csr
-}
+
 
 
 

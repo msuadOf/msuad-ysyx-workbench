@@ -1,7 +1,8 @@
 import chisel3._
 import chisel3.util._
+import upickle.default
 
-class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile,val csr:csr , val DMem: MemIO) {
+class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DMem: MemIO) {
   //val rs1, rs2, rd, src1, src2, imm ,Rrd = Wire(UInt())
   val rs1 = inst(19, 15)
   val rs2 = inst(24, 20)
@@ -82,4 +83,26 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile,val csr:csr , val DMe
   def IDLE() = { Mem.IDLE(); Reg.IDLE() }
   def Mw(addr: UInt, len: Int, data: UInt) = Mem.write(addr, len, data)
   def Mr(addr: UInt, len: Int): UInt = Mem.read(addr, len)
+
+  //---CSR--------
+  def CSR_READ(imm: UInt):UInt = {
+    return MuxCase(
+      0.U(32.W),
+      Seq(
+        (imm === 0x341.U) -> csr.mepc.read(),
+        (imm === 0x342.U) -> csr.mcause.read(),
+        (imm === 0x300.U) -> csr.mstatus.read(),
+        (imm === 0x305.U) -> csr.mtvec.read()
+      )
+    )
+  }
+  def CSR_WRITE(imm: UInt,value:UInt):Unit = {
+    switch(imm){
+      is(0x341.U){csr.mepc.write(value)}
+      is(0x342.U){csr.mcause.write(value)}
+      is(0x300.U){csr.mstatus.write(value)}
+      is(0x305.U){csr.mtvec.write(value)}
+    }
+    return
+  }
 }

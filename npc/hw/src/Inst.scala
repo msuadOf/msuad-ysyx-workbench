@@ -148,8 +148,8 @@ object LSUExec {
 
 }
 object ZicsrExec {
-  def CSRRW  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
-  def CSRRS  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def CSRRW  = (e: ExecEnv) => {e.Rrd := e.CSR_READ(e.immI); e.CSR_WRITE(e.immI,e.src1)}
+  def CSRRS  = (e: ExecEnv) => {e.Rrd := e.CSR_READ(e.immI); e.CSR_WRITE(e.immI,e.CSR_READ(e.immI)|e.src1)}
   def CSRRC  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
   def CSRRWI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
   def CSRRSI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
