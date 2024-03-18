@@ -83,10 +83,10 @@ C_HEAD_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.h) #search all hw/
 
 verilog:$(CHISEL_GEN_VERILOG_FILE)
 	@echo "====NODISPLA=====" ${NODISPLAY}
-	sed 's/define PRINTF_COND_ 1/define PRINTF_COND_ 0/g' $(CHISEL_GEN_VERILOG_FILE)
+	sed -i 's/define PRINTF_COND_ 1/define PRINTF_COND_ 0/g' $(CHISEL_GEN_VERILOG_FILE)
 ifeq ( ${NODISPLAY} , "y" )
 	@echo "NODISPLAY"
-	sed 's/define PRINTF_COND_ 1/define PRINTF_COND_ 0/g' $(CHISEL_GEN_VERILOG_FILE)
+
 endif
 
 $(CHISEL_GEN_VERILOG_FILE):$(CHISEL_SRC_FILE)
