@@ -35,7 +35,7 @@ word_t mmio_read(paddr_t addr, int len) {
     // if(MMIO_IS_AT(SERIAL)) { return mmio_read_SERIAL(addr, len); };
     doREAD(SERIAL);
     doREAD(RTC);
-    Assert(0,);
+    panic("[npc]mmio_read should not reach here!");
 }
 
 void mmio_write(paddr_t addr, int len, word_t data) {
@@ -43,6 +43,7 @@ void mmio_write(paddr_t addr, int len, word_t data) {
     // if(MMIO_IS_AT(SERIAL)) {  mmio_write_SERIAL(addr, len,data); return; };
     doWRITE(SERIAL);
     doWRITE(RTC);
+    panic("[npc]mmio_write should not reach here!");
 }
 
 /* 宏定义原型 */
