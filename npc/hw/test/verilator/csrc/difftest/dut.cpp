@@ -183,6 +183,14 @@ bool isa_difftest_checkregs(CPU_state_diff_t *ref_r, vaddr_t pc) {
     state=false;
     //return false;
   }
+  #define CHECKDIFF(p) if (ref_r->p != s->p) { \
+  printf(ANSI_FG_RED "[Error]" ANSI_NONE " \"" #p "\" is diffrent: (nemu-false)= %08x ,(qemu-yes)= %08x.\n",s->p,ref_r->p); \
+  state=false; \
+}
+  CHECKDIFF(csr.mstatus);
+	CHECKDIFF(csr.mcause);
+  CHECKDIFF(csr.mepc);
+  CHECKDIFF(csr.mtvec);
   return state;
   //return true;
 }
