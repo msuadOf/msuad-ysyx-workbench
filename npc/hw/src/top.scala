@@ -7,11 +7,7 @@ import chisel3.experimental.prefix
 
 class top(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {
-    val IMem = new Bundle {
-      val rAddr = Output(UInt(32.W))
-      val rData = Input(UInt(32.W))
-    }
-
+    val IMem = new InstIO
     val DMem = new MemIO
 
     val diff = new Bundle {
