@@ -28,6 +28,7 @@
 // #define CONFIG_DIFFTEST 1
 //#define CONFIG_MTRACE 1
 #define CONFIG_LOG 1
+#define CONFIG_MMIO_NO_CHECK 1
 // #define CONFIG_Log_level_0
 // #define CONFIG_Log_level_1
 //IO
@@ -68,6 +69,8 @@ typedef uint16_t ioaddr_t;
 #include <debug.h>
 
 #include "cpu.h"
+
+#include "mem.h"
 
 int is_exit_status_bad();
 
