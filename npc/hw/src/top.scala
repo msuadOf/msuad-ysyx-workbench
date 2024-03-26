@@ -58,7 +58,7 @@ class test_12 extends Module {
   io.AR.arAddr:=arAddr
   //---------------
       val addr_out=Wire(UInt(32.W))
-      addr_out:=0x8000.U
+      addr_out:="x80000000".U(32.W)
 
       val data_in=Wire(UInt(32.W))
       data_in:=0.U
