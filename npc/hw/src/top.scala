@@ -18,6 +18,7 @@ class test_12 extends Module {
   io.simpleW.wValid := 0.U
 
   val I_en = RegInit(1.U)
+        val data_in=RegInit(0.U)
 
   val sIDLE :: sARwaiting :: sARcplt_Rwaiting :: sRcplt :: Nil = Enum(4)
   val R_state                                                  = RegInit(sIDLE)
@@ -41,6 +42,7 @@ class test_12 extends Module {
     is(sARcplt_Rwaiting) {
       when(io.R.rValid===1.U){
         R_state:=sRcplt
+        data_in:=io.R.rData //data sa
       }.otherwise{
         R_state:=sARcplt_Rwaiting
       }
@@ -62,7 +64,7 @@ class test_12 extends Module {
       addr_out:=addr_out_r
       addr_out_r:=addr_out_r+4.U
 
-      val data_in=RegInit(0.U)
+
   switch(R_state){
     is(sIDLE) {
       io.AR.arValid:=0.U
@@ -78,7 +80,6 @@ class test_12 extends Module {
     is(sRcplt) {
       io.R.rReady:=0.U
       io.AR.arValid:=0.U
-      data_in:=io.R.rData //data
     }
   }
 printf("data_in=%d\n",data_in)
