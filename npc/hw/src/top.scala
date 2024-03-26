@@ -54,6 +54,31 @@ class test_12 extends Module {
       }
     }
   }
+      io.AR.arAddr:=0x8000.U
+      val addr_out=Wire(UInt(32.W))
+      addr_out:=0.U
+      val data_in=Wire(UInt(32.W))
+      data_in:=0.U
+      val data_in_R=RegNext(data_in)
+  switch(R_state){
+    is(sIDLE) {
+      io.AR.arValid:=0.U
+    }
+    is(sARwaiting) {
+      io.AR.arValid:=1.U
+      io.AR.arAddr:=addr_out //addr<-pc
+    }
+    is(sARcplt_Rwaiting) {
+      io.AR.arValid:=0.U
+      io.R.rReady:=1.U
+    }
+    is(sRcplt) {
+      io.R.rReady:=0.U
+      io.AR.arValid:=0.U
+      data_in:=io.R.rData //data
+    }
+  }
+
 }
 class top(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {
