@@ -78,7 +78,7 @@ class test_12 extends Module {
       data_in:=io.R.rData //data
     }
   }
-
+printf("data_in=%d,data_in_R=%d\n",data_in,data_in_R)
 }
 class top(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {
