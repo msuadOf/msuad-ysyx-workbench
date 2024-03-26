@@ -17,6 +17,8 @@ io.simpleW.wAddr :=0.U
 io.simpleW.wData :=0.U
 io.simpleW.wWidth:=0.U
 io.simpleW.wValid:=0.U
+
+
 }
 class top(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {
