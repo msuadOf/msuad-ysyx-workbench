@@ -62,9 +62,8 @@ class test_12 extends Module {
       addr_out:=addr_out_r
       addr_out_r:=addr_out_r+4.U
 
-      val data_in=Wire(UInt(32.W))
+      val data_in=Reg(UInt(32.W))
       data_in:=0.U
-      val data_in_R=RegNext(data_in)
   switch(R_state){
     is(sIDLE) {
       io.AR.arValid:=0.U
@@ -83,7 +82,7 @@ class test_12 extends Module {
       data_in:=io.R.rData //data
     }
   }
-printf("data_in=%d,data_in_R=%d\n",data_in,data_in_R)
+printf("data_in=%d\n",data_in)
 }
 class top(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {
