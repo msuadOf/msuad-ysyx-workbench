@@ -68,7 +68,7 @@ void paddr_write(paddr_t addr, int len, word_t data) {
 }
 
 extern "C" int mmio_read(int addr, int len) {
-paddr_read( addr,  len);
+return paddr_read( addr,  len);
 }
 
 extern "C" void mmio_write(int addr, int len, int data) {
