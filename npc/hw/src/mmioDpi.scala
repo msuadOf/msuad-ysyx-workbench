@@ -1,28 +1,5 @@
 import chisel3._
 import chisel3.util._
-class mmioAR extends Bundle {
-  val arAddr  = Input(UInt(32.W))
-  val arWidth = Input(UInt(32.W))
-  val arValid = Input(UInt(1.W))
-  val arReady = Output(UInt(1.W))
-}
-class mmioR extends Bundle {
-  val rData  = Output(UInt(32.W))
-  val rValid = Output(UInt(1.W))
-  val rReady = Input(UInt(1.W))
-}
-class mmioW extends Bundle {
-  val wAddr  = Input(UInt(32.W))
-  val wData  = Input(UInt(32.W))
-  val wWidth = Input(UInt(32.W))
-  val wValid = Input(UInt(1.W))
-  val wReady = Output(UInt(1.W))
-}
-class mmioIO extends Bundle {
-  val AR      = new mmioAR
-  val R       = new mmioR
-  val simpleW = new mmioW
-}
 
 class mmio_dpi extends BlackBox {
 
