@@ -42,7 +42,7 @@ class test_12 extends Module {
     is(sARcplt_Rwaiting) {
       when(io.R.rValid===1.U){
         R_state:=sRcplt
-        data_in:=io.R.rData //data sa
+        data_in:=io.R.rData //data satis
       }.otherwise{
         R_state:=sARcplt_Rwaiting
       }
