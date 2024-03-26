@@ -54,9 +54,14 @@ class test_12 extends Module {
       }
     }
   }
+  //---- io reg ----
+  val arAddr=RegInit(0.U)
+  io.AR.arAddr:=arAddr
+  //---------------
       io.AR.arAddr:=0.U
       val addr_out=Wire(UInt(32.W))
       addr_out:=0x8000.U
+      
       val data_in=Wire(UInt(32.W))
       data_in:=0.U
       val data_in_R=RegNext(data_in)
@@ -66,7 +71,7 @@ class test_12 extends Module {
     }
     is(sARwaiting) {
       io.AR.arValid:=1.U
-      io.AR.arAddr:=addr_out //addr<-pc
+      arAddr:=addr_out //addr<-pc
     }
     is(sARcplt_Rwaiting) {
       io.AR.arValid:=0.U
