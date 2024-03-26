@@ -9,7 +9,6 @@ class test_12 extends Module {
 
   io.AR.arWidth := 4.U
   io.AR.arValid := 0.U
-  io.AR.arAddr  := 0.U
 
   io.R.rReady := 0.U
 
@@ -58,10 +57,9 @@ class test_12 extends Module {
   val arAddr=RegInit(0.U)
   io.AR.arAddr:=arAddr
   //---------------
-      io.AR.arAddr:=0.U
       val addr_out=Wire(UInt(32.W))
       addr_out:=0x8000.U
-      
+
       val data_in=Wire(UInt(32.W))
       data_in:=0.U
       val data_in_R=RegNext(data_in)
