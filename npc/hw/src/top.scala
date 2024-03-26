@@ -63,7 +63,6 @@ class test_12 extends Module {
       addr_out_r:=addr_out_r+4.U
 
       val data_in=Reg(UInt(32.W))
-      data_in:=0.U
   switch(R_state){
     is(sIDLE) {
       io.AR.arValid:=0.U
