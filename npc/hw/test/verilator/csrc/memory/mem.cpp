@@ -66,3 +66,11 @@ void paddr_write(paddr_t addr, int len, word_t data) {
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
 }
+
+extern "C" int mmio_read(int addr, int len) {
+return paddr_read( addr,  len);
+}
+
+extern "C" void mmio_write(int addr, int len, int data) {
+paddr_write( addr,  len,  data); 
+}
