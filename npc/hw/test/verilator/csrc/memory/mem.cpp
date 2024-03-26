@@ -50,7 +50,7 @@ void trace_mwrite(paddr_t addr, int len, word_t data);
 word_t mmio_read(paddr_t addr, int len);
 void mmio_write(paddr_t addr, int len, word_t data);
 
-extern "C" word_t paddr_read(paddr_t addr, int len) {
+word_t paddr_read(paddr_t addr, int len) {
   IFDEF(CONFIG_MTRACE,trace_mread(addr, len);) 
 
   if (likely(in_pmem(addr))) return pmem_read(addr, len);
@@ -59,10 +59,18 @@ extern "C" word_t paddr_read(paddr_t addr, int len) {
   return 0;
 }
 
-extern "C" void paddr_write(paddr_t addr, int len, word_t data) {
+void paddr_write(paddr_t addr, int len, word_t data) {
   IFDEF(CONFIG_MTRACE,if(data!=0) trace_mwrite(addr, len, data); )
 
   if (likely(in_pmem(addr))) { pmem_write(addr, len, data); return; }
   IFDEF(CONFIG_DEVICE, mmio_write(addr, len, data); return);
   out_of_bound(addr);
+}
+
+extern "C" int mmio_read(int addr, int len) {
+paddr_read( addr,  len);
+}
+
+extern "C" void mmio_write(int addr, int len, int data) {
+paddr_write( addr,  len,  data); 
 }
