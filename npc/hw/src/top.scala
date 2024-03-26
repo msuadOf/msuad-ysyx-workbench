@@ -7,7 +7,7 @@ import chisel3.experimental.prefix
 class test_12 extends Module {
   val io = IO(Flipped(new mmioIO))
 
-  io.AR.arWidth := 0.U
+  io.AR.arWidth := 4.U
   io.AR.arValid := 0.U
   io.AR.arAddr  := 0.U
 
