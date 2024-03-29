@@ -57,3 +57,6 @@ class mmioIO extends Bundle {
   val R       = new mmioR
   val simpleW = new mmioW
 }
+// class IFU2EX_IO extends Bundle{
+//   val 
+// }
