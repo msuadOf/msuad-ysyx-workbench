@@ -105,7 +105,7 @@ void cpu_init() {
 
   diff_cpuInfoUpdate(s);
 }
-void exec_once() {
+void tick_once() {
   top->clock = 0;
   //printf("======clock shoule be 0 now %d\n",top->clock);
   // top->mem_inst = pmem_read(top->mem_addr);
@@ -147,4 +147,11 @@ void exec_once() {
     paddr_write(top->io_DMem_wAddr,top->io_DMem_wWidth,top->io_DMem_wData);
   }
   Log_level_2("after postedge: top->io_DMem_ren=%d,addr=0x%08x,data=0x%08x",top->io_DMem_ren,top->io_DMem_rAddr,top->io_DMem_rData );
+}
+void exec_once(){
+  while (!diff_en)
+  {
+    tick_once();
+  }
+  
 }
