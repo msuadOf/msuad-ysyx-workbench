@@ -113,6 +113,8 @@ class Core(isa_info: String = "RISCV32") extends Module {
 
     val ebreakDpi = Module(new ebreakDpi)
     ebreakDpi.io.inst := inst
+  }.otherwise{
+    decode_success:=0.U
   }
 
   io.diff.pc      := pc
