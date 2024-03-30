@@ -28,5 +28,6 @@ class top(isa_info: String = "RISCV32") extends Module {
   val mmio_dpi = Module(new mmio_dpi_wraper)
   val IFU      = Module(new IFU)
 
+  IFU.io.Inst<>core.io.IMem
   mmio_dpi.io <> IFU.io.mmio
 }

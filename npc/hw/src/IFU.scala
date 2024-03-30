@@ -4,7 +4,7 @@ import chisel3.util._
 class IFU extends Module {
   val io = IO(new Bundle {
     val mmio=Flipped(new mmioIO)
-    val Inst
+    val Inst=Flipped(new InstIO)
   })
 
   io.mmio.AR.arWidth := 4.U
@@ -23,6 +23,9 @@ class IFU extends Module {
   val sIDLE :: sARwaiting :: sARcplt_Rwaiting :: sRcplt :: Nil = Enum(4)
 
   val R_state = RegInit(sIDLE)
+
+  io.Inst.rValid:=0.U //Inst data - default vld
+  io.Inst.rData:= data_in //Inst data
 //跳转
 // R_state:=sIDLE
   switch(R_state) {
@@ -44,6 +47,7 @@ class IFU extends Module {
       when(io.mmio.R.rValid === 1.U) {
         R_state := sRcplt
         data_in := io.mmio.R.rData //data - satisfy timing
+        io.Inst.rValid:=1.U
       }.otherwise {
         R_state := sARcplt_Rwaiting
       }
@@ -62,7 +66,7 @@ class IFU extends Module {
   //---------------
   val addr_out   = Wire(UInt(32.W))
   val addr_out_r = RegInit("x80000000".U(32.W))
-  addr_out   := addr_out_r
+  addr_out   := io.Inst.rAddr
   addr_out_r := addr_out_r + 4.U
 
   switch(R_state) {
