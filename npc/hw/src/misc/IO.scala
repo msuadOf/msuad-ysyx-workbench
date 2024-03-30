@@ -1,5 +1,19 @@
+package npc.misc
+
 import chisel3._
 import chisel3.util._
+
+class diffIO extends Bundle {
+  val pc   = Output(UInt(32.W))
+  val dnpc = Output(UInt(32.W))
+  val snpc = Output(UInt(32.W))
+  val regs = Output(Vec(32, UInt(32.W)))
+
+  val mepc    = Output(UInt(32.W))
+  val mcause  = Output(UInt(32.W))
+  val mstatus = Output(UInt(32.W))
+  val mtvec   = Output(UInt(32.W))
+}
 
 class MemIO extends Bundle {
   val rAddr  = Output(UInt(32.W))
@@ -57,3 +71,6 @@ class mmioIO extends Bundle {
   val R       = new mmioR
   val simpleW = new mmioW
 }
+// class IFU2EX_IO extends Bundle{
+//   val
+// }

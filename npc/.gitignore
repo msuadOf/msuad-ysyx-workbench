@@ -15,7 +15,7 @@
 !README.md
 !Chisel_Startup.md
 !utils/*
-
+!*.bak
 
 # mill
 out/
