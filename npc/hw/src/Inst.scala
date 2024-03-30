@@ -148,8 +148,8 @@ object LSUExec {
 
 }
 object ZicsrExec {
-  def CSRRW  = (e: ExecEnv) => {e.Rrd := e.CSR_READ(e.immI); e.CSR_WRITE(e.immI,e.src1)}
-  def CSRRS  = (e: ExecEnv) => {e.Rrd := e.CSR_READ(e.immI); e.CSR_WRITE(e.immI,e.CSR_READ(e.immI)|e.src1)}
+  def CSRRW  = (e: ExecEnv) => { e.Rrd := e.CSR_READ(e.immI); e.CSR_WRITE(e.immI, e.src1) }
+  def CSRRS  = (e: ExecEnv) => { e.Rrd := e.CSR_READ(e.immI); e.CSR_WRITE(e.immI, e.CSR_READ(e.immI) | e.src1) }
   def CSRRC  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
   def CSRRWI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
   def CSRRSI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
@@ -160,11 +160,16 @@ object PriviledgedExec {
   def SRET       = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
   def SFANCE_VMA = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
 
-  def ECALL  = (e: ExecEnv) => {e.csr.mcause := 0xb.U; e.csr.mepc:=e.pc; e.pc:=e.csr.mtvec.read(); e.csr.mstatus := ((((e.csr.mstatus.read()&(~(1.U<<7)))|((e.csr.mstatus.read()&(1.U<<3))<<4)) &(~(1.U<<3))))|((1.U<<11)+(1.U<<12)); }
-  def EBREAK = (e: ExecEnv) => e.pc:=e.pc+4.U //stop npc
-  def MRET   = (e: ExecEnv) => e.mret_impl()//{e.pc := e.csr.mepc.read();    e.csr.mstatus.MPRV:= Mux(e.csr.mstatus.MPP =/= 3.U,0.U,e.csr.mstatus.MPRV) ;e.csr.mstatus.MIE:=e.csr.mstatus.MPIE;e.csr.mstatus.MPIE:=1.U;e.csr.mstatus.MPP:=0.U;}
-  def FENCE  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
-  def WFI    = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def ECALL = (e: ExecEnv) => {
+    e.csr.mcause := 0xb.U; e.csr.mepc := e.pc; e.pc := e.csr.mtvec.read();
+    e.csr.mstatus := ((((e.csr.mstatus.read() & (~(1.U << 7))) | ((e.csr.mstatus
+      .read() & (1.U << 3)) << 4)) & (~(1.U << 3)))) | ((1.U << 11) + (1.U << 12));
+  }
+  def EBREAK = (e: ExecEnv) => e.pc := e.pc + 4.U //stop npc
+  def MRET = (e: ExecEnv) =>
+    e.mret_impl() //{e.pc := e.csr.mepc.read();    e.csr.mstatus.MPRV:= Mux(e.csr.mstatus.MPP =/= 3.U,0.U,e.csr.mstatus.MPRV) ;e.csr.mstatus.MIE:=e.csr.mstatus.MPIE;e.csr.mstatus.MPIE:=1.U;e.csr.mstatus.MPP:=0.U;}
+  def FENCE = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
+  def WFI   = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
 }
 object RV32I_ALUInstr {
   def ADDI  = BitPat("b???????_?????_?????_000_?????_0010011")

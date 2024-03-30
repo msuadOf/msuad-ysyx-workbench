@@ -14,7 +14,6 @@ object getVariableName {
   }
 }
 
-
 class Core(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {
     val IMem = new InstIO
@@ -89,34 +88,32 @@ class Core(isa_info: String = "RISCV32") extends Module {
   // src2 := R(rs2)
 
   val decode_success = RegInit(1.U(1.W))
-  decode_success := 0.U
-  RVIInstr.table
-    .asInstanceOf[Array[((BitPat, Any), ExecEnv => Any)]]
-    .foreach((t: ((BitPat, Any), ExecEnv => Any)) => {
-      prefix(s"InstMatch_${getVariableName(t._1._1)}") {
-        when(t._1._1 === inst) {
-          decode_success := 1.U //debug
-          Decoder.IDLE()
-          t._2(Decoder)
-          if (t._1._1 == RV32I_ALUInstr.ADDI) {
-            printf("ADDI\n")
+
+  when(io.IMem.rValid === 1.U) {
+    decode_success := 0.U
+    RVIInstr.table
+      .asInstanceOf[Array[((BitPat, Any), ExecEnv => Any)]]
+      .foreach((t: ((BitPat, Any), ExecEnv => Any)) => {
+        prefix(s"InstMatch_${getVariableName(t._1._1)}") {
+          when(t._1._1 === inst) {
+            decode_success := 1.U //debug
+            Decoder.IDLE()
+            t._2(Decoder)
+            if (t._1._1 == RV32I_ALUInstr.ADDI) {
+              printf("ADDI\n")
+            }
+            printf(p"Inst_Decode:${(t._1)}\n");
           }
-          printf(p"Inst_Decode:${(t._1)}\n");
         }
-      }
-    })
-  when(decode_success === 0.U) //decode failed
-  {
-    chisel3.assert(0.B, p"decode failed @ pc=${pc}\n" + "\n")
+      })
+    when(decode_success === 0.U) //decode failed
+    {
+      chisel3.assert(0.B, p"decode failed @ pc=${pc}\n" + "\n")
+    }
+
+    val ebreakDpi = Module(new ebreakDpi)
+    ebreakDpi.io.inst := inst
   }
-  //addi exec
-
-  //R(rd)         :=add_exec(src1,imm)
-  //R(rd)         := (src1.asSInt + imm.asSInt).asUInt
-  //io.DMem.wData := R(rd)
-
-  val ebreakDpi = Module(new ebreakDpi)
-  ebreakDpi.io.inst := inst
 
   io.diff.pc      := pc
   io.diff.regs    := R.reg

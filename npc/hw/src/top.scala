@@ -4,7 +4,6 @@ import chisel3.util._
 import chisel3.util.experimental._
 import chisel3.experimental.prefix
 
-
 class top(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {
     val IMem = new InstIO
@@ -27,7 +26,7 @@ class top(isa_info: String = "RISCV32") extends Module {
   core.io <> this.io
 
   val mmio_dpi = Module(new mmio_dpi_wraper)
-  val IFU  = Module(new IFU)
+  val IFU      = Module(new IFU)
 
   mmio_dpi.io <> IFU.io
 }

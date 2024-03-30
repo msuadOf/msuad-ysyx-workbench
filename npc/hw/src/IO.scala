@@ -31,8 +31,9 @@ class MemIO extends Bundle {
 }
 
 class InstIO extends Bundle {
-  val rAddr = Output(UInt(32.W))
-  val rData = Input(UInt(32.W))
+  val rAddr  = Output(UInt(32.W))
+  val rData  = Input(UInt(32.W))
+  val rValid = Input(UInt(32.W))
 }
 class mmioAR extends Bundle {
   val arAddr  = Input(UInt(32.W))
@@ -57,6 +58,3 @@ class mmioIO extends Bundle {
   val R       = new mmioR
   val simpleW = new mmioW
 }
-// class IFU2EX_IO extends Bundle{
-//   val 
-// }
