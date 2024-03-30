@@ -152,6 +152,7 @@ void exec_once(){
   while (!diff_en)
   {
     tick_once();
+    diff_cpuInfoUpdate(s);
   }
   
 }
