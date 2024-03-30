@@ -34,12 +34,15 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
 
   object Mem {
     def wIDLE() = {
-      DMem.wAddr := Fill(32, 1.U)
-      DMem.wData := Fill(32, 1.U)
-      DMem.wen   := 0.U
+      DMem.wAddr  := Fill(32, 1.U)
+      DMem.wData  := Fill(32, 1.U)
+      DMem.wen    := 0.U
+      DMem.wEvent := 0.U
     }
     def rIDLE() = {
       DMem.ren := 0.U
+
+      DMem.rEvent := 0.U
     }
     def IDLE() = {
       wIDLE()
@@ -49,6 +52,7 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
       DMem.wen   := 1.U
       DMem.wAddr := addr
       //DMem.wData := data
+      DMem.wEvent := 1.U
 
       DMem.wData := (len match {
         case 1 => { DMem.wWidth := 1.U; data(8 - 1, 0) }
@@ -61,8 +65,9 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
 
     }
     def read(addr: UInt, len: Int): UInt = {
-      DMem.ren   := 1.U
-      DMem.rAddr := addr
+      DMem.ren    := 1.U
+      DMem.rAddr  := addr
+      DMem.rEvent := 1.U
       //DMem.rData
       (len match {
         case 1 => { DMem.rWidth := 1.U; DMem.rData(8 - 1, 0) }

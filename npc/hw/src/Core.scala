@@ -19,17 +19,7 @@ class Core(isa_info: String = "RISCV32") extends Module {
     val IMem = new InstIO
     val DMem = new MemIO
 
-    val diff = new Bundle {
-      val pc   = Output(UInt(32.W))
-      val dnpc = Output(UInt(32.W))
-      val snpc = Output(UInt(32.W))
-      val regs = Output(Vec(32, UInt(32.W)))
-
-      val mepc    = Output(UInt(32.W))
-      val mcause  = Output(UInt(32.W))
-      val mstatus = Output(UInt(32.W))
-      val mtvec   = Output(UInt(32.W))
-    }
+    val diff = new diffIO
   })
 
   io.DMem.IOinit()
@@ -38,8 +28,8 @@ class Core(isa_info: String = "RISCV32") extends Module {
   val csr        = new csr
   val pc         = RegInit("h80000000".U(32.W))
   val snpc, dnpc = Wire(UInt(32.W))
-  snpc         := pc 
-  dnpc         := pc 
+  snpc         := pc
+  dnpc         := pc
   pc           := dnpc
   io.diff.dnpc := dnpc
   io.diff.snpc := snpc
@@ -88,11 +78,11 @@ class Core(isa_info: String = "RISCV32") extends Module {
   // src2 := R(rs2)
 
   val decode_success = Wire(UInt(1.W))
-decode_success := 0.U
+  decode_success := 0.U
 
   when(io.IMem.rValid === 1.U) {
-  snpc         := pc + 4.U
-  dnpc         := pc + 4.U
+    snpc := pc + 4.U
+    dnpc := pc + 4.U
 
     decode_success := 0.U
     RVIInstr.table
@@ -117,8 +107,8 @@ decode_success := 0.U
 
     val ebreakDpi = Module(new ebreakDpi)
     ebreakDpi.io.inst := inst
-  }.otherwise{
-    decode_success:=0.U
+  }.otherwise {
+    decode_success := 0.U
   }
 
   io.diff.pc      := pc
@@ -127,6 +117,8 @@ decode_success := 0.U
   io.diff.mcause  := csr.mcause.read()
   io.diff.mstatus := csr.mstatus.read()
   io.diff.mtvec   := csr.mtvec.read()
+
+    io.diff.diff_en:=decode_success
 
   printf("io.IMem.rAddr=%x\n", io.IMem.rAddr)
 //  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)},s0=${R(8)}\n")
