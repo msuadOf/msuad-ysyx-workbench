@@ -24,8 +24,8 @@ class mmio_dpi_wraper extends Module {
   val io       = IO(new mmioIO)
   val mmio_dpi = Module(new mmio_dpi)
 
-  mmio_dpi.io.clk:=clock
-  mmio_dpi.io.reset:=reset
+  mmio_dpi.io.clk   := clock
+  mmio_dpi.io.reset := reset
 
   mmio_dpi.io.arAddr  := io.AR.arAddr
   mmio_dpi.io.arWidth := io.AR.arWidth

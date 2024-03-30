@@ -14,7 +14,6 @@ object getVariableName {
   }
 }
 
-
 class Core(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {
     val IMem = new InstIO

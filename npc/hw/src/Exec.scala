@@ -119,7 +119,6 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
     // when(csr.mstatus.MPP =/= PRV_M.U) {
     //   csr.mstatus.write_MPRV(0.U)
     // }
-    
 
     csr.mstatus := 0x80.U /* (set_field(
       csr.mstatus.read(),

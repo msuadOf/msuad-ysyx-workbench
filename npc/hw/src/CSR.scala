@@ -43,29 +43,29 @@ class mstatus_csr extends csr_base {
   def write_TVM(bit: UInt): Unit = { this.value(20) := bit }
   def write_TW(bit: UInt): Unit = { this.value(21) := bit }
   def write_TSR(bit: UInt): Unit = { this.value(22) := bit }
-  def write_SD(bit: UInt): Unit = { this.value(31) := bit }     
+  def write_SD(bit: UInt): Unit = { this.value(31) := bit }
 
-  def UIE: UInt = { this.value(0)  }
-  def SIE: UInt = { this.value(1)  }
-  def HIE: UInt = { this.value(2)  }
-  def MIE: UInt = { this.value(3)  }
-  def UPIE: UInt = { this.value(4)  }
-  def SPIE: UInt = { this.value(5)  }
-  def HPIE: UInt = { this.value(6)  }
-  def MPIE: UInt = { this.value(7)  }
-  def SPP: UInt = { this.value(8)  }
-  def HPP: UInt = { this.value(10, 9)  }
+  def UIE: UInt = { this.value(0) }
+  def SIE: UInt = { this.value(1) }
+  def HIE: UInt = { this.value(2) }
+  def MIE: UInt = { this.value(3) }
+  def UPIE: UInt = { this.value(4) }
+  def SPIE: UInt = { this.value(5) }
+  def HPIE: UInt = { this.value(6) }
+  def MPIE: UInt = { this.value(7) }
+  def SPP: UInt = { this.value(8) }
+  def HPP: UInt = { this.value(10, 9) }
   def VS: UInt = { HPP }
-  def MPP: UInt = { this.value(12, 11)  }
-  def FS: UInt = { this.value(14, 13)  }
-  def XS: UInt = { this.value(16, 15)  }
-  def MPRV: UInt = { this.value(17)  }
-  def PUM: UInt = { this.value(18)  }
-  def MXR: UInt = { this.value(19)  }
-  def TVM: UInt = { this.value(20)  }
-  def TW: UInt = { this.value(21)  }
-  def TSR: UInt = { this.value(22)  }
-  def SD: UInt = { this.value(31)  }   
+  def MPP: UInt = { this.value(12, 11) }
+  def FS: UInt = { this.value(14, 13) }
+  def XS: UInt = { this.value(16, 15) }
+  def MPRV: UInt = { this.value(17) }
+  def PUM: UInt = { this.value(18) }
+  def MXR: UInt = { this.value(19) }
+  def TVM: UInt = { this.value(20) }
+  def TW: UInt = { this.value(21) }
+  def TSR: UInt = { this.value(22) }
+  def SD: UInt = { this.value(31) }
 
 }
 class mtvec_csr extends csr_base {}
