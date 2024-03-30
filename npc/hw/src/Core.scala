@@ -118,7 +118,7 @@ class Core(isa_info: String = "RISCV32") extends Module {
   io.diff.mstatus := csr.mstatus.read()
   io.diff.mtvec   := csr.mtvec.read()
 
-    io.diff.diff_en:=decode_success
+    io.diff.diff_en:=RegNext(decode_success)
 
   printf("io.IMem.rAddr=%x\n", io.IMem.rAddr)
 //  printf(p"test inst: inst=${io.IMem.rData},pc=${io.IMem.rAddr},R($rd)=${R(rd)},s0=${R(8)}\n")
