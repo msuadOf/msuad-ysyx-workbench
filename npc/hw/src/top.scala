@@ -15,9 +15,15 @@ class top(isa_info: String = "RISCV32") extends Module {
   val core = Module(new Core)
   core.io <> this.io
 
-  val mmio_dpi = Module(new mmio_dpi_wraper)
+  val mmio_dpi_inst = Module(new mmio_dpi_inst)
   val IFU      = Module(new IFU)
 
+
   IFU.io.Inst <> core.io.IMem //overwrite InstIO
-  mmio_dpi.io <> IFU.io.mmio
+  mmio_dpi_inst.io.Mr <> IFU.io.Mr
+
+    val mmio_dpi_data = Module(new mmio_dpi_data)
+  val LSU      = Module(new LSU)
+
+  mmio_dpi_data.io.Mw <> LSU.io.Mw
 }
