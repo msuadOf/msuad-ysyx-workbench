@@ -24,7 +24,9 @@ class IFU extends Module {
 
   val R_state = RegInit(sIDLE)
 
-  io.Inst.rValid:=0.U //Inst data - default vld
+  val Inst_rValid_r=RegInit(0.U)
+  Inst_rValid_r:=0.U //Inst data - vld default
+  io.Inst.rValid:=Inst_rValid_r //Inst data - vld
   io.Inst.rData:= data_in //Inst data
 //跳转
 // R_state:=sIDLE
@@ -47,7 +49,7 @@ class IFU extends Module {
       when(io.mmio.R.rValid === 1.U) {
         R_state := sRcplt
         data_in := io.mmio.R.rData //data - satisfy timing
-        io.Inst.rValid:=1.U
+        Inst_rValid_r:=1.U //data vld - sysnc with data_in
       }.otherwise {
         R_state := sARcplt_Rwaiting
       }
