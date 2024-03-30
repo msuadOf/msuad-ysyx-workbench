@@ -149,10 +149,10 @@ void tick_once() {
   Log_level_2("after postedge: top->io_DMem_ren=%d,addr=0x%08x,data=0x%08x",top->io_DMem_ren,top->io_DMem_rAddr,top->io_DMem_rData );
 }
 void exec_once(){
-  while (!diff_en)
+  do
   {
     tick_once();
     diff_cpuInfoUpdate(s);
-  }
+  }while (!diff_en);
   
 }
