@@ -87,7 +87,8 @@ class Core(isa_info: String = "RISCV32") extends Module {
   // src1 := R(rs1)
   // src2 := R(rs2)
 
-  val decode_success = RegInit(0.U(1.W))
+  val decode_success = Wire(UInt(1.W))
+decode_success := 0.U
 
   when(io.IMem.rValid === 1.U) {
   snpc         := pc + 4.U
