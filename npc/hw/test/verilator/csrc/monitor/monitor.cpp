@@ -77,6 +77,8 @@ static int cmd_info(char *args)
   if (strcmp(args, "r") == 0)
   {
     isa_reg_display();
+    extern int diff_en;
+    printf("diff_en=%d\n",diff_en);
   }
   else if (args[0] == 'r') // r1;r2...r31;r32
   {
