@@ -38,8 +38,8 @@ class Core(isa_info: String = "RISCV32") extends Module {
   val csr        = new csr
   val pc         = RegInit("h80000000".U(32.W))
   val snpc, dnpc = Wire(UInt(32.W))
-  snpc         := pc + 4.U
-  dnpc         := pc + 4.U
+  snpc         := pc 
+  dnpc         := pc 
   pc           := dnpc
   io.diff.dnpc := dnpc
   io.diff.snpc := snpc
@@ -87,9 +87,12 @@ class Core(isa_info: String = "RISCV32") extends Module {
   // src1 := R(rs1)
   // src2 := R(rs2)
 
-  val decode_success = RegInit(1.U(1.W))
+  val decode_success = RegInit(0.U(1.W))
 
   when(io.IMem.rValid === 1.U) {
+  snpc         := pc + 4.U
+  dnpc         := pc + 4.U
+
     decode_success := 0.U
     RVIInstr.table
       .asInstanceOf[Array[((BitPat, Any), ExecEnv => Any)]]
