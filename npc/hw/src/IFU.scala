@@ -2,17 +2,20 @@ import chisel3._
 import chisel3.util._
 
 class IFU extends Module {
-  val io = IO(Flipped(new mmioIO))
+  val io = IO(new Bundle {
+    val mmio = Flipped(new mmioIO)
+    val Inst = Flipped(new InstIO)
+  })
 
-  io.AR.arWidth := 4.U
-  io.AR.arValid := 0.U
+  io.mmio.AR.arWidth := 4.U
+  io.mmio.AR.arValid := 0.U
 
-  io.R.rReady := 0.U
+  io.mmio.R.rReady := 0.U
 
-  io.simpleW.wAddr  := 0.U
-  io.simpleW.wData  := 0.U
-  io.simpleW.wWidth := 0.U
-  io.simpleW.wValid := 0.U
+  io.mmio.simpleW.wAddr  := 0.U
+  io.mmio.simpleW.wData  := 0.U
+  io.mmio.simpleW.wWidth := 0.U
+  io.mmio.simpleW.wValid := 0.U
 
   val I_en    = RegInit(1.U)
   val data_in = RegInit(0.U)
@@ -20,6 +23,11 @@ class IFU extends Module {
   val sIDLE :: sARwaiting :: sARcplt_Rwaiting :: sRcplt :: Nil = Enum(4)
 
   val R_state = RegInit(sIDLE)
+
+  val Inst_rValid_r = RegInit(0.U)
+  Inst_rValid_r  := 0.U //Inst data - vld default
+  io.Inst.rValid := Inst_rValid_r //Inst data - vld
+  io.Inst.rData  := data_in //Inst data
 //跳转
 // R_state:=sIDLE
   switch(R_state) {
@@ -31,16 +39,17 @@ class IFU extends Module {
       }
     }
     is(sARwaiting) {
-      when(io.AR.arReady === 1.U) {
+      when(io.mmio.AR.arReady === 1.U) {
         R_state := sARcplt_Rwaiting
       }.otherwise {
         R_state := sARwaiting
       }
     }
     is(sARcplt_Rwaiting) {
-      when(io.R.rValid === 1.U) {
-        R_state := sRcplt
-        data_in := io.R.rData //data - satisfy timing
+      when(io.mmio.R.rValid === 1.U) {
+        R_state       := sRcplt
+        data_in       := io.mmio.R.rData //data - satisfy timing
+        Inst_rValid_r := 1.U //data vld - sysnc with data_in
       }.otherwise {
         R_state := sARcplt_Rwaiting
       }
@@ -55,28 +64,28 @@ class IFU extends Module {
   }
   //---- io reg ----
   val arAddr = RegInit(0.U)
-  io.AR.arAddr := arAddr
+  io.mmio.AR.arAddr := arAddr
   //---------------
   val addr_out   = Wire(UInt(32.W))
   val addr_out_r = RegInit("x80000000".U(32.W))
-  addr_out   := addr_out_r
+  addr_out   := io.Inst.rAddr
   addr_out_r := addr_out_r + 4.U
 
   switch(R_state) {
     is(sIDLE) {
-      io.AR.arValid := 0.U
+      io.mmio.AR.arValid := 0.U
     }
     is(sARwaiting) {
-      io.AR.arValid := 1.U
-      arAddr        := addr_out //addr<-pc
+      io.mmio.AR.arValid := 1.U
+      arAddr             := addr_out //addr<-pc
     }
     is(sARcplt_Rwaiting) {
-      io.AR.arValid := 0.U
-      io.R.rReady   := 1.U
+      io.mmio.AR.arValid := 0.U
+      io.mmio.R.rReady   := 1.U
     }
     is(sRcplt) {
-      io.R.rReady   := 0.U
-      io.AR.arValid := 0.U
+      io.mmio.R.rReady   := 0.U
+      io.mmio.AR.arValid := 0.U
     }
   }
   printf("data_in=%d\n", data_in)

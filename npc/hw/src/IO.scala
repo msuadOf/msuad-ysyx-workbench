@@ -1,6 +1,18 @@
 import chisel3._
 import chisel3.util._
 
+class diffIO extends Bundle {
+      val diff_en = Output(UInt(1.W))
+      val pc      = Output(UInt(32.W))
+      val dnpc    = Output(UInt(32.W))
+      val snpc    = Output(UInt(32.W))
+      val regs    = Output(Vec(32, UInt(32.W)))
+
+      val mepc    = Output(UInt(32.W))
+      val mcause  = Output(UInt(32.W))
+      val mstatus = Output(UInt(32.W))
+      val mtvec   = Output(UInt(32.W))
+    }
 class MemIO extends Bundle {
   val rAddr  = Output(UInt(32.W))
   val rData  = Input(UInt(32.W))
@@ -16,6 +28,9 @@ class MemIO extends Bundle {
   val wValid = Output(UInt(1.W))
   val wReady = Input(UInt(1.W))
 
+  val rEvent = Output(UInt(1.W))
+  val wEvent = Output(UInt(1.W))
+
   def IOinit() = {
     this.rAddr  := 0.U
     this.wAddr  := 0.U
@@ -27,6 +42,9 @@ class MemIO extends Bundle {
 
     this.rReady := 0.U
     this.wValid := 0.U
+
+    this.wEvent := 0.U
+    this.rEvent := 0.U
   }
 }
 

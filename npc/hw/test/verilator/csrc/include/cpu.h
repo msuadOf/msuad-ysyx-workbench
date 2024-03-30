@@ -44,7 +44,7 @@ void isa_reg_display();
 void isa_reg_display(CPU_state_diff_t* s);
 const char* reg_name(int idx);
 // word_t isa_reg_str2val(const char *name, bool *success);
-// int isa_reg_getValueByIndex(int i);
+void isa_reg_display_byIndex(int i);
 
 // // exec
 // struct Decode;

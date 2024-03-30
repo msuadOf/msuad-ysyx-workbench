@@ -9,17 +9,7 @@ class top(isa_info: String = "RISCV32") extends Module {
     val IMem = new InstIO
     val DMem = new MemIO
 
-    val diff = new Bundle {
-      val pc   = Output(UInt(32.W))
-      val dnpc = Output(UInt(32.W))
-      val snpc = Output(UInt(32.W))
-      val regs = Output(Vec(32, UInt(32.W)))
-
-      val mepc    = Output(UInt(32.W))
-      val mcause  = Output(UInt(32.W))
-      val mstatus = Output(UInt(32.W))
-      val mtvec   = Output(UInt(32.W))
-    }
+    val diff = new diffIO
   })
 
   val core = Module(new Core)
@@ -28,5 +18,6 @@ class top(isa_info: String = "RISCV32") extends Module {
   val mmio_dpi = Module(new mmio_dpi_wraper)
   val IFU      = Module(new IFU)
 
-  mmio_dpi.io <> IFU.io
+  IFU.io.Inst <> core.io.IMem //overwrite InstIO
+  mmio_dpi.io <> IFU.io.mmio
 }

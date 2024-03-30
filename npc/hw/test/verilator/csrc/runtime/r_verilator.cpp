@@ -1,5 +1,6 @@
 #include "r_verilator.h"
 
+int diff_en=0;
 
 VerilatedContext* contextp;
 Vtop* top;
@@ -82,6 +83,7 @@ void diff_cpuInfoUpdate(CPU_state_diff_t* s){
   s->csr.mstatus=top->io_diff_mstatus;
   s->csr.mtvec=top->io_diff_mtvec;
 
+  diff_en=top->io_diff_diff_en;
 }
 void cpu_init() {
   // s->pc=RESET_VECTOR;
@@ -103,7 +105,7 @@ void cpu_init() {
 
   diff_cpuInfoUpdate(s);
 }
-void exec_once() {
+void tick_once() {
   top->clock = 0;
   //printf("======clock shoule be 0 now %d\n",top->clock);
   // top->mem_inst = pmem_read(top->mem_addr);
@@ -145,4 +147,12 @@ void exec_once() {
     paddr_write(top->io_DMem_wAddr,top->io_DMem_wWidth,top->io_DMem_wData);
   }
   Log_level_2("after postedge: top->io_DMem_ren=%d,addr=0x%08x,data=0x%08x",top->io_DMem_ren,top->io_DMem_rAddr,top->io_DMem_rData );
+}
+void exec_once(){
+  do
+  {
+    tick_once();
+    diff_cpuInfoUpdate(s);
+  }while (!diff_en);
+  
 }
