@@ -1,5 +1,6 @@
 #include "r_verilator.h"
 
+int diff_en=0;
 
 VerilatedContext* contextp;
 Vtop* top;
@@ -82,6 +83,7 @@ void diff_cpuInfoUpdate(CPU_state_diff_t* s){
   s->csr.mstatus=top->io_diff_mstatus;
   s->csr.mtvec=top->io_diff_mtvec;
 
+  diff_en=top->io_diff_diff_en;
 }
 void cpu_init() {
   // s->pc=RESET_VECTOR;
