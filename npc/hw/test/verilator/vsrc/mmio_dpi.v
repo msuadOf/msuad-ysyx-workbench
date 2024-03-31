@@ -186,7 +186,7 @@ module mmio_dpi (
   end
 
   /* Mw */
-  reg Mr_ok;
+  reg Mw_ok;
   reg [31:0] Mw_addr,Mw_data;
   //B
   localparam RESP_OKAY=2'b00,
@@ -320,7 +320,7 @@ module mmio_dpi (
 //write
       always @(* ) begin
 
-            Mr_ok=(AW_state==AW_state_WORK&&W_state==W_state_WORK);
+            Mw_ok=(AW_state==AW_state_WORK&&W_state==W_state_WORK);
 
       end
       always @(posedge clk ) begin
@@ -329,7 +329,7 @@ module mmio_dpi (
             
           end
           else begin
-            if(Mr_ok) mmio_write(Mw_addr,(wStrb==4'b0001)?(32'd8):(
+            if(Mw_ok) mmio_write(Mw_addr,(wStrb==4'b0001)?(32'd8):(
                 (wStrb==4'b0011)?(32'd16):(
                     (wStrb==4'b1111)?(32'd32):(32'd0)
                 )
@@ -352,7 +352,7 @@ module mmio_dpi (
       always @(*) begin
           case (B_state)
               B_state_IDLE: begin
-                if(Mr_ok)
+                if(Mw_ok)
                   B_state_next=B_state_WAIT;
                   else 
                     B_state_next=B_state_IDLE;

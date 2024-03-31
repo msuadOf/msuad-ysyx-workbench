@@ -18,6 +18,7 @@ class Core(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {
     val IMem = new InstIO
     val DMem = new MemIO
+    val LSUCtrl= Flipped(new LSUCtrl_IO)
 
     val diff = new diffIO
   })
@@ -77,9 +78,21 @@ class Core(isa_info: String = "RISCV32") extends Module {
   // src1 := R(rs1)
   // src2 := R(rs2)
 
+    val s_IF :: s_EX :: s_LS :: Nil = Enum(3)
+    val state                   = RegInit(s_IF)
+    state := MuxLookup(state, s_IF)(
+      List(
+        s_IF -> Mux(io.IMem.rValid.asBool, s_EX, s_IF),
+        s_EX -> Mux(1.B, s_LS, s_EX),
+        s_LS -> Mux(wen, s_IF, s_LS)
+      )
+    )
+
+
   val decode_success = Wire(UInt(1.W))
   decode_success := 0.U
 
+  
   when(io.IMem.rValid === 1.U) {
     snpc := pc + 4.U
     dnpc := pc + 4.U
@@ -110,6 +123,11 @@ class Core(isa_info: String = "RISCV32") extends Module {
   }.otherwise {
     decode_success := 0.U
   }
+
+// when(){
+//   value := e.Mr(e.src1 + e.immI, 4)
+// }
+// regnext:=value
 
   io.diff.pc      := pc
   io.diff.regs    := R.reg

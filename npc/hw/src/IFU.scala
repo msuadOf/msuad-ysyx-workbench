@@ -12,7 +12,8 @@ class IFU extends Module {
 
   io.Mr.R.Ready := 0.U
 
-  val I_en    = RegInit(1.U)
+  // val I_en    = RegInit(1.U)
+  val I_en    = io.Inst.Ien
   val data_in = RegInit(0.U)
 
   val sIDLE :: sARwaiting :: sARcplt_Rwaiting :: sRcplt :: Nil = Enum(4)

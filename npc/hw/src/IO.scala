@@ -52,7 +52,16 @@ class InstIO extends Bundle {
   val rAddr  = Output(UInt(32.W))
   val rData  = Input(UInt(32.W))
   val rValid = Input(UInt(32.W))
-
+  val Ien=Output(Bool())
+}
+trait AXI_WithValidReady {
+  val Valid: UInt
+  val Ready: UInt
+  // require(Valid.getWidth == 1)
+  // require(Ready.getWidth == 1)
+  def fire(): Bool = {
+    Valid.asBool && Ready.asBool
+  }
 }
 trait AXI_WithIOInit {
   def IOinit[T <: Data](value: T): Unit
@@ -74,7 +83,7 @@ trait AXI_WithIOInit {
     Flipped_IODontCare()
   }
 }
-class mmioAR extends Bundle with AXI_WithIOInit {
+class mmioAR extends Bundle with AXI_WithIOInit with AXI_WithValidReady {
   val Addr  = Input(UInt(32.W))
   val Width = Input(UInt(32.W))
   val Valid = Input(UInt(1.W))
@@ -89,7 +98,7 @@ class mmioAR extends Bundle with AXI_WithIOInit {
     Valid := value
   }
 }
-class mmioR extends Bundle with AXI_WithIOInit {
+class mmioR extends Bundle with AXI_WithIOInit with AXI_WithValidReady{
   val Data  = Output(UInt(32.W))
   val Valid = Output(UInt(1.W))
   val Ready = Input(UInt(1.W))
@@ -102,7 +111,7 @@ class mmioR extends Bundle with AXI_WithIOInit {
     Ready := value
   }
 }
-class mmioAW extends Bundle with AXI_WithIOInit {
+class mmioAW extends Bundle with AXI_WithIOInit with AXI_WithValidReady{
   val Addr  = Input(UInt(32.W))
   val Port  = Input(UInt(2.W))
   val Valid = Input(UInt(1.W))
@@ -118,7 +127,7 @@ class mmioAW extends Bundle with AXI_WithIOInit {
     Valid := value
   }
 }
-class mmioW extends Bundle with AXI_WithIOInit {
+class mmioW extends Bundle with AXI_WithIOInit with AXI_WithValidReady{
   val Data  = Input(UInt(32.W))
   val Strb  = Input(UInt((32 / 8).W))
   val Valid = Input(UInt(1.W))
@@ -132,7 +141,7 @@ class mmioW extends Bundle with AXI_WithIOInit {
     Valid := value
   }
 }
-class mmioB extends Bundle with AXI_WithIOInit {
+class mmioB extends Bundle with AXI_WithIOInit with AXI_WithValidReady{
   val Resp  = Output(UInt(32.W))
   val Valid = Output(UInt(1.W))
   val Ready = Input(UInt(1.W))
@@ -171,4 +180,15 @@ class Mw_mmioIO extends Bundle with AXI_WithIOInit {
     W.Flipped_IOinit(value)
     B.Flipped_IOinit(value)
   }
+}
+class SUCtrl_IO extends Bundle{
+  val wEn=Input(UInt(1.W))
+  val wAddr=Input(UInt(32.W))
+  val wData=Input(UInt(32.W))
+  val wEop=Output(UInt(1.W))
+
+  
+}
+class LSUCtrl_IO extends Bundle{
+  val SUCtrl=new SUCtrl_IO
 }
