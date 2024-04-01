@@ -26,7 +26,7 @@
 #include <assert.h>
 
 // #define CONFIG_DIFFTEST 1
-//#define CONFIG_MTRACE 1
+// #define CONFIG_MTRACE 1
 #define CONFIG_LOG 1
 #define CONFIG_MMIO_NO_CHECK 1
 // #define CONFIG_Log_level_0

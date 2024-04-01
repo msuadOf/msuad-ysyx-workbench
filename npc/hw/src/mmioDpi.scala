@@ -79,11 +79,10 @@ class mmio_dpi_inst extends Module{
 }
 class mmio_dpi_data extends Module{
     val io = IO(new Bundle {
-    // val Mr = new Mr_mmioIO
+    val Mr = new Mr_mmioIO
     val Mw = new Mw_mmioIO
   })
   val mmio_dpi_wraper=Module(new mmio_dpi_wraper)
-  // mmio_dpi_wraper.io.Mr<>io.Mr
-    mmio_dpi_wraper.io.Mr.Flipped_IOinit()
+  mmio_dpi_wraper.io.Mr<>io.Mr
   mmio_dpi_wraper.io.Mw<>io.Mw
 }

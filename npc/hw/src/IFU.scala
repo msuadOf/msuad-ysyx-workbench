@@ -21,7 +21,8 @@ class IFU extends Module {
   val R_state = RegInit(sIDLE)
 
   val Inst_rValid_r = RegInit(0.U)
-  Inst_rValid_r  := 0.U //Inst data - vld default
+  /* !!! */
+  Inst_rValid_r  :=  0.U //Inst data - vld default //Mux(I_en === 1.U, Inst_rValid_r, 0.U)
   io.Inst.rValid := Inst_rValid_r //Inst data - vld
   io.Inst.rData  := data_in //Inst data
 //跳转
@@ -73,7 +74,6 @@ class IFU extends Module {
     }
     is(sARwaiting) {
       io.Mr.AR.Valid := 1.U
-      arAddr         := addr_out //addr<-pc
     }
     is(sARcplt_Rwaiting) {
       io.Mr.AR.Valid := 0.U
@@ -84,5 +84,13 @@ class IFU extends Module {
       io.Mr.AR.Valid := 0.U
     }
   }
+
+  //addr<-pc
+  arAddr := MuxLookup(R_state, arAddr)(
+    List(
+      sIDLE -> Mux(I_en === 1.U, addr_out, arAddr),
+      sRcplt -> Mux(I_en === 1.U, addr_out, arAddr)
+    )
+  )
   printf("data_in=%d\n", data_in)
 }

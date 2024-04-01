@@ -2,22 +2,24 @@ import chisel3._
 import chisel3.util._
 
 class diffIO extends Bundle {
-  val diff_en = Output(UInt(1.W))
-  val pc      = Output(UInt(32.W))
-  val dnpc    = Output(UInt(32.W))
-  val snpc    = Output(UInt(32.W))
-  val regs    = Output(Vec(32, UInt(32.W)))
+  val diff_en  = Output(UInt(1.W))
+  val DMemInst = Output(UInt(1.W))
+  val pc       = Output(UInt(32.W))
+  val dnpc     = Output(UInt(32.W))
+  val snpc     = Output(UInt(32.W))
+  val regs     = Output(Vec(32, UInt(32.W)))
 
   val mepc    = Output(UInt(32.W))
   val mcause  = Output(UInt(32.W))
   val mstatus = Output(UInt(32.W))
   val mtvec   = Output(UInt(32.W))
 }
-class MemIO extends Bundle {
+class MemIO extends Bundle with WithIOInit {
   val rAddr  = Output(UInt(32.W))
   val rData  = Input(UInt(32.W))
   val ren    = Output(UInt(1.W))
   val rWidth = Output(UInt(4.W))
+    val rStrb = Output(UInt(4.W))
   val rValid = Input(UInt(1.W))
   val rReady = Output(UInt(1.W))
 
@@ -25,34 +27,49 @@ class MemIO extends Bundle {
   val wData  = Output(UInt(32.W))
   val wen    = Output(UInt(1.W))
   val wWidth = Output(UInt(4.W))
+  val wStrb = Output(UInt(4.W))
   val wValid = Output(UInt(1.W))
   val wReady = Input(UInt(1.W))
 
   val rEvent = Output(UInt(1.W))
   val wEvent = Output(UInt(1.W))
 
-  def IOinit() = {
-    this.rAddr  := 0.U
-    this.wAddr  := 0.U
-    this.wData  := Fill(32, 1.U) //FFFF FFFF
-    this.wen    := 0.U
-    this.ren    := 0.U
-    this.wWidth := 4.U
-    this.rWidth := 4.U
-
-    this.rReady := 0.U
-    this.wValid := 0.U
-
-    this.wEvent := 0.U
-    this.rEvent := 0.U
+  def IOinit[T <: Data](value: T): Unit = {
+    this.rAddr  := value
+    this.wAddr  := value
+    this.wData  := value //FFFF FFFF
+    this.wen    := value
+    this.ren    := value
+    this.wWidth := value
+    this.rWidth := value
+    this.rReady := value
+    this.wValid := value
+    this.wEvent := value
+    this.rEvent := value
+    rStrb:=value
+    wStrb:=value
   }
+  def Flipped_IOinit[T <: Data](value: T): Unit = {
+    rData  := value
+    rValid := value
+    wReady := value
+  }
+
 }
 
-class InstIO extends Bundle {
+class InstIO extends Bundle with WithIOInit {
   val rAddr  = Output(UInt(32.W))
   val rData  = Input(UInt(32.W))
-  val rValid = Input(UInt(32.W))
-  val Ien=Output(Bool())
+  val rValid = Input(UInt(1.W))
+  val Ien    = Output(Bool())
+  def IOinit[T <: Data](value: T): Unit = {
+    rAddr := value
+    Ien   := value
+  }
+  def Flipped_IOinit[T <: Data](value: T): Unit = {
+    rData  := value
+    rValid := value
+  }
 }
 trait AXI_WithValidReady {
   val Valid: UInt
@@ -63,7 +80,7 @@ trait AXI_WithValidReady {
     Valid.asBool && Ready.asBool
   }
 }
-trait AXI_WithIOInit {
+trait WithIOInit {
   def IOinit[T <: Data](value: T): Unit
   def IOinit(): Unit = {
     this.IOinit(0.U)
@@ -83,7 +100,7 @@ trait AXI_WithIOInit {
     Flipped_IODontCare()
   }
 }
-class mmioAR extends Bundle with AXI_WithIOInit with AXI_WithValidReady {
+class mmioAR extends Bundle with WithIOInit with AXI_WithValidReady {
   val Addr  = Input(UInt(32.W))
   val Width = Input(UInt(32.W))
   val Valid = Input(UInt(1.W))
@@ -98,7 +115,7 @@ class mmioAR extends Bundle with AXI_WithIOInit with AXI_WithValidReady {
     Valid := value
   }
 }
-class mmioR extends Bundle with AXI_WithIOInit with AXI_WithValidReady{
+class mmioR extends Bundle with WithIOInit with AXI_WithValidReady {
   val Data  = Output(UInt(32.W))
   val Valid = Output(UInt(1.W))
   val Ready = Input(UInt(1.W))
@@ -111,7 +128,7 @@ class mmioR extends Bundle with AXI_WithIOInit with AXI_WithValidReady{
     Ready := value
   }
 }
-class mmioAW extends Bundle with AXI_WithIOInit with AXI_WithValidReady{
+class mmioAW extends Bundle with WithIOInit with AXI_WithValidReady {
   val Addr  = Input(UInt(32.W))
   val Port  = Input(UInt(2.W))
   val Valid = Input(UInt(1.W))
@@ -127,7 +144,7 @@ class mmioAW extends Bundle with AXI_WithIOInit with AXI_WithValidReady{
     Valid := value
   }
 }
-class mmioW extends Bundle with AXI_WithIOInit with AXI_WithValidReady{
+class mmioW extends Bundle with WithIOInit with AXI_WithValidReady {
   val Data  = Input(UInt(32.W))
   val Strb  = Input(UInt((32 / 8).W))
   val Valid = Input(UInt(1.W))
@@ -141,7 +158,7 @@ class mmioW extends Bundle with AXI_WithIOInit with AXI_WithValidReady{
     Valid := value
   }
 }
-class mmioB extends Bundle with AXI_WithIOInit with AXI_WithValidReady{
+class mmioB extends Bundle with WithIOInit with AXI_WithValidReady {
   val Resp  = Output(UInt(32.W))
   val Valid = Output(UInt(1.W))
   val Ready = Input(UInt(1.W))
@@ -153,7 +170,7 @@ class mmioB extends Bundle with AXI_WithIOInit with AXI_WithValidReady{
     Ready := value
   }
 }
-class Mr_mmioIO extends Bundle with AXI_WithIOInit {
+class Mr_mmioIO extends Bundle with WithIOInit {
   val AR = new mmioAR
   val R  = new mmioR
   def IOinit[T <: Data](value: T): Unit = {
@@ -165,7 +182,7 @@ class Mr_mmioIO extends Bundle with AXI_WithIOInit {
     AR.Flipped_IOinit(value)
   }
 }
-class Mw_mmioIO extends Bundle with AXI_WithIOInit {
+class Mw_mmioIO extends Bundle with WithIOInit {
 
   val AW = new mmioAW
   val W  = new mmioW
@@ -181,14 +198,37 @@ class Mw_mmioIO extends Bundle with AXI_WithIOInit {
     B.Flipped_IOinit(value)
   }
 }
-class SUCtrl_IO extends Bundle{
-  val wEn=Input(UInt(1.W))
-  val wAddr=Input(UInt(32.W))
-  val wData=Input(UInt(32.W))
-  val wEop=Output(UInt(1.W))
+class SUCtrl_IO extends Bundle with WithIOInit {
+  val wEn   = Input(UInt(1.W))
+  val wAddr = Input(UInt(32.W))
+  val wData = Input(UInt(32.W))
+  val wStrb = Input(UInt(4.W))
+  val wEop  = Output(UInt(1.W))
 
-  
+  def IOinit[T <: Data](value: T): Unit = {
+    wEop := value
+  }
+  def Flipped_IOinit[T <: Data](value: T): Unit = {
+    wEn   := value
+    wAddr := value
+    wData := value
+  }
 }
-class LSUCtrl_IO extends Bundle{
-  val SUCtrl=new SUCtrl_IO
+class LUCtrl_IO extends Bundle with WithIOInit {
+  val rEn    = Input(UInt(1.W))
+  val rAddr  = Input(UInt(32.W))
+  val rData  = Output(UInt(32.W))
+  val rStrb  = Input(UInt(4.W))
+  val rValid = Output(UInt(1.W))
+  val rEop = Output(UInt(1.W))
+  def IOinit[T <: Data](value: T): Unit = {
+    rData  := value
+    rValid := value
+    rEop   := value
+
+  }
+  def Flipped_IOinit[T <: Data](value: T): Unit = {
+    rEn   := value
+    rAddr := value
+  }
 }
