@@ -6,6 +6,7 @@ class IFU extends Module {
     val Mr   = Flipped(new Mr_mmioIO)
     val Inst = Flipped(new InstIO)
   })
+  io.Mr.Flipped_IOinit()
 
   io.Mr.AR.Width := 4.U
   io.Mr.AR.Valid := 0.U

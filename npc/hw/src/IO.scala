@@ -19,7 +19,7 @@ class MemIO extends Bundle with WithIOInit {
   val rData  = Input(UInt(32.W))
   val ren    = Output(UInt(1.W))
   val rWidth = Output(UInt(4.W))
-    val rStrb = Output(UInt(4.W))
+  val rStrb  = Output(UInt(4.W))
   val rValid = Input(UInt(1.W))
   val rReady = Output(UInt(1.W))
 
@@ -27,7 +27,7 @@ class MemIO extends Bundle with WithIOInit {
   val wData  = Output(UInt(32.W))
   val wen    = Output(UInt(1.W))
   val wWidth = Output(UInt(4.W))
-  val wStrb = Output(UInt(4.W))
+  val wStrb  = Output(UInt(4.W))
   val wValid = Output(UInt(1.W))
   val wReady = Input(UInt(1.W))
 
@@ -46,8 +46,8 @@ class MemIO extends Bundle with WithIOInit {
     this.wValid := value
     this.wEvent := value
     this.rEvent := value
-    rStrb:=value
-    wStrb:=value
+    rStrb       := value
+    wStrb       := value
   }
   def Flipped_IOinit[T <: Data](value: T): Unit = {
     rData  := value
@@ -198,6 +198,45 @@ class Mw_mmioIO extends Bundle with WithIOInit {
     B.Flipped_IOinit(value)
   }
 }
+class AXIIO(datawidth: Int = 32) extends Bundle with WithIOInit {
+  val AR              = Flipped(new mmioAR)
+  val R               = Flipped(new mmioR)
+  val AW              = Flipped(new mmioAW)
+  val W               = Flipped(new mmioW)
+  val B               = Flipped(new mmioB)
+  def read_request()  = AR.Valid.asBool
+  def write_request() = AW.Valid.asBool && W.Valid.asBool
+  def rw_request()    = read_request() || write_request()
+  def read_sop()      = AR.fire()
+  def write_sop()     = AW.fire() && W.fire()
+  def rw_sop()        = read_sop() || write_sop()
+  def read_eop()      = R.fire().asBool
+  def write_eop()     = B.fire().asBool
+  def rw_eop()        = read_eop() || write_eop()
+  def IOinit[T <: Data](value: T): Unit = {
+    R.Flipped_IOinit(value)
+    AR.Flipped_IOinit(value)
+    AW.Flipped_IOinit(value)
+    W.Flipped_IOinit(value)
+    B.Flipped_IOinit(value)
+  }
+  def Flipped_IOinit[T <: Data](value: T): Unit = {
+    R.IOinit(value)
+    AR.IOinit(value)
+    AW.IOinit(value)
+    W.IOinit(value)
+    B.IOinit(value)
+  }
+  def -->(Mr: Mr_mmioIO): Unit = {
+    AR <> Mr.AR
+    R <> Mr.R
+  }
+  def -->(Mw: Mw_mmioIO): Unit = {
+    AW <> Mw.AW
+    W <> Mw.W
+    B <> Mw.B
+  }
+}
 class SUCtrl_IO extends Bundle with WithIOInit {
   val wEn   = Input(UInt(1.W))
   val wAddr = Input(UInt(32.W))
@@ -220,7 +259,7 @@ class LUCtrl_IO extends Bundle with WithIOInit {
   val rData  = Output(UInt(32.W))
   val rStrb  = Input(UInt(4.W))
   val rValid = Output(UInt(1.W))
-  val rEop = Output(UInt(1.W))
+  val rEop   = Output(UInt(1.W))
   def IOinit[T <: Data](value: T): Unit = {
     rData  := value
     rValid := value

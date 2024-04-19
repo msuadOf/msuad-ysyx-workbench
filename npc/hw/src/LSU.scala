@@ -43,6 +43,7 @@ class SU extends Module with With_ValidReadyFsmCreator {
     val Mw   = Flipped(new Mw_mmioIO)
     val Ctrl = new SUCtrl_IO
   })
+  io.Mw.AW.Flipped_IOinit()
   io.Mw.AW.Port := DontCare
 
 //init

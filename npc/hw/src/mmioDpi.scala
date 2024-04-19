@@ -86,3 +86,9 @@ class mmio_dpi_data extends Module{
   mmio_dpi_wraper.io.Mr<>io.Mr
   mmio_dpi_wraper.io.Mw<>io.Mw
 }
+class mmio_dpi_AXI extends Module{
+    val io = IO(Flipped(new AXIIO(32)))
+  val mmio_dpi_wraper=Module(new mmio_dpi_wraper)
+  io-->mmio_dpi_wraper.io.Mr
+  io-->mmio_dpi_wraper.io.Mw
+}
