@@ -2,12 +2,13 @@ import chisel3._
 import chisel3.util._
 
 trait With_ValidReadyFsmCreator {
-  def create_sender_fsm(wen: Bool, Valid: UInt, Ready: UInt) = {
+  //BugFix Log(2024-4-20): fixed create_sender_fsm(wen: Bool,...) --> create_sender_fsm(sop: Bool,...)
+  def create_sender_fsm(sop: Bool, Valid: UInt, Ready: UInt) = {
     val s_idle :: s_wait :: Nil = Enum(2)
     val state                   = RegInit(s_idle)
     state := MuxLookup(state, s_idle)(
       List(
-        s_idle -> Mux(wen, s_wait, s_idle),
+        s_idle -> Mux(sop, s_wait, s_idle),
         s_wait -> Mux(Ready.asBool, s_idle, s_wait)
       )
     )
@@ -54,8 +55,12 @@ class SU extends Module with With_ValidReadyFsmCreator {
   val wen = Wire(UInt(1.W))
   wen := io.Ctrl.wEn
 
-  val (aw_state, s_aw_idle :: s_aw_wait :: Nil) = create_sender_fsm(wen.asBool, io.Mw.AW.Valid, io.Mw.AW.Ready)
-  val (w_state, s_w_idle :: s_w_wait :: Nil)    = create_sender_fsm(wen.asBool, io.Mw.W.Valid, io.Mw.W.Ready)
+  /* BugFix Log(2024-4-20): fixed create_sender_fsm(wen: Bool,...) --> create_sender_fsm(sop: Bool,...)
+   * so create_sender_fsm(wen.asBool, ...) --> create_sender_fsm(wen_pulse, ...)
+  */
+  val wen_pulse= wen.asBool && (~RegNext(wen.asBool))
+  val (aw_state, s_aw_idle :: s_aw_wait :: Nil) = create_sender_fsm(wen_pulse, io.Mw.AW.Valid, io.Mw.AW.Ready)
+  val (w_state, s_w_idle :: s_w_wait :: Nil)    = create_sender_fsm(wen_pulse, io.Mw.W.Valid, io.Mw.W.Ready)
   val (b_state, s_b_idle :: s_b_wait :: Nil) =
     create_reciever_fsm((aw_state === s_aw_wait) && (w_state === s_w_wait), io.Mw.B.Valid, io.Mw.B.Ready)
 
