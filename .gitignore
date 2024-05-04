@@ -21,5 +21,6 @@
 !/notes/*/am-kernels
 !Dockerfile
 !README*/fceux-am
+!notes/*
 
 ysyxSoC/
