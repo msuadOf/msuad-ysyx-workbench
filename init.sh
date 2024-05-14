@@ -74,6 +74,10 @@ case $1 in
   npc)
     addenv NPC_HOME npc
     ;;
+  ysyxSoC)
+    git clone git@github.com:msuadOf/ysyxSoC.git
+    cd ysyxSoC && make dev-init
+    ;;
   *)
     echo "Invalid input..."
     exit
