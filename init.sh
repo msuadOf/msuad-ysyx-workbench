@@ -78,6 +78,13 @@ case $1 in
     git clone git@github.com:msuadOf/ysyxSoC.git
     cd ysyxSoC && make dev-init
     ;;
+  all)
+    for cmd in nemu abstract-machine am-kernels nanos-lite navy-apps nvboard npc-chisel npc ysyxSoC; do
+      # 使用eval来动态执行case分支对应的命令
+      eval "./init.sh $cmd"
+      # 注意：这种方法非常基础且有风险，特别是对于那些有持久性影响的操作（如环境变量设置、文件操作）
+    done
+    ;;
   *)
     echo "Invalid input..."
     exit
