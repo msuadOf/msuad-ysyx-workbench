@@ -16,11 +16,10 @@
 !.gitignore
 !init.sh
 /utils
-/nvboard
 !/labs/**
 !/notes/*/am-kernels
 !Dockerfile
 !README*/fceux-am
 !notes/*
 
-ysyxSoC/
+ysyxSoC//nvboard
