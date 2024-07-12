@@ -86,6 +86,9 @@ case $1 in
       # 注意：这种方法非常基础且有风险，特别是对于那些有持久性影响的操作（如环境变量设置、文件操作）
     done
     ;;
+  init)
+    git submodule update --init --recursive
+    ;;
   *)
     echo "Invalid input..."
     exit

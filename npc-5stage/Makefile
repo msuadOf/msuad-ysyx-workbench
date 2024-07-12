@@ -16,7 +16,7 @@ sim run:verilator-binary $(DIFF_REF_SO)
 
 -include ../Makefile
 clean:clean-vscode
-	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat build out
+	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat build
 clean-verilator clean-v vclean:
 	cp build/top.v top.v.bak._tmp && rm -rf build/* && mv top.v.bak._tmp build/top.v
 clean-chisel clean-c:
