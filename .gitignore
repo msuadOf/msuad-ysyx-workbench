@@ -9,7 +9,7 @@
 !/nexus-am/*
 !/nanos-lite/*
 !/navy-apps/*
-!/npc/*
+!/npc*/*
 !/rt-thread-am/*
 !Makefile
 !README.md
