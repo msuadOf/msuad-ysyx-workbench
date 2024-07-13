@@ -1,82 +1,59 @@
 package core
 import chisel3._
 import chisel3.util._
+import core.utils._
 
-class IFUIO extends Bundle {}
-class LSUIO extends Bundle {}
-class CoreIO extends Bundle {
+class IFUIO extends BundleWithIOInitImpl {}
+class LSUIO extends BundleWithIOInitImpl {}
+class CoreIO extends BundleWithIOInit {
   val LSUIO = new LSUIO
   val IFUIO = new IFUIO
+
+  val pc    = Input(UInt(32.W))
+  val inst  = Input(UInt(32.W))
+  val id=new IF2IDBundle
+  def IOinit[T <: Data](value: T): Unit = {
+    id.IOinit(value)
+  }
+  def Flipped_IOinit[T <: Data](value: T): Unit = {
+    inst := 0.U
+    pc := 0.U
+  }
 }
 
 class Core extends Module {
-  val io = new CoreIO
-
+  val io = IO(new CoreIO)
+  io.IOinit()
   val RegFile = new RegFile("RISCV32")
 
   val inst: UInt = 1.U
 
-  val IF2ID = Wire(new Bundle {
-    val inst = UInt(32.W)
-  })
-  val ID2EX = Wire(new Bundle {
-    val src1 = UInt(32.W)
-    val src2 = UInt(32.W)
-    val rd   = UInt(5.W)
+  // val IF2ID = new IF2IDBundle
+  // val ID2EX = new ID2EXBundle
+  // val EX2WB = new EX2WBBundle
 
-    val imm    = UInt()
-    val alu_op = UInt()
-    val lsu_op = UInt()
-  })
-  val EX2WB = Wire(new Bundle {
-    val rd      = UInt(5.W)
-    val rd_data = UInt(32.W)
-  })
-  val IDStage = new PiplineStageWithoutDepth(IF2ID, ID2EX)
-  val EXStage = new PiplineStageWithoutDepth(ID2EX, EX2WB)
-  val WBStage = new PiplineStageWithoutDepth(EX2WB, new Bundle {})
+  // val IFStage = new PiplineStageWithoutDepth(new Bundle {}, IF2ID)
+  // val IDStage = new PiplineStageWithoutDepth(IF2ID, ID2EX)
+  // val EXStage = new PiplineStageWithoutDepth(ID2EX, EX2WB)
+  // val WBStage = new PiplineStageWithoutDepth(EX2WB, new Bundle {})
 
-  //ID
-  IDStage
+  //IF
+  val IF2ID   = new IF2IDBundle
+  val IFStage = new PiplineStageWithoutDepth(new BundleWithIOInitImpl {}, IF2ID)
+  val IDStage = new PiplineStageWithoutDepth(IF2ID, new BundleWithIOInitImpl {})
+  IFStage.ALL_IOinit()
+  IDStage.ALL_IOinit()
 
-  StageConnect(IDStage, EXStage)
-  StageConnect(withRegBeats=false)(EXStage, WBStage)
+  IFStage.out.bits.inst := io.inst
+  IFStage.out.bits.pc   := io.pc
 
-  when(inst === ADDI) {
-    //ID
-    val src1_ID = RegFile.read(inst.rs1)
-    val src2_ID = RegFile.read(inst.rs2)
-    val rd_ID   = inst.rd
+  //这里！！！晕了睡觉了
+  IDStage.in <> Wire(IFStage.out.bits.getRegEnable(IFStage.out.bits, true.B))
+  io.id.pc:=IDStage.in.bits.pc 
+   io.id.inst:=IDStage.in.bits.inst 
 
-    //ID/EX
-    val src1_EX = RegNext(src1_ID)
-    val src2_EX = RegNext(src2_ID)
-    val rd_EX   = RegNext(rd_ID)
-    //EX
-    val Rrd_EX = src1_EX + src2_EX
-
-    //EX/Mem
-    val Rrd_Mem = RegNext(Rrd_EX)
-    val rd_Mem = RegNext(rd_EX)
-    //Mem
-    //nothing...
-
-    //Mem/WB
-    val Rrd_WB = RegNext(Rrd_Mem)
-    val rd_WB = RegNext(rd_Mem)
-    //WB
-    RegFile.write(rd_WB, Rrd_WB)
-  }
-  // Frontend
-  //TODO: IF stage
-
-  // Insts pc
-  //TODO: ID stage
-
-  // uops rs1 rs2 rd alu_op
-  // Backend
-  //TODO: EX stage = LSU + FU
-
-  //TODO: WB stage
+  // StageConnect(IFStage, IDStage)
+  // StageConnect(IDStage, EXStage)
+  // StageConnect(withRegBeats=false)(EXStage, WBStage)
 
 }
