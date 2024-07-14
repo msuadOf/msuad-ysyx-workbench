@@ -14,10 +14,15 @@ class IF2IDBundle extends BundleWithIOInit {
     pc   := value
   }
   def Flipped_IOinit[T <: Data](value: T): Unit = {}
-  def getRegEnable(t:IF2IDBundle,enable:Bool): Bundle = new Bundle{
-    val pc = RegEnable(t.pc,enable)
-    val inst = RegEnable(t.inst,enable)
+
+
+  def =>>[T <: BundleWithIOInit](enable: Bool)(that: T): Unit = {
+    val that_IF2IDBundle = that.asInstanceOf[IF2IDBundle]
+
+    that_IF2IDBundle.pc   := RegEnable(this.pc,0.U, enable)
+    that_IF2IDBundle.inst := RegEnable(this.inst,0.U, enable)
   }
+  def =>>(that: BundleWithIOInit)=new StageConnect_CallChain(this,that)
 }
 
 class another_ID2EXBundle extends BundleWithIOInit {
@@ -30,6 +35,7 @@ class another_ID2EXBundle extends BundleWithIOInit {
   val futype = Output(UInt())
   def IOinit[T <: Data](value: T): Unit = {}
   def Flipped_IOinit[T <: Data](value: T): Unit = {}
+  def =>>[T <: BundleWithIOInit](enable: Bool)(that: T): Unit = {}
 }
 class ID2EXBundle extends BundleWithIOInit {
   val src1 = Output(UInt(32.W))
@@ -52,6 +58,7 @@ class ID2EXBundle extends BundleWithIOInit {
     immJ := value
   }
   def Flipped_IOinit[T <: Data](value: T): Unit = {}
+  def =>>[T <: BundleWithIOInit](enable: Bool)(that: T): Unit = {}
 }
 class EX2WBBundle extends BundleWithIOInit {
   val rd  = Output(UInt(5.W))
@@ -61,4 +68,5 @@ class EX2WBBundle extends BundleWithIOInit {
     Rrd := value
   }
   def Flipped_IOinit[T <: Data](value: T): Unit = {}
+  def =>>[T <: BundleWithIOInit](enable: Bool)(that: T): Unit = {}
 }

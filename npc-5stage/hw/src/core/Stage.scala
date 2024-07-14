@@ -4,7 +4,7 @@ import chisel3.util._
 import core.utils._
 
 class StageBundle extends Bundle {}
-class HandshakeIO[+T <: BundleWithIOInit](gen: T) extends BundleWithIOInit {
+class HandshakeIO[+T <: BundleWithIOInit](gen: T) extends BundleWithIOInit with StageBeatsImpl {
 
   /** Indicates that the consumer is ready to accept the data this cycle
     * @group Signals
@@ -26,7 +26,7 @@ class HandshakeIO[+T <: BundleWithIOInit](gen: T) extends BundleWithIOInit {
     this.bits.IOinit(value)
   }
   def Flipped_IOinit[T <: Data](value: T): Unit = {
-    
+
     this.ready := value
     this.bits.Flipped_IOinit(value)
   }
@@ -43,28 +43,25 @@ object Handshake {
   def apply[T <: BundleWithIOInit](gen: T): HandshakeIO[T] = new HandshakeIO(gen)
 
   // use a proper empty data type, this is a quick and dirty solution
-  private final class EmptyBundle extends BundleWithIOInit {
-    def IOinit[T <: Data](value: T): Unit = {}
-    def Flipped_IOinit[T <: Data](value: T): Unit = {}
-  }
+  private final class EmptyBundle extends BundleWithIOInitImpl
 
   def apply(): HandshakeIO[BundleWithIOInit] = apply(new EmptyBundle)
   def empty:   HandshakeIO[BundleWithIOInit] = Handshake()
 
 }
 object StageConnect {
-  def apply[A <: BundleWithIOInit, B <: BundleWithIOInit](left: Stage[A, B], right: Stage[A, B]):Unit = {
+  def apply[A <: BundleWithIOInit, B <: BundleWithIOInit](left: Stage[A, B], right: Stage[A, B]): Unit = {
     val arch = "pipeline"
     // 为展示抽象的思想, 此处代码省略了若干细节
-    if (arch == "single") { apply(withRegBeats = false)(left,right) }
-    else if (arch == "multi") { apply(withRegBeats = false)(left,right) }
-    else if (arch == "pipeline") { apply(withRegBeats = true)(left,right) }
+    if (arch == "single") { apply(withRegBeats = false)(left, right) }
+    else if (arch == "multi") { apply(withRegBeats = false)(left, right) }
+    else if (arch == "pipeline") { apply(withRegBeats = true)(left, right) }
   }
   def apply[A <: BundleWithIOInit, B <: BundleWithIOInit](
     withRegBeats: Boolean = true
   )(left:         Stage[A, B],
     right:        Stage[A, B]
-  ):Unit = {
+  ): Unit = {
     if (withRegBeats) { right.in <> RegEnable(left.out.bits, left.out.fire) }
     else { right.in <> left.out }
   }
@@ -72,23 +69,48 @@ object StageConnect {
 
 // TODO: 将他抽象成 abstract class
 abstract class Stage[+A <: BundleWithIOInit, +B <: BundleWithIOInit](_in: A, _out: B) {
-  val in  = Wire(Flipped(Handshake(_in)))
-  val out = Wire(Handshake(_out))
+  val in           = Wire(Flipped(Handshake(_in)))
+  val out          = Wire(Handshake(_out))
+
+  val self_valid=Wire(Bool())
+  val self_ready=Wire(Bool())
+    private var if_self_valid_is_set=false
+  private var if_self_ready_is_set=false
+  def set_self_valid(valid: Bool): Unit = {
+    self_valid:=valid
+    if_self_valid_is_set=true
+  }
+  def set_self_ready(ready: Bool): Unit = {
+    self_ready:=ready
+    if_self_ready_is_set=true
+  }
+  def build_validready(): Unit = {
+    require(if_self_valid_is_set && if_self_ready_is_set, "self_valid and self_ready must be set before build_validready")
+    def right=out
+    def left=in
+    right.valid := self_valid 
+    left.ready := right.ready || self_ready
+  }
+
   def ALL_IOinit(): Unit = {
     in.ALL_IOinit()
     out.ALL_IOinit()
   }
-  // val Busy = false.B
-  def getBusy(): Bool = {
-    // Busy
-    false.B
+
+
+  def build(): Unit={
+    this.build_validready()//初步逻辑
+    //。。。请继续
   }
-  def setBusy(busyOrNot: Bool): Unit = {
-    // Busy := busyOrNot
-  }
-  def build(): Unit
 }
 class PiplineStage[+A <: BundleWithIOInit, +B <: BundleWithIOInit](_in: A, _out: B) extends Stage[A, B](_in, _out) {
+    private val Busy = RegInit(0.B)
+   def getBusy(): Bool = Busy
+  def full:    Bool = Busy
+  def busy:    Bool = Busy
+  def setBusy(busyOrNot: Bool): Unit = {
+    Busy := busyOrNot
+  }
   def build(): Unit = {
 
     // TODO: To Be validate... 有待验证逻辑的正确性。。
@@ -105,7 +127,8 @@ class PiplineStage[+A <: BundleWithIOInit, +B <: BundleWithIOInit](_in: A, _out:
 }
 class PiplineStageWithoutDepth[+A <: BundleWithIOInit, +B <: BundleWithIOInit](_in: A, _out: B)
     extends Stage[A, B](_in, _out) {
-  def build(): Unit = {
+  override def build(): Unit = {
+    super.build()
     /*
     @member :
     val in   = Handshake(_in)
@@ -113,5 +136,25 @@ class PiplineStageWithoutDepth[+A <: BundleWithIOInit, +B <: BundleWithIOInit](_
      */
     in.ready  := out.ready
     out.valid := in.valid
+
+      (IFStage.out.bits =>> IDStage.in.bits).enable(true.B)
+  val ID_busy = RegInit(0.B)
+
+  val left  = IFStage.out
+  val right = IDStage.in
+  left.ready  := !ID_busy || right.ready
+  right.valid := ID_busy
+  ID_busy := MuxLookup(Cat(left.fire, right.fire, ID_busy), 0.U)(
+    Seq(
+      "b000".U -> 0.B, // true
+      "b001".U -> 0.B, // false
+      //// "b010".U -> 1.B, // 不可能
+      "b011".U -> 0.B, // false
+      "b100".U -> 1.B, // true
+      ////"b101".U -> 0.B, // 不可能
+      ////"b110".U -> 1.B, // 不可能
+      "b111".U -> 1.B // false
+    )
+  )
   }
 }

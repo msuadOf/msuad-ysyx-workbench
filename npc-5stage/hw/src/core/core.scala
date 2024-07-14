@@ -5,19 +5,23 @@ import core.utils._
 
 class IFUIO extends BundleWithIOInitImpl {}
 class LSUIO extends BundleWithIOInitImpl {}
-class CoreIO extends BundleWithIOInit {
+class CoreIO extends BundleWithIOInit with StageBeatsImpl {
   val LSUIO = new LSUIO
   val IFUIO = new IFUIO
 
   val pc    = Input(UInt(32.W))
   val inst  = Input(UInt(32.W))
-  val id=new IF2IDBundle
+  val vld   = Input(Bool())
+  val ready = Output(Bool())
+
+  val id = new IF2IDBundle
   def IOinit[T <: Data](value: T): Unit = {
     id.IOinit(value)
+    ready := value
   }
   def Flipped_IOinit[T <: Data](value: T): Unit = {
-    inst := 0.U
-    pc := 0.U
+    inst := value
+    pc   := value
   }
 }
 
@@ -47,11 +51,31 @@ class Core extends Module {
   IFStage.out.bits.inst := io.inst
   IFStage.out.bits.pc   := io.pc
 
-  //这里！！！晕了睡觉了
-  IDStage.in <> Wire(IFStage.out.bits.getRegEnable(IFStage.out.bits, true.B))
-  io.id.pc:=IDStage.in.bits.pc 
-   io.id.inst:=IDStage.in.bits.inst 
+  //  IFStage.out.bits .=>>(true.B)( IDStage.in.bits )
+  (IFStage.out.bits =>> IDStage.in.bits).enable(true.B)
+  val ID_busy = RegInit(0.B)
 
+  val left  = IFStage.out
+  val right = IDStage.in
+  left.ready  := !ID_busy || right.ready
+  right.valid := ID_busy
+  ID_busy := MuxLookup(Cat(left.fire, right.fire, ID_busy), 0.U)(
+    Seq(
+      "b000".U -> 0.B, // true
+      "b001".U -> 0.B, // false
+      //// "b010".U -> 1.B, // 不可能
+      "b011".U -> 0.B, // false
+      "b100".U -> 1.B, // true
+      ////"b101".U -> 0.B, // 不可能
+      ////"b110".U -> 1.B, // 不可能
+      "b111".U -> 1.B // false
+    )
+  )
+
+  io.ready          := IFStage.out.ready
+  IFStage.out.valid := io.vld
+
+  io.id <> IDStage.in.bits
   // StageConnect(IFStage, IDStage)
   // StageConnect(IDStage, EXStage)
   // StageConnect(withRegBeats=false)(EXStage, WBStage)
