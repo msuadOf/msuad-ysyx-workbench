@@ -15,14 +15,13 @@ class IF2IDBundle extends BundlePlus {
   }
   def Flipped_IOinit[T <: Data](value: T): Unit = {}
 
-
   def do_=>>[T <: BundlePlus](enable: Bool)(that: T): Unit = {
     val that_IF2IDBundle = that.asInstanceOf[IF2IDBundle]
 
-    that_IF2IDBundle.pc   := RegEnable(this.pc,0.U, enable)
-    that_IF2IDBundle.inst := RegEnable(this.inst,0.U, enable)
+    that_IF2IDBundle.pc   := RegEnable(this.pc, 0.U, enable)
+    that_IF2IDBundle.inst := RegEnable(this.inst, 0.U, enable)
   }
-  
+
 }
 
 class another_ID2EXBundle extends BundlePlus {

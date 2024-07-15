@@ -76,7 +76,7 @@ object StageConnect {
     val beatReg_busy_wire = MuxLookup(Cat(left.fire, right.fire, beatReg_busy), 0.B)(
       Seq(
         "b000".U -> 0.B, // true
-        "b001".U -> 0.B, // false
+        "b001".U -> 1.B, // false
         //// "b010".U -> 1.B, // 不可能
         "b011".U -> 0.B, // false
         "b100".U -> 1.B, // true
@@ -174,7 +174,7 @@ class PiplineStageWithoutDepth[+A <: BundlePlus, +B <: BundlePlus](_in: A, _out:
     ID_busy := MuxLookup(Cat(left.fire, right.fire, ID_busy), 0.U)(
       Seq(
         "b000".U -> 0.B, // true
-        "b001".U -> 0.B, // false
+        "b001".U -> 1.B, // false
         //// "b010".U -> 1.B, // 不可能
         "b011".U -> 0.B, // false
         "b100".U -> 1.B, // true

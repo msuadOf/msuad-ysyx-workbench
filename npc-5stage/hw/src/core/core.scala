@@ -2,6 +2,7 @@ package core
 import chisel3._
 import chisel3.util._
 import core.utils._
+import core.Stages._
 
 class IFUIO extends BundlePlusImpl {}
 class LSUIO extends BundlePlusImpl {}
@@ -9,19 +10,14 @@ class CoreIO extends BundlePlus with StageBeatsImpl {
   val LSUIO = new LSUIO
   val IFUIO = new IFUIO
 
-  val pc    = Input(UInt(32.W))
-  val inst  = Input(UInt(32.W))
-  val vld   = Input(Bool())
-  val ready = Output(Bool())
+  val ifu = Output(Handshake(new IF2IDBundle))
+  val idu = Output(Handshake(new IF2IDBundle))
 
-  val id = new IF2IDBundle
   def IOinit[T <: Data](value: T): Unit = {
-    id.IOinit(value)
-    ready := value
+    // idu.IOinit(value)
   }
   def Flipped_IOinit[T <: Data](value: T): Unit = {
-    inst := value
-    pc   := value
+
   }
 }
 
@@ -42,23 +38,22 @@ class Core extends Module {
   // val WBStage = new PiplineStageWithoutDepth(EX2WB, new Bundle {})
 
   //IF
+  val IO2IF=new IFUIO
   val IF2ID   = new IF2IDBundle
-  val IFStage = new PiplineStageWithoutDepth(new BundlePlusImpl {}, IF2ID)
-  val IDStage = new PiplineStageWithoutDepth(IF2ID, new BundlePlusImpl {})
+  // val IFStage = new PiplineStageWithoutDepth(new BundlePlusImpl {}, IF2ID)
+  val IFStage=new InstFetchStage(IO2IF,IF2ID)
+  val IDStage = new InstDecodeStage(IF2ID, new BundlePlusImpl {})
   IFStage.ALL_IOinit()
   IDStage.ALL_IOinit()
 
-  IFStage.out.bits.inst := io.inst
-  IFStage.out.bits.pc   := io.pc
 
   //  IFStage.out.bits .=>>(true.B)( IDStage.in.bits )
 
+  IFStage.build()
   StageConnect(IFStage, IDStage)
 
-  io.ready          := IFStage.out.ready
-  IFStage.out.valid := io.vld
-
-  io.id <> IDStage.in.bits
+  io.idu <> IDStage.in
+  io.ifu <> IFStage.out
   // StageConnect(IFStage, IDStage)
   // StageConnect(IDStage, EXStage)
   // StageConnect(withRegBeats=false)(EXStage, WBStage)

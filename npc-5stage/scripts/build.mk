@@ -84,6 +84,7 @@ CPP_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.cpp) #search all hw/
 C_HEAD_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.h) #search all hw/
 
 verilog:$(CHISEL_GEN_VERILOG_FILE)
+	sed -i '/\/\/ ----- 8< ----- FILE "firrtl_black_box_resource_files.f" ----- 8< -----$$/,+2d' $(CHISEL_GEN_VERILOG_FILE) #删除Chisel BlackBox的脏东西
 ifeq ($(NODISPLAY),y) 
 	@ echo "display disabled in top.v ...... yes"
 	@ sed -i 's/define PRINTF_COND_ 1/define PRINTF_COND_ 0/g' $(CHISEL_GEN_VERILOG_FILE)
@@ -109,7 +110,7 @@ verilator-binary: verilog
 	@echo
 	@echo "-- VERILATE ----------------"
 	@mkdir -p $(VERI_BUILD_DIR)
-	$(Q) $(VERILATOR) --timing $(VERILATOR_FLAGS) $(VERILATOR_INPUT) --Mdir $(VERI_BUILD_DIR)
+	$(Q) $(VERILATOR) --top top --timing $(VERILATOR_FLAGS) $(VERILATOR_INPUT) --Mdir $(VERI_BUILD_DIR)
 
 	@echo
 	@echo "-- BUILD -------------------"

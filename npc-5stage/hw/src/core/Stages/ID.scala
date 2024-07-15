@@ -1,14 +1,18 @@
-package core
+package core.Stages
 
 import chisel3._
 import chisel3.util._
 
+import core._
+import core.utils._
+
 import insts._
 import insts.Inst
 import chisel3.internal.throwException
-import org.yaml.snakeyaml.events.Event.ID
 
-
+class InstDecodeStage(_in: IF2IDBundle, _out: BundlePlus) extends PiplineStageWithoutDepth(_in, _out){
+  
+}
 
 class Decoder(val inst: UInt, val pc: UInt, R: RegFile) {
   val rs1 = inst(19, 15)
@@ -41,9 +45,9 @@ object Decoder {
 }
 object Decode {
 
-  def apply(IDStage: Stage[IF2IDBundle,ID2EXBundle], R: RegFile) = {
-    val IDStage_in  = IDStage.in//.asInstanceOf[HandshakeIO[IF2IDBundle]]
-    val IDStage_out = IDStage.out//.asInstanceOf[HandshakeIO[ID2EXBundle]]
+  def apply(IDStage: Stage[IF2IDBundle, ID2EXBundle], R: RegFile) = {
+    val IDStage_in  = IDStage.in //.asInstanceOf[HandshakeIO[IF2IDBundle]]
+    val IDStage_out = IDStage.out //.asInstanceOf[HandshakeIO[ID2EXBundle]]
 
     val decoder = Decoder(IDStage_in.bits.inst, IDStage_in.bits.pc, R)
 
@@ -58,8 +62,6 @@ object Decode {
 
   }
 }
-
-
 
 // class another_Decoder(val inst: UInt, val pc: UInt, R: RegFile) {
 //   val rs1 = inst(19, 15)

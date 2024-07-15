@@ -1,5 +1,3 @@
-import "DPI-C" function void mmio_write(input  int addr, input int len, input  int data);
-import "DPI-C" function  int mmio_read(input  int addr, input int len);
 module mmio_dpi (
     input wire clk,
     input wire reset,
@@ -32,7 +30,8 @@ module mmio_dpi (
     input wire bReady
 
   );
-
+import "DPI-C" function void mmio_write(input  int addr, input int len, input  int data);
+import "DPI-C" function  int mmio_read(input  int addr, input int len);
   // always @(posedge clk) begin
   //     if(reset) begin
   //         rValid<=1;

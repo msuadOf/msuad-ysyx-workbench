@@ -6,6 +6,4 @@ import chisel3.util._
 import core._
 import core.utils._
 
-class BundleReg[T <: Data](gen: T) extends Bundle {
-  
-}
+class BundleReg[T <: Data](gen: T) extends Bundle {}
