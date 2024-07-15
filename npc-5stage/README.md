@@ -1,4 +1,4 @@
-NPC
+NPC-5stage
 =========
            
 ## 简介
@@ -6,6 +6,13 @@ NPC
 相信大家都知道一生一芯，那么一生一芯究竟是怎么回事呢？下面就。。。（误）
 
 ## Get Start
+
+## 新写法
+- 给bundle打排：（Signal.scala io.scala）
+  ```scala
+      val A,B=new BundlePlus{}
+      (A =>> B).enable(C.asBool)//A和B是有方向性的
+  ```
 
 ## 目录结构
 

@@ -27,3 +27,5 @@ distclean:clean clean-chisel
 
 .DEFAULT_GOAL = verilator-binary
 .PHONY: verilator-binary clean
+
+include utils/testbench/build.mk
