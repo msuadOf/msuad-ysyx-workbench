@@ -37,6 +37,7 @@ class another_ID2EXBundle extends BundlePlus {
   def do_=>>[T <: BundlePlus](enable: Bool)(that: T): Unit = {}
 }
 class ID2EXBundle extends BundlePlus {
+  val pc = Output(UInt(32.W))
   val src1 = Output(UInt(32.W))
   val src2 = Output(UInt(32.W))
   val rd   = Output(UInt(5.W))
