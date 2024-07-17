@@ -44,6 +44,7 @@ class ID2EXBundle extends BundlePlus {
   val imm = Output(UInt())
   val inst_id= Output(UInt())
   def IOinit[T <: Data](value: T): Unit = {
+    pc := value
     src1 := value
     src2 := value
     rd   := value

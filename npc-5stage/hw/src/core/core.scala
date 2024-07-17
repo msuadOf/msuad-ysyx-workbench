@@ -16,9 +16,7 @@ class CoreIO extends BundlePlus with StageBeatsImpl {
   def IOinit[T <: Data](value: T): Unit = {
     // idu.IOinit(value)
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
-
-  }
+  def Flipped_IOinit[T <: Data](value: T): Unit = {}
 }
 
 class Core extends Module {
@@ -38,21 +36,23 @@ class Core extends Module {
   // val WBStage = new PiplineStageWithoutDepth(EX2WB, new Bundle {})
 
   //IF
-  val IO2IF=new IFUIO
-  val IF2ID   = new IF2IDBundle
+  val IO2IF = new IFUIO
+  val IF2ID = new IF2IDBundle
+  val ID2EX = new ID2EXBundle
   // val IFStage = new PiplineStageWithoutDepth(new BundlePlusImpl {}, IF2ID)
-  val IFStage=new InstFetchStage(IO2IF,IF2ID)
-  val IDStage = new InstDecodeStage(IF2ID, new ID2EXBundle )
+  val IFStage = new InstFetchStage(IO2IF, IF2ID)
+  val IDStage = new PiplineStageWithoutDepth(IF2ID, ID2EX)
+  val EXStage = new PiplineStageWithoutDepth(ID2EX, new EX2WBBundle)
   IFStage.ALL_IOinit()
   IDStage.ALL_IOinit()
-
+  EXStage.ALL_IOinit()
 
   //  IFStage.out.bits .=>>(true.B)( IDStage.in.bits )
 
   IFStage.build()
   IDStage.build()
-  StageConnect(withRegBeats =  true)(IFStage, IDStage)
-  // StageConnect(withRegBeats =  true)(IDStage, EXStage)
+  StageConnect(withRegBeats = true)(IFStage, IDStage)
+  StageConnect(withRegBeats =  true)(IDStage, EXStage)
 
   io.idu <> IDStage.in
   io.ifu <> IFStage.out
