@@ -42,12 +42,14 @@ class Decoder(val inst: UInt, val pc: UInt, R: RegFile) {
 
   val instType=0.U
   val imm = 0.U
+  val inst_id=0.U
   RVIInstr.tabelWithIndex.foreach((t) => {
     val (elem,inst_index)=t
     val (bitpat -> (instType_onTable::fuType_onTable::fuOp_onTable::Nil) -> exec )=elem
 
     when(bitpat === inst) {
       instType := instType_onTable.U
+      inst_id := inst_index.U
       imm := (instType_onTable match {
         case Inst.I => immI
         case Inst.S => immS
@@ -80,6 +82,7 @@ object Decode {
     IDStage_out.bits.src1 := decoder.src1
     IDStage_out.bits.src2 := decoder.src2
     IDStage_out.bits.imm := decoder.imm
+    IDStage_out.bits.inst_id := decoder.inst_id
 
 
   }

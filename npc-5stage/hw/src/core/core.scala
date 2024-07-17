@@ -50,6 +50,7 @@ class Core extends Module {
   //  IFStage.out.bits .=>>(true.B)( IDStage.in.bits )
 
   IFStage.build()
+  
   StageConnect(withRegBeats =  true)(IFStage, IDStage)
 
   io.idu <> IDStage.in

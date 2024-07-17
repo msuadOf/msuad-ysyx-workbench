@@ -312,5 +312,5 @@ object Priviledged {
 object RVIInstr {
   val table =
     RV32I_ALUInstr.table ++ RV32I_BRUInstr.table ++ RV32I_LSUInstr.table ++ RVZicsrInstr.table ++ Priviledged.table
-  val tabelWithIndex = table.zipWithIndex.map { case (x, i) => (x, i.asUInt) }
+  val tabelWithIndex = table.zipWithIndex
   }

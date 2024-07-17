@@ -41,12 +41,13 @@ class ID2EXBundle extends BundlePlus {
   val src2 = Output(UInt(32.W))
   val rd   = Output(UInt(5.W))
   val imm = Output(UInt())
-
+  val inst_id= Output(UInt())
   def IOinit[T <: Data](value: T): Unit = {
     src1 := value
     src2 := value
     rd   := value
     imm := value
+    inst_id:= value
 
   }
   def Flipped_IOinit[T <: Data](value: T): Unit = {}

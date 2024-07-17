@@ -4,12 +4,11 @@ import chisel3._
 import chisel3.util._
 import core.utils._
 
-import core.PiplineStageWithoutDepth
+import core._
 import chisel3.util.experimental.BoringUtils
-import core.IFUIO
-import core.IF2IDBundle
 
-class InstFetchStage(_in: IFUIO, _out: IF2IDBundle) extends PiplineStageWithoutDepth(_in, _out) {
+
+class InstFetchStage(_in: IFUIO, _out: IF2IDBundle) extends Stage(_in, _out) {
   val pc = RegInit("h80000000".U(32.W))
   override def build(): Unit = {
     super.build()
