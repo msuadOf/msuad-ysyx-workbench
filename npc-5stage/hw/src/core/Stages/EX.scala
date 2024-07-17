@@ -25,6 +25,7 @@ class ExecStage(_in: ID2EXBundle, _out: EX2WBBundle) extends PiplineStageWithout
       val (bitpat -> (instType_onTable :: fuType_onTable :: fuOp_onTable :: Nil) -> exec) = elem
       when(inst_index.U === env.inst_id) {
         exec(env)
+        printf(s"$bitpat")
       }
     })
 

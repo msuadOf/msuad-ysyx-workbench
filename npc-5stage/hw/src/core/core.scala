@@ -51,6 +51,7 @@ class Core extends Module {
 
   IFStage.build()
   IDStage.build()
+  EXStage.build()
   StageConnect(withRegBeats = true)(IFStage, IDStage)
   StageConnect(withRegBeats =  true)(IDStage, EXStage)
 
