@@ -2,7 +2,7 @@ import chisel3._
 import chisel3.util._
 import upickle.default
 import SpikeEncoding.se._
-class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DMem: MemIO) {
+class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DMem: MemIO,val DMEM_Inst:UInt,val LUCtrl:LUCtrl_IO) {
   //val rs1, rs2, rd, src1, src2, imm ,Rrd = Wire(UInt())
   val rs1 = inst(19, 15)
   val rs2 = inst(24, 20)
@@ -12,6 +12,9 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
   val src2 = R.read(rs2)
   object Rrd {
     def :=(that: UInt): Unit = {
+      //  when(DMEM_Inst===1){
+
+      //  }
       R.write(rd, that)
     }
   }
@@ -38,11 +41,13 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
       DMem.wData  := Fill(32, 1.U)
       DMem.wen    := 0.U
       DMem.wEvent := 0.U
+      DMEM_Inst:=0.U
     }
     def rIDLE() = {
       DMem.ren := 0.U
 
       DMem.rEvent := 0.U
+      DMEM_Inst:=0.U
     }
     def IDLE() = {
       wIDLE()
@@ -53,11 +58,12 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
       DMem.wAddr := addr
       //DMem.wData := data
       DMem.wEvent := 1.U
+      DMEM_Inst:=1.U
 
       DMem.wData := (len match {
-        case 1 => { DMem.wWidth := 1.U; data(8 - 1, 0) }
-        case 2 => { DMem.wWidth := 2.U; data(8 * 2 - 1, 0) }
-        case 4 => { DMem.wWidth := 4.U; data(8 * 4 - 1, 0) }
+        case 1 => { DMem.wWidth := 1.U;DMem.wStrb := 1.U;  data(8 - 1, 0) }
+        case 2 => { DMem.wWidth := 2.U;DMem.wStrb := 3.U;  data(8 * 2 - 1, 0) }
+        case 4 => { DMem.wWidth := 4.U;DMem.wStrb := 15.U; data(8 * 4 - 1, 0) }
         case _: Int => throw new IllegalArgumentException("write(addr,len,data) args \"len\" should be [1] [2] [4]")
       })
 
@@ -68,11 +74,12 @@ class ExecEnv(val inst: UInt, val pc: UInt, val R: RegFile, val csr: csr, val DM
       DMem.ren    := 1.U
       DMem.rAddr  := addr
       DMem.rEvent := 1.U
+      DMEM_Inst:=1.U
       //DMem.rData
       (len match {
-        case 1 => { DMem.rWidth := 1.U; DMem.rData(8 - 1, 0) }
-        case 2 => { DMem.rWidth := 2.U; DMem.rData(8 * 2 - 1, 0) }
-        case 4 => { DMem.rWidth := 4.U; DMem.rData(8 * 4 - 1, 0) }
+        case 1 => { DMem.rWidth := 1.U;DMem.rStrb := 1.U;  LUCtrl.rData(8 - 1, 0) }
+        case 2 => { DMem.rWidth := 2.U;DMem.rStrb := 3.U;  LUCtrl.rData(8 * 2 - 1, 0) }
+        case 4 => { DMem.rWidth := 4.U;DMem.rStrb := 15.U; LUCtrl.rData(8 * 4 - 1, 0) }
         case _: Int => throw new IllegalArgumentException("write(addr,len,data) args \"len\" should be [1] [2] [4]")
       })
 

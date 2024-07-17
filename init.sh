@@ -32,12 +32,13 @@ function init() {
   if [ $4 == "true" ] ; then
     rm -rf $3/.git
     git add -A $3
-    git commit -am "$1 $2 initialized"$'\n\n'"$log"
+    #git commit -am "$1 $2 initialized"$'\n\n'"$log"
   else
     sed -i -e "/^\/$3/d" .gitignore
+    echo -e "\n" >> .gitignore
     echo "/$3" >> .gitignore
     git add -A .gitignore
-    git commit --no-verify --allow-empty -am "$1 $2 initialized without tracing"$'\n\n'"$log"
+    #git commit --no-verify --allow-empty -am "$1 $2 initialized without tracing"$'\n\n'"$log"
   fi
 
 
@@ -73,6 +74,20 @@ case $1 in
     ;;
   npc)
     addenv NPC_HOME npc
+    ;;
+  ysyxSoC)
+    git clone git@github.com:msuadOf/ysyxSoC.git
+    cd ysyxSoC && make dev-init
+    ;;
+  all)
+    for cmd in nemu abstract-machine am-kernels npc ysyxSoC; do
+      # 使用eval来动态执行case分支对应的命令
+      eval "./init.sh $cmd"
+      # 注意：这种方法非常基础且有风险，特别是对于那些有持久性影响的操作（如环境变量设置、文件操作）
+    done
+    ;;
+  init)
+    git submodule update --init --recursive
     ;;
   *)
     echo "Invalid input..."

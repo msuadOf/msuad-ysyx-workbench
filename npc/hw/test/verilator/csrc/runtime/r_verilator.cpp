@@ -107,33 +107,8 @@ void cpu_init() {
 }
 void tick_once() {
   top->clock = 0;
-  //printf("======clock shoule be 0 now %d\n",top->clock);
-  // top->mem_inst = pmem_read(top->mem_addr);
-  // printf("excute addr:0x%08lx inst:0x%08x\n",top->mem_addr,top->mem_inst);
   top->eval();
   tfp->dump(main_time);
-
-  //====== cpu exec body begin ======
-  //paddr_read()
-  //IMem read
-  top->io_IMem_rData=paddr_read(top->io_IMem_rAddr,4);
-
-
-
-  int pc=top->io_IMem_rAddr;
-  Log_level_1("pc=%08x\n",pc);
-
-
-    //DMem read
-      top->eval();
-  
-  if(in_pmem(top->io_DMem_rAddr)){
-    top->io_DMem_rData=paddr_read(top->io_DMem_rAddr,top->io_DMem_rWidth);
-  }else{
-    top->io_DMem_rData=0xFFFFFFFF;
-  }
-  Log_level_2("before postedge: top->io_DMem_ren=%d,addr=%08x,data=0x%08x",top->io_DMem_ren,top->io_DMem_rAddr, top->io_DMem_rData);
-  //====== cpu exec body ends  ======
 
   main_time ++;
   top->clock = 1;
@@ -142,11 +117,6 @@ void tick_once() {
 	tfp->dump(main_time);
   main_time ++;
   
-    //DMem write
-  if(top->io_DMem_wen==1){
-    paddr_write(top->io_DMem_wAddr,top->io_DMem_wWidth,top->io_DMem_wData);
-  }
-  Log_level_2("after postedge: top->io_DMem_ren=%d,addr=0x%08x,data=0x%08x",top->io_DMem_ren,top->io_DMem_rAddr,top->io_DMem_rData );
 }
 void exec_once(){
   do

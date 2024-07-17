@@ -109,7 +109,7 @@ verilator-binary: verilog
 	@echo
 	@echo "-- VERILATE ----------------"
 	@mkdir -p $(VERI_BUILD_DIR)
-	$(Q) $(VERILATOR) $(VERILATOR_FLAGS) $(VERILATOR_INPUT) --Mdir $(VERI_BUILD_DIR)
+	$(Q) $(VERILATOR) --timing $(VERILATOR_FLAGS) $(VERILATOR_INPUT) --Mdir $(VERI_BUILD_DIR)
 
 	@echo
 	@echo "-- BUILD -------------------"

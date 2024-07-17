@@ -45,18 +45,19 @@ void init_mem() {
 }
 
 //mtrace
-void trace_mread(paddr_t addr, int len);
+void trace_mread(paddr_t addr, int len, word_t data);
 void trace_mwrite(paddr_t addr, int len, word_t data);
 word_t mmio_read(paddr_t addr, int len);
 void mmio_write(paddr_t addr, int len, word_t data);
 
 word_t paddr_read(paddr_t addr, int len) {
-  IFDEF(CONFIG_MTRACE,trace_mread(addr, len);) 
+  word_t data;
 
-  if (likely(in_pmem(addr))) return pmem_read(addr, len);
-  IFDEF(CONFIG_DEVICE, return mmio_read(addr, len));
-  out_of_bound(addr);
-  return 0;
+  IFDEF(CONFIG_DEVICE, data= mmio_read(addr, len));
+  if (likely(in_pmem(addr))) data= pmem_read(addr, len);
+  // out_of_bound(addr);
+    IFDEF(CONFIG_MTRACE,trace_mread(addr, len,data);) 
+  return data;
 }
 
 void paddr_write(paddr_t addr, int len, word_t data) {

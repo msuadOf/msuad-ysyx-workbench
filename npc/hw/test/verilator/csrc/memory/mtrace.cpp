@@ -42,9 +42,10 @@ void mtrace_paddr_write(uint32_t inst, uint32_t pc, paddr_t addr, int len, word_
 }
 
 // mtrace
-void trace_mread(paddr_t addr, int len)
+void trace_mread(paddr_t addr, int len, word_t data)
 {
-    printf("(npc) pread at " FMT_PADDR " len=%d\n", addr, len);
+    if(addr!=0)
+    printf("(npc) pread at " FMT_PADDR " len=%d, data=" FMT_WORD "\n", addr, len, data);
 }
 
 void trace_mwrite(paddr_t addr, int len, word_t data)
