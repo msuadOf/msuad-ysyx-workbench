@@ -37,24 +37,20 @@ class another_ID2EXBundle extends BundlePlus {
   def do_=>>[T <: BundlePlus](enable: Bool)(that: T): Unit = {}
 }
 class ID2EXBundle extends BundlePlus {
+  val pc = Output(UInt(32.W))
   val src1 = Output(UInt(32.W))
   val src2 = Output(UInt(32.W))
   val rd   = Output(UInt(5.W))
-  val immI = Output(UInt())
-  val immS = Output(UInt())
-  val immB = Output(UInt())
-  val immU = Output(UInt())
-  val immJ = Output(UInt())
-
+  val imm = Output(UInt())
+  val inst_id= Output(UInt())
   def IOinit[T <: Data](value: T): Unit = {
+    pc := value
     src1 := value
     src2 := value
     rd   := value
-    immI := value
-    immS := value
-    immB := value
-    immU := value
-    immJ := value
+    imm := value
+    inst_id:= value
+
   }
   def Flipped_IOinit[T <: Data](value: T): Unit = {}
   def do_=>>[T <: BundlePlus](enable: Bool)(that: T): Unit = {}

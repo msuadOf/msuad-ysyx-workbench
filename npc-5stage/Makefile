@@ -13,7 +13,8 @@ sim run:verilator-binary $(DIFF_REF_SO)
 	@echo "-- RUN ---------------------"
 	@rm -rf logs
 	$(VERI_BUILD_DIR)/Vtop $(VERI_RUNNING_ARGS) +trace
-
+wave:
+	code ${BUILD_DIR}/wave.vcd
 -include ../Makefile
 clean:
 	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat build

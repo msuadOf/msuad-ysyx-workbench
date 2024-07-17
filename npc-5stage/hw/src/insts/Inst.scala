@@ -2,110 +2,110 @@ package insts
 import chisel3._
 import chisel3.util._
 
-import core.ExecEnv
+import core.Stages.ExecEnv
 object Inst {
-  def N = "b0000".U
-  def I = "b0100".U
-  def R = "b0101".U
-  def S = "b0010".U
-  def B = "b0001".U
-  def U = "b0110".U
-  def J = "b0111".U
+  val N = "b0000"
+  val I = "b0100"
+  val R = "b0101"
+  val S = "b0010"
+  val B = "b0001"
+  val U = "b0110"
+  val J = "b0111"
 }
 
 object FuType {
   def num     = 5
-  def alu     = "b000".U
-  def lsu     = "b001".U
-  def mdu     = "b010".U
-  def csr     = "b011".U
-  def mou     = "b100".U
-  def bru     = "b101".U
+  def alu     = "b000"
+  def lsu     = "b001"
+  def mdu     = "b010"
+  def csr     = "b011"
+  def mou     = "b100"
+  def bru     = "b101"
   def apply() = UInt(log2Up(num).W)
 }
 
 object ALUOpType {
-  def add  = "b1000000".U
-  def sll  = "b0000001".U
-  def slt  = "b0000010".U
-  def sltu = "b0000011".U
-  def xor  = "b0000100".U
-  def srl  = "b0000101".U
-  def or   = "b0000110".U
-  def and  = "b0000111".U
-  def sub  = "b0001000".U
-  def sra  = "b0001101".U
+  def add  = "b1000000"
+  def sll  = "b0000001"
+  def slt  = "b0000010"
+  def sltu = "b0000011"
+  def xor  = "b0000100"
+  def srl  = "b0000101"
+  def or   = "b0000110"
+  def and  = "b0000111"
+  def sub  = "b0001000"
+  def sra  = "b0001101"
 
-  def addw = "b1100000".U
-  def subw = "b0101000".U
-  def sllw = "b0100001".U
-  def srlw = "b0100101".U
-  def sraw = "b0101101".U
+  def addw = "b1100000"
+  def subw = "b0101000"
+  def sllw = "b0100001"
+  def srlw = "b0100101"
+  def sraw = "b0101101"
 
-  def jal  = "b1011000".U
-  def jalr = "b1011010".U
-  def beq  = "b0010000".U
-  def bne  = "b0010001".U
-  def blt  = "b0010100".U
-  def bge  = "b0010101".U
-  def bltu = "b0010110".U
-  def bgeu = "b0010111".U
+  def jal  = "b1011000"
+  def jalr = "b1011010"
+  def beq  = "b0010000"
+  def bne  = "b0010001"
+  def blt  = "b0010100"
+  def bge  = "b0010101"
+  def bltu = "b0010110"
+  def bgeu = "b0010111"
 
 }
 object LSUOpType { //TODO: refactor LSU fuop
-  def lb  = "b0000000".U
-  def lh  = "b0000001".U
-  def lw  = "b0000010".U
-  def ld  = "b0000011".U
-  def lbu = "b0000100".U
-  def lhu = "b0000101".U
-  def lwu = "b0000110".U
-  def sb  = "b0001000".U
-  def sh  = "b0001001".U
-  def sw  = "b0001010".U
-  def sd  = "b0001011".U
+  def lb  = "b0000000"
+  def lh  = "b0000001"
+  def lw  = "b0000010"
+  def ld  = "b0000011"
+  def lbu = "b0000100"
+  def lhu = "b0000101"
+  def lwu = "b0000110"
+  def sb  = "b0001000"
+  def sh  = "b0001001"
+  def sw  = "b0001010"
+  def sd  = "b0001011"
 
-  def lr      = "b0100000".U
-  def sc      = "b0100001".U
-  def amoswap = "b0100010".U
-  def amoadd  = "b1100011".U
-  def amoxor  = "b0100100".U
-  def amoand  = "b0100101".U
-  def amoor   = "b0100110".U
-  def amomin  = "b0110111".U
-  def amomax  = "b0110000".U
-  def amominu = "b0110001".U
-  def amomaxu = "b0110010".U
+  def lr      = "b0100000"
+  def sc      = "b0100001"
+  def amoswap = "b0100010"
+  def amoadd  = "b1100011"
+  def amoxor  = "b0100100"
+  def amoand  = "b0100101"
+  def amoor   = "b0100110"
+  def amomin  = "b0110111"
+  def amomax  = "b0110000"
+  def amominu = "b0110001"
+  def amomaxu = "b0110010"
 
 }
 
 object CSROpType {
-  def jmp  = "b000".U
-  def wrt  = "b001".U
-  def set  = "b010".U
-  def clr  = "b011".U
-  def wrti = "b101".U
-  def seti = "b110".U
-  def clri = "b111".U
+  def jmp  = "b000"
+  def wrt  = "b001"
+  def set  = "b010"
+  def clr  = "b011"
+  def wrti = "b101"
+  def seti = "b110"
+  def clri = "b111"
 }
 object MOUOpType {
-  def fence      = "b00".U
-  def fencei     = "b01".U
-  def sfence_vma = "b10".U
+  def fence      = "b00"
+  def fencei     = "b01"
+  def sfence_vma = "b10"
 }
 object ALUExec {
-  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
+  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.imm).asUInt
   def ADDI = (e: ExecEnv) => {
-    e.Rrd := e.src1 + e.immI; printf("[ADDI]:ADDR=%x,src1=%x,immI=%x}\n", e.src1 + e.immI, e.src1, e.immI)
+    e.Rrd := e.src1 + e.imm; printf("[ADDI]:ADDR=%x,src1=%x,imm=%x}\n", e.src1 + e.imm, e.src1, e.imm)
   }
-  def SLLI  = (e: ExecEnv) => e.Rrd := e.src1 << e.immI(5, 0)
-  def SLTI  = (e: ExecEnv) => e.Rrd := e.src1.asSInt < e.immI.asSInt
-  def SLTIU = (e: ExecEnv) => e.Rrd := e.src1 < e.immI
-  def XORI  = (e: ExecEnv) => e.Rrd := e.src1 ^ e.immI
-  def SRLI  = (e: ExecEnv) => e.Rrd := e.src1 >> e.immI(5, 0)
-  def ORI   = (e: ExecEnv) => e.Rrd := e.src1 | e.immI
-  def ANDI  = (e: ExecEnv) => e.Rrd := e.src1 & e.immI
-  def SRAI  = (e: ExecEnv) => e.Rrd := (e.src1.asSInt >> e.immI(5, 0).asUInt).asUInt(31, 0)
+  def SLLI  = (e: ExecEnv) => e.Rrd := e.src1 << e.imm(5, 0)
+  def SLTI  = (e: ExecEnv) => e.Rrd := e.src1.asSInt < e.imm.asSInt
+  def SLTIU = (e: ExecEnv) => e.Rrd := e.src1 < e.imm
+  def XORI  = (e: ExecEnv) => e.Rrd := e.src1 ^ e.imm
+  def SRLI  = (e: ExecEnv) => e.Rrd := e.src1 >> e.imm(5, 0)
+  def ORI   = (e: ExecEnv) => e.Rrd := e.src1 | e.imm
+  def ANDI  = (e: ExecEnv) => e.Rrd := e.src1 & e.imm
+  def SRAI  = (e: ExecEnv) => e.Rrd := (e.src1.asSInt >> e.imm(5, 0).asUInt).asUInt(31, 0)
 
   def ADD  = (e: ExecEnv) => e.Rrd := e.src1 + e.src2
   def SLL  = (e: ExecEnv) => e.Rrd := e.src1 << e.src2(4, 0)
@@ -118,40 +118,40 @@ object ALUExec {
   def SUB  = (e: ExecEnv) => e.Rrd := e.src1 - e.src2
   def SRA  = (e: ExecEnv) => e.Rrd := (e.src1.asSInt >> e.src2.asUInt(4, 0)).asUInt(31, 0)
 
-  def AUIPC = (e: ExecEnv) => e.Rrd := e.pc + e.immU
-  def LUI   = (e: ExecEnv) => e.Rrd := e.immU
+  def AUIPC = (e: ExecEnv) => e.Rrd := e.pc + e.imm
+  def LUI   = (e: ExecEnv) => e.Rrd := e.imm
 }
 
 object BRUExec {
-  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-  def JAL  = (e: ExecEnv) => { e.Rrd := e.pc + 4.U; e.pc := e.pc + e.immJ; }
-  def JALR = (e: ExecEnv) => { e.pc := (e.src1 + e.immI) & (-1.S(32.W)).asUInt; e.Rrd := e.pc + 4.U }
+  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.imm).asUInt
+  def JAL  = (e: ExecEnv) => { e.Rrd := e.pc + 4.U; e.pc := e.pc + e.imm; }
+  def JALR = (e: ExecEnv) => { e.pc := (e.src1 + e.imm) & (-1.S(32.W)).asUInt; e.Rrd := e.pc + 4.U }
   //s->dnpc = (src1 + imm) & ~(word_t)1; R(rd)= s->pc + 4 );
-  def BEQ  = (e: ExecEnv) => when(e.src1 === e.src2) { e.pc := e.pc + e.immB }
-  def BNE  = (e: ExecEnv) => when(e.src1 =/= e.src2) { e.pc := e.pc + e.immB }
-  def BLT  = (e: ExecEnv) => when(e.src1.asSInt < e.src2.asSInt) { e.pc := e.pc + e.immB }
-  def BGE  = (e: ExecEnv) => when(e.src1.asSInt >= e.src2.asSInt) { e.pc := e.pc + e.immB }
-  def BLTU = (e: ExecEnv) => when(e.src1 < e.src2) { e.pc := e.pc + e.immB }
-  def BGEU = (e: ExecEnv) => when(e.src1 >= e.src2) { e.pc := e.pc + e.immB }
+  def BEQ  = (e: ExecEnv) => when(e.src1 === e.src2) { e.pc := e.pc + e.imm }
+  def BNE  = (e: ExecEnv) => when(e.src1 =/= e.src2) { e.pc := e.pc + e.imm }
+  def BLT  = (e: ExecEnv) => when(e.src1.asSInt < e.src2.asSInt) { e.pc := e.pc + e.imm }
+  def BGE  = (e: ExecEnv) => when(e.src1.asSInt >= e.src2.asSInt) { e.pc := e.pc + e.imm }
+  def BLTU = (e: ExecEnv) => when(e.src1 < e.src2) { e.pc := e.pc + e.imm }
+  def BGEU = (e: ExecEnv) => when(e.src1 >= e.src2) { e.pc := e.pc + e.imm }
 
 }
 object LSUExec {
-  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
-  def LB  = (e: ExecEnv) => e.Rrd := (e.Mr(e.src1 + e.immI, 4).asUInt(8 - 1, 0).asSInt + 0.S(32.W)).asUInt
-  def LH  = (e: ExecEnv) => e.Rrd := (e.Mr(e.src1 + e.immI, 4).asUInt(16 - 1, 0).asSInt + 0.S(32.W)).asUInt
-  def LW  = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 4)
-  def LBU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 1)
-  def LHU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.immI, 2)
+  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.imm).asUInt
+  def LB  = (e: ExecEnv) => e.Rrd := (e.Mr(e.src1 + e.imm, 4).asUInt(8 - 1, 0).asSInt + 0.S(32.W)).asUInt
+  def LH  = (e: ExecEnv) => e.Rrd := (e.Mr(e.src1 + e.imm, 4).asUInt(16 - 1, 0).asSInt + 0.S(32.W)).asUInt
+  def LW  = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.imm, 4)
+  def LBU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.imm, 1)
+  def LHU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.imm, 2)
   def SB = (e: ExecEnv) => {
-    e.Mw(e.src1 + e.immS, 1, e.src2); /* printf("[SB]:ADDR=%x,src1=%x,immS=%x}\n",e.src1 + e.immS,e.src1 ,e.immS) */
+    e.Mw(e.src1 + e.imm, 1, e.src2); /* printf("[SB]:ADDR=%x,src1=%x,imm=%x}\n",e.src1 + e.imm,e.src1 ,e.imm) */
   }
-  def SH = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 2, e.src2)
-  def SW = (e: ExecEnv) => e.Mw(e.src1 + e.immS, 4, e.src2)
+  def SH = (e: ExecEnv) => e.Mw(e.src1 + e.imm, 2, e.src2)
+  def SW = (e: ExecEnv) => e.Mw(e.src1 + e.imm, 4, e.src2)
 
 }
 object ZicsrExec {
-  def CSRRW  = (e: ExecEnv) => { e.Rrd := e.CSR_READ(e.immI); e.CSR_WRITE(e.immI, e.src1) }
-  def CSRRS  = (e: ExecEnv) => { e.Rrd := e.CSR_READ(e.immI); e.CSR_WRITE(e.immI, e.CSR_READ(e.immI) | e.src1) }
+  def CSRRW  = (e: ExecEnv) => { e.Rrd := e.CSR_READ(e.imm); e.CSR_WRITE(e.imm, e.src1) }
+  def CSRRS  = (e: ExecEnv) => { e.Rrd := e.CSR_READ(e.imm); e.CSR_WRITE(e.imm, e.CSR_READ(e.imm) | e.src1) }
   def CSRRC  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
   def CSRRWI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
   def CSRRSI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
@@ -312,4 +312,5 @@ object Priviledged {
 object RVIInstr {
   val table =
     RV32I_ALUInstr.table ++ RV32I_BRUInstr.table ++ RV32I_LSUInstr.table ++ RVZicsrInstr.table ++ Priviledged.table
-}
+  val tabelWithIndex = table.zipWithIndex
+  }

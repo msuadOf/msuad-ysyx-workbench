@@ -91,11 +91,16 @@ object StageConnect {
 
 }
 
-// TODO: 将他抽象成 abstract class
 abstract class Stage[+A <: BundlePlus, +B <: BundlePlus](_in: A, _out: B) {
   val in  = Wire(Flipped(Handshake(_in)))
   val out = Wire(Handshake(_out))
 
+  def ALL_IOinit(): Unit = {
+    in.ALL_IOinit()
+    out.ALL_IOinit()
+  }
+  
+//内部和valid ready逻辑
   val self_valid = Wire(Bool())
   val self_ready = Wire(Bool())
   self_valid := 0.B
@@ -121,13 +126,8 @@ abstract class Stage[+A <: BundlePlus, +B <: BundlePlus](_in: A, _out: B) {
     left.ready  := right.ready || self_ready
   }
 
-  def ALL_IOinit(): Unit = {
-    in.ALL_IOinit()
-    out.ALL_IOinit()
-  }
-
   def build(): Unit = {
-    this.build_validready() //初步逻辑
+    //this.build_validready() //初步逻辑
     //。。。请继续
   }
 }
@@ -155,14 +155,12 @@ class PiplineStage[+A <: BundlePlus, +B <: BundlePlus](_in: A, _out: B) extends 
 }
 class PiplineStageWithoutDepth[+A <: BundlePlus, +B <: BundlePlus](_in: A, _out: B) extends Stage[A, B](_in, _out) {
   override def build(): Unit = {
-    super.build()
+    //super.build()
     /*
     @member :
     val in   = Handshake(_in)
     val out  = Handshake(_out)
      */
-    in.ready  := out.ready
-    out.valid := in.valid
 
     //(IFStage.out.bits =>> IDStage.in.bits).enable(true.B)
     //val ID_busy = RegInit(0.B)
