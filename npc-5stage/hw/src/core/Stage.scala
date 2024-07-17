@@ -21,11 +21,11 @@ class HandshakeIO[+T <: BundlePlus](gen: T) extends BundlePlus with StageBeatsIm
     * @group Signals
     */
   val bits = (gen)
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
     this.valid := value
     this.bits.IOinit(value)
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
 
     this.ready := value
     this.bits.Flipped_IOinit(value)

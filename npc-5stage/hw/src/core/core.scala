@@ -13,10 +13,10 @@ class CoreIO extends BundlePlus with StageBeatsImpl {
   val ifu = Output(Handshake(new IF2IDBundle))
   val idu = Output(Handshake(new IF2IDBundle))
 
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
     // idu.IOinit(value)
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {}
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {}
 }
 
 class Core extends Module {
@@ -39,6 +39,7 @@ class Core extends Module {
   val IO2IF = new IFUIO
   val IF2ID = new IF2IDBundle
   val ID2EX = new ID2EXBundle
+  
   // val IFStage = new PiplineStageWithoutDepth(new BundlePlusImpl {}, IF2ID)
   val IFStage = new InstFetchStage(IO2IF, IF2ID)
   val IDStage = new PiplineStageWithoutDepth(IF2ID, ID2EX)
@@ -47,6 +48,20 @@ class Core extends Module {
   IDStage.ALL_IOinit()
   EXStage.ALL_IOinit()
 
+// IDStage.out.getElements.foreach(x => println(chiselTypeOf(x)== x ))
+// IDStage.out.getElements.foreach(x => println(chisel3.reflect.DataMirror.checkTypeEquivalence(x,Bits()  ) ))
+// IDStage.out.getElements.foreach(x => println(chisel3.reflect.DataMirror.directionOf(x)== ActualDirection.Output))
+
+IDStage.out.getElements.foreach(x => x match {
+  case b:chisel3.Bits => if(chisel3.reflect.DataMirror.directionOf(b) == ActualDirection.Output) b:=0.U
+  case e:BundlePlus => if(chisel3.reflect.DataMirror.directionOf(e) == ActualDirection.Output) e.IOinit(0.U)
+  case _ => println("Unknown")
+})
+/* IDStage.out.getElements.foreach(x => chisel3.reflect.DataMirror.directionOf(x) match {
+  case ActualDirection.Output => x.IOinit(0.U) ;println("Output")
+  case ActualDirection.Input => println("Input")
+  case _ => println("Unknown")
+}) */
   //  IFStage.out.bits .=>>(true.B)( IDStage.in.bits )
 
   IFStage.build()

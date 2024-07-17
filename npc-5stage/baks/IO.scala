@@ -34,7 +34,7 @@ class MemIO extends Bundle with WithIOInit {
   val rEvent = Output(UInt(1.W))
   val wEvent = Output(UInt(1.W))
 
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
     this.rAddr  := value
     this.wAddr  := value
     this.wData  := value //FFFF FFFF
@@ -49,7 +49,7 @@ class MemIO extends Bundle with WithIOInit {
     rStrb       := value
     wStrb       := value
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
     rData  := value
     rValid := value
     wReady := value
@@ -62,11 +62,11 @@ class InstIO extends Bundle with WithIOInit {
   val rData  = Input(UInt(32.W))
   val rValid = Input(UInt(1.W))
   val Ien    = Output(Bool())
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
     rAddr := value
     Ien   := value
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
     rData  := value
     rValid := value
   }
@@ -81,14 +81,14 @@ trait AXI_WithValidReady {
   }
 }
 trait WithIOInit {
-  def IOinit[T <: Data](value: T): Unit
+  def IOIIInit[T <: Data](value: T): Unit
   def IOinit(): Unit = {
     this.IOinit(0.U)
   }
   def IODontCare(): Unit = {
     this.IOinit(DontCare)
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit
+  def Flipped_IOIIInit[T <: Data](value: T)T)T)T)T)T)T): Unit
   def Flipped_IOinit(): Unit = {
     Flipped_IOinit(0.U)
   }
@@ -106,10 +106,10 @@ class mmioAR extends Bundle with WithIOInit with AXI_WithValidReady {
   val Valid = Input(UInt(1.W))
   val Ready = Output(UInt(1.W))
 
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
     Ready := value
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
     Addr  := value
     Width := value
     Valid := value
@@ -120,11 +120,11 @@ class mmioR extends Bundle with WithIOInit with AXI_WithValidReady {
   val Valid = Output(UInt(1.W))
   val Ready = Input(UInt(1.W))
 
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
     Data  := value
     Valid := value
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
     Ready := value
   }
 }
@@ -133,11 +133,11 @@ class mmioAW extends Bundle with WithIOInit with AXI_WithValidReady {
   val Port  = Input(UInt(2.W))
   val Valid = Input(UInt(1.W))
   val Ready = Output(UInt(1.W))
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
 
     Ready := value
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
 
     Addr  := value
     Port  := value
@@ -149,10 +149,10 @@ class mmioW extends Bundle with WithIOInit with AXI_WithValidReady {
   val Strb  = Input(UInt((32 / 8).W))
   val Valid = Input(UInt(1.W))
   val Ready = Output(UInt(1.W))
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unititit = {
     Ready := value
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
     Data  := value
     Strb  := value
     Valid := value
@@ -162,22 +162,22 @@ class mmioB extends Bundle with WithIOInit with AXI_WithValidReady {
   val Resp  = Output(UInt(32.W))
   val Valid = Output(UInt(1.W))
   val Ready = Input(UInt(1.W))
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
     Resp  := value
     Valid := value
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
     Ready := value
   }
 }
 class Mr_mmioIO extends Bundle with WithIOInit {
   val AR = new mmioAR
   val R  = new mmioR
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
     R.IOinit(value)
     AR.IOinit(value)
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
     R.Flipped_IOinit(value)
     AR.Flipped_IOinit(value)
   }
@@ -187,12 +187,12 @@ class Mw_mmioIO extends Bundle with WithIOInit {
   val AW = new mmioAW
   val W  = new mmioW
   val B  = new mmioB
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
     AW.IOinit(value)
     W.IOinit(value)
     B.IOinit(value)
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
     AW.Flipped_IOinit(value)
     W.Flipped_IOinit(value)
     B.Flipped_IOinit(value)
@@ -213,14 +213,14 @@ class AXIIO(datawidth: Int = 32) extends Bundle with WithIOInit {
   def read_eop()      = R.fire().asBool
   def write_eop()     = B.fire().asBool
   def rw_eop()        = read_eop() || write_eop()
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
     R.Flipped_IOinit(value)
     AR.Flipped_IOinit(value)
     AW.Flipped_IOinit(value)
     W.Flipped_IOinit(value)
     B.Flipped_IOinit(value)
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
     R.IOinit(value)
     AR.IOinit(value)
     AW.IOinit(value)
@@ -244,10 +244,10 @@ class SUCtrl_IO extends Bundle with WithIOInit {
   val wStrb = Input(UInt(4.W))
   val wEop  = Output(UInt(1.W))
 
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
     wEop := value
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
     wEn   := value
     wAddr := value
     wData := value
@@ -260,13 +260,13 @@ class LUCtrl_IO extends Bundle with WithIOInit {
   val rStrb  = Input(UInt(4.W))
   val rValid = Output(UInt(1.W))
   val rEop   = Output(UInt(1.W))
-  def IOinit[T <: Data](value: T): Unit = {
+  def IOIIInit[T <: Data](value: T): Unit = {
     rData  := value
     rValid := value
     rEop   := value
 
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {
+  def Flipped_IOIIInit[T <: Data](value: T): Unit = {
     rEn   := value
     rAddr := value
   }
