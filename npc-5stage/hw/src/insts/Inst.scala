@@ -4,94 +4,94 @@ import chisel3.util._
 
 import core.ExecEnv
 object Inst {
-  def N = "b0000".U
-  def I = "b0100".U
-  def R = "b0101".U
-  def S = "b0010".U
-  def B = "b0001".U
-  def U = "b0110".U
-  def J = "b0111".U
+  val N = "b0000"
+  val I = "b0100"
+  val R = "b0101"
+  val S = "b0010"
+  val B = "b0001"
+  val U = "b0110"
+  val J = "b0111"
 }
 
 object FuType {
   def num     = 5
-  def alu     = "b000".U
-  def lsu     = "b001".U
-  def mdu     = "b010".U
-  def csr     = "b011".U
-  def mou     = "b100".U
-  def bru     = "b101".U
+  def alu     = "b000"
+  def lsu     = "b001"
+  def mdu     = "b010"
+  def csr     = "b011"
+  def mou     = "b100"
+  def bru     = "b101"
   def apply() = UInt(log2Up(num).W)
 }
 
 object ALUOpType {
-  def add  = "b1000000".U
-  def sll  = "b0000001".U
-  def slt  = "b0000010".U
-  def sltu = "b0000011".U
-  def xor  = "b0000100".U
-  def srl  = "b0000101".U
-  def or   = "b0000110".U
-  def and  = "b0000111".U
-  def sub  = "b0001000".U
-  def sra  = "b0001101".U
+  def add  = "b1000000"
+  def sll  = "b0000001"
+  def slt  = "b0000010"
+  def sltu = "b0000011"
+  def xor  = "b0000100"
+  def srl  = "b0000101"
+  def or   = "b0000110"
+  def and  = "b0000111"
+  def sub  = "b0001000"
+  def sra  = "b0001101"
 
-  def addw = "b1100000".U
-  def subw = "b0101000".U
-  def sllw = "b0100001".U
-  def srlw = "b0100101".U
-  def sraw = "b0101101".U
+  def addw = "b1100000"
+  def subw = "b0101000"
+  def sllw = "b0100001"
+  def srlw = "b0100101"
+  def sraw = "b0101101"
 
-  def jal  = "b1011000".U
-  def jalr = "b1011010".U
-  def beq  = "b0010000".U
-  def bne  = "b0010001".U
-  def blt  = "b0010100".U
-  def bge  = "b0010101".U
-  def bltu = "b0010110".U
-  def bgeu = "b0010111".U
+  def jal  = "b1011000"
+  def jalr = "b1011010"
+  def beq  = "b0010000"
+  def bne  = "b0010001"
+  def blt  = "b0010100"
+  def bge  = "b0010101"
+  def bltu = "b0010110"
+  def bgeu = "b0010111"
 
 }
 object LSUOpType { //TODO: refactor LSU fuop
-  def lb  = "b0000000".U
-  def lh  = "b0000001".U
-  def lw  = "b0000010".U
-  def ld  = "b0000011".U
-  def lbu = "b0000100".U
-  def lhu = "b0000101".U
-  def lwu = "b0000110".U
-  def sb  = "b0001000".U
-  def sh  = "b0001001".U
-  def sw  = "b0001010".U
-  def sd  = "b0001011".U
+  def lb  = "b0000000"
+  def lh  = "b0000001"
+  def lw  = "b0000010"
+  def ld  = "b0000011"
+  def lbu = "b0000100"
+  def lhu = "b0000101"
+  def lwu = "b0000110"
+  def sb  = "b0001000"
+  def sh  = "b0001001"
+  def sw  = "b0001010"
+  def sd  = "b0001011"
 
-  def lr      = "b0100000".U
-  def sc      = "b0100001".U
-  def amoswap = "b0100010".U
-  def amoadd  = "b1100011".U
-  def amoxor  = "b0100100".U
-  def amoand  = "b0100101".U
-  def amoor   = "b0100110".U
-  def amomin  = "b0110111".U
-  def amomax  = "b0110000".U
-  def amominu = "b0110001".U
-  def amomaxu = "b0110010".U
+  def lr      = "b0100000"
+  def sc      = "b0100001"
+  def amoswap = "b0100010"
+  def amoadd  = "b1100011"
+  def amoxor  = "b0100100"
+  def amoand  = "b0100101"
+  def amoor   = "b0100110"
+  def amomin  = "b0110111"
+  def amomax  = "b0110000"
+  def amominu = "b0110001"
+  def amomaxu = "b0110010"
 
 }
 
 object CSROpType {
-  def jmp  = "b000".U
-  def wrt  = "b001".U
-  def set  = "b010".U
-  def clr  = "b011".U
-  def wrti = "b101".U
-  def seti = "b110".U
-  def clri = "b111".U
+  def jmp  = "b000"
+  def wrt  = "b001"
+  def set  = "b010"
+  def clr  = "b011"
+  def wrti = "b101"
+  def seti = "b110"
+  def clri = "b111"
 }
 object MOUOpType {
-  def fence      = "b00".U
-  def fencei     = "b01".U
-  def sfence_vma = "b10".U
+  def fence      = "b00"
+  def fencei     = "b01"
+  def sfence_vma = "b10"
 }
 object ALUExec {
   //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.immI).asUInt
@@ -312,4 +312,5 @@ object Priviledged {
 object RVIInstr {
   val table =
     RV32I_ALUInstr.table ++ RV32I_BRUInstr.table ++ RV32I_LSUInstr.table ++ RVZicsrInstr.table ++ Priviledged.table
-}
+  val tabelWithIndex = table.zipWithIndex.map { case (x, i) => (x, i.asUInt) }
+  }

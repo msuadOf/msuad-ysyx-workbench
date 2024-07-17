@@ -10,8 +10,12 @@ import insts._
 import insts.Inst
 import chisel3.internal.throwException
 
-class InstDecodeStage(_in: IF2IDBundle, _out: BundlePlus) extends PiplineStageWithoutDepth(_in, _out){
-  
+class InstDecodeStage(_in: IF2IDBundle, _out: ID2EXBundle) extends PiplineStageWithoutDepth(_in, _out) {
+  val regfile=new RegFile("RISCV32")
+  override def build(): Unit = {
+    super.build()
+    Decode(this,regfile)
+  }
 }
 
 class Decoder(val inst: UInt, val pc: UInt, R: RegFile) {
@@ -36,6 +40,27 @@ class Decoder(val inst: UInt, val pc: UInt, R: RegFile) {
     32.W
   )).asUInt //*imm = SEXT((   (inst( 31, 31) << 12) | BITS(i, 30, 25)<<5 | (BITS(i, 11, 8) << 1) | (BITS(i, 7, 7) << 11) ) , 13);
 
+  val instType=0.U
+  val imm = 0.U
+  RVIInstr.tabelWithIndex.foreach((t) => {
+    val (elem,inst_index)=t
+    val (bitpat -> (instType_onTable::fuType_onTable::fuOp_onTable::Nil) -> exec )=elem
+
+    when(bitpat === inst) {
+      instType := instType_onTable.U
+      imm := (instType_onTable match {
+        case Inst.I => immI
+        case Inst.S => immS
+        case Inst.B => immB
+        case Inst.U => immU
+        case Inst.J => immJ
+        case _      => throw new IllegalArgumentException("Unkown Inst type not supported(Let us see see where goes wrong ~)")
+      })
+    }
+
+  })
+
+
 }
 object Decoder {
   def apply(inst: UInt, pc: UInt, R: RegFile): Decoder = {
@@ -54,11 +79,8 @@ object Decode {
     IDStage_out.bits.rd   := decoder.rd
     IDStage_out.bits.src1 := decoder.src1
     IDStage_out.bits.src2 := decoder.src2
-    IDStage_out.bits.immI := decoder.immI
-    IDStage_out.bits.immS := decoder.immS
-    IDStage_out.bits.immB := decoder.immB
-    IDStage_out.bits.immU := decoder.immU
-    IDStage_out.bits.immJ := decoder.immJ
+    IDStage_out.bits.imm := decoder.imm
+
 
   }
 }

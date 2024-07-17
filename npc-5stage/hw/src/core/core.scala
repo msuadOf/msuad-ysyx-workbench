@@ -42,7 +42,7 @@ class Core extends Module {
   val IF2ID   = new IF2IDBundle
   // val IFStage = new PiplineStageWithoutDepth(new BundlePlusImpl {}, IF2ID)
   val IFStage=new InstFetchStage(IO2IF,IF2ID)
-  val IDStage = new InstDecodeStage(IF2ID, new BundlePlusImpl {})
+  val IDStage = new InstDecodeStage(IF2ID, new ID2EXBundle )
   IFStage.ALL_IOinit()
   IDStage.ALL_IOinit()
 

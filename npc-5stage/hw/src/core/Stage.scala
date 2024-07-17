@@ -155,14 +155,12 @@ class PiplineStage[+A <: BundlePlus, +B <: BundlePlus](_in: A, _out: B) extends 
 }
 class PiplineStageWithoutDepth[+A <: BundlePlus, +B <: BundlePlus](_in: A, _out: B) extends Stage[A, B](_in, _out) {
   override def build(): Unit = {
-    super.build()
+    //super.build()
     /*
     @member :
     val in   = Handshake(_in)
     val out  = Handshake(_out)
      */
-    in.ready  := out.ready
-    out.valid := in.valid
 
     //(IFStage.out.bits =>> IDStage.in.bits).enable(true.B)
     //val ID_busy = RegInit(0.B)
