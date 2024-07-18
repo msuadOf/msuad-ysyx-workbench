@@ -17,12 +17,12 @@ class WriteBackStage(_in: EX2WBBundle, regfile: RegFile, pc: PC, diff: diffIO) e
     pc.write(in.fire && in.bits.dnpcEn, in.bits.dnpc)
 
     if (diff != null) {
-      when(RegNext(in.fire,0.B)) {
         diff.regs    <> regfile.reg
         diff.pc      := in.bits.pc
         diff.dnpc    := in.bits.dnpc
-        diff.diff_en := 1.U
-      }
+      
+        diff.diff_en := RegNext(in.fire,0.B)
+      
     }
   }
 }
