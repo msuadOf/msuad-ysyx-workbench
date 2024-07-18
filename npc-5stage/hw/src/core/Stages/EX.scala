@@ -9,6 +9,7 @@ import insts.RVIInstr
 class ExecStage(_in: ID2EXBundle, _out: EX2WBBundle) extends PiplineStageWithoutDepth(_in, _out) {
 
   override def build(): Unit = {
+    super.build()
     val env = ExecEnv(in.bits, out.bits)
 
     RVIInstr.tabelWithIndex.foreach((t) => {
