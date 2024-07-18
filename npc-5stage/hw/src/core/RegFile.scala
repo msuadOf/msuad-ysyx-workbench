@@ -2,6 +2,25 @@ package core
 import chisel3._
 import chisel3.util._
 
+class PC(init: UInt) {
+  val pc_en = Wire(Bool())
+  val dnpc  = Wire(UInt(32.W))
+  val pc    = RegEnable(dnpc, "h80000000".U(32.W), 1.B)
+  val snpc  = pc + 4.U
+  dnpc  := snpc
+  pc_en := 0.B
+  def init(): Unit = {
+    /*     dnpc := snpc
+    pc_en:=0.B */
+  }
+  def read = pc
+//   def write(idx:UInt,data:UInt) = Mux( (idx===0.U) , reg(32) ,reg(idx) ) :=data
+  def write(data: UInt) = dnpc := data
+  def write(enable: Bool, data: UInt) = {
+    pc_en := enable
+    dnpc  := Mux(enable, data, snpc)
+  }
+}
 class RegFile(val ISet: String) {
   val regNum = ISet match {
     case "RISCV32E" => 16
@@ -14,12 +33,15 @@ class RegFile(val ISet: String) {
   }
   val reg = RegInit(VecInit(Seq.tabulate(regNum)(i => 0.U(32.W))))
 
-  def read(idx: UInt) = reg(idx)
+  def read(idx: UInt) = Mux((idx === 0.U), 0.U, reg(idx))
 
 //   def write(idx:UInt,data:UInt) = Mux( (idx===0.U) , reg(32) ,reg(idx) ) :=data
   def write(idx: UInt, data: UInt) = reg(idx) := Mux((idx === 0.U), 0.U, data)
+  def write(enable: Bool, idx: UInt, data: UInt) = {
+    reg(idx) := Mux((idx === 0.U), 0.U, Mux(enable, data, reg(idx)))
+  }
 
-  def apply(idx: UInt): UInt = {
-    return Mux(idx === 0.U, RegEnable(0.U, 0.B), reg(idx))
+  private def apply(idx: UInt): UInt = {
+    return Mux(idx === 0.U, RegEnable(0.U, 0.B), reg(idx)) //FIXME: 这啥逻辑？？应该是错的
   }
 }

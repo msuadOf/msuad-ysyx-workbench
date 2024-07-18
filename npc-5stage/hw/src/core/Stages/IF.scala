@@ -7,19 +7,17 @@ import core.utils._
 import core._
 import chisel3.util.experimental.BoringUtils
 
-
 class InstFetchStage(_in: IFUIO, _out: IF2IDBundle) extends Stage(_in, _out) {
-  val pc = RegInit("h80000000".U(32.W))
+  val pc = new PC("h80000000".U(32.W))
   override def build(): Unit = {
     super.build()
+    pc.init()
     val if_dpic = Module(new IF_DPIC)
-    //TODO: this.in的IOinit
-
-    out.bits.inst := if_dpic.io.inst
-    out.bits.pc   := pc
-    out.valid := if_dpic.io.inst_en
-    if_dpic.io.pc_en:= 1.U
-    if_dpic.io.pc:=pc
+    out.bits.inst    := if_dpic.io.inst
+    out.bits.pc      := pc.read
+    out.valid        := if_dpic.io.inst_en
+    if_dpic.io.pc_en := 1.U
+    if_dpic.io.pc    := pc.read
   }
 }
 class IF_DPIC extends BlackBox with HasBlackBoxInline {

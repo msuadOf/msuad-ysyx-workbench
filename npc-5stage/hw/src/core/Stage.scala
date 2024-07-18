@@ -99,7 +99,7 @@ abstract class Stage[+A <: BundlePlus, +B <: BundlePlus](_in: A, _out: B) {
     in.ALL_IOinit()
     out.ALL_IOinit()
   }
-  
+
 //内部和valid ready逻辑
   val self_valid = Wire(Bool())
   val self_ready = Wire(Bool())
@@ -140,22 +140,17 @@ class PiplineStage[+A <: BundlePlus, +B <: BundlePlus](_in: A, _out: B) extends 
     Busy := busyOrNot
   }
   override def build(): Unit = {
-    super.build()
-    // TODO: To Be validate... 有待验证逻辑的正确性。。
-    // FIXME: in.ready  out.valid 组合逻辑形成了回环。。。肯定有问题
-    /*
-        Busy  in.ready  out.valid
-        =========================
-        0     1          in.fire
-        1     out.fire   1
-     */
-    in.ready  := out.fire || !getBusy()
-    out.valid := in.fire || getBusy()
+    this.build_validready()
   }
 }
 class PiplineStageWithoutDepth[+A <: BundlePlus, +B <: BundlePlus](_in: A, _out: B) extends Stage[A, B](_in, _out) {
+  override def build_validready(): Unit = {
+    out.valid := in.fire
+    in.ready  := out.ready
+  }
   override def build(): Unit = {
-    //super.build()
+    this.build_validready()
+
     /*
     @member :
     val in   = Handshake(_in)

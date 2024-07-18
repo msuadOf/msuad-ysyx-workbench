@@ -67,7 +67,7 @@ class ID2EXBundle extends BundlePlus {
 
     val this_wirelist = this.toList
     val that_wirelist = that_.toList
-    (this_wirelist zip that_wirelist ).foreach {
+    (this_wirelist.zip(that_wirelist)).foreach {
       case (thiswire, thatwire) => {
         thatwire := RegEnable(thiswire, 0.U, enable)
       }
@@ -75,11 +75,14 @@ class ID2EXBundle extends BundlePlus {
   }
 }
 class EX2WBBundle extends BundlePlus {
-  val pc  = Output(UInt(32.W))
-  val rd  = Output(UInt(5.W))
-  val Rrd = Output(UInt(32.W))
+  val pc   = Output(UInt(32.W))
+  val dnpc   = Output(UInt(32.W))
+  val dnpcEn = Output(Bool())
+  val rd     = Output(UInt(5.W))
+  val Rrd    = Output(UInt(32.W))
+  val RrdEn  = Output(Bool())
+  val ebreak  = Output(Bool())
   def IOIIInit[T <: Data](value: T): Unit = {
-    pc  := value
     rd  := value
     Rrd := value
   }

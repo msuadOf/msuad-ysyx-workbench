@@ -6,12 +6,33 @@ import core.Stages._
 
 class IFUIO extends BundlePlusImpl {}
 class LSUIO extends BundlePlusImpl {}
-class CoreIO extends BundlePlus with StageBeatsImpl {
-  val LSUIO = new LSUIO
-  val IFUIO = new IFUIO
+class MonitorIO extends BundlePlus {
+  val if2id_if = Output(Handshake(new IF2IDBundle))
+  val if2id_id = Output(Handshake(new IF2IDBundle))
+  val id2ex_id = Output(Handshake(new ID2EXBundle))
+  val id2ex_ex = Output(Handshake(new ID2EXBundle))
+  val ex2wb_ex = Output(Handshake(new EX2WBBundle))
+  val ex2wb_wb = Output(Handshake(new EX2WBBundle))
 
-  val ifu = Output(Handshake(new IF2IDBundle))
-  val idu = Output(Handshake(new IF2IDBundle))
+  def connectStageIO(s: InstFetchStage): Unit = {
+    s.out <> if2id_if
+  }
+  def connectStageIO(s: InstDecodeStage): Unit = {
+    s.in <> if2id_id
+    s.out <> id2ex_id
+  }
+  def connectStageIO(s: ExecStage): Unit = {
+    s.in <> id2ex_ex
+    s.out <> ex2wb_ex
+  }
+  def connectStageIO(s: WriteBackStage): Unit = {
+    s.in <> ex2wb_wb
+  }
+}
+class CoreIO extends BundlePlus with StageBeatsImpl {
+  val LSUIO   = new LSUIO
+  val IFUIO   = new IFUIO
+  val monitor = new MonitorIO
 
   def IOIIInit[T <: Data](value: T): Unit = {
     // idu.IOinit(value)
@@ -39,39 +60,34 @@ class Core extends Module {
   val IO2IF = new IFUIO
   val IF2ID = new IF2IDBundle
   val ID2EX = new ID2EXBundle
-  
+  val EX2WB = new EX2WBBundle
+
   // val IFStage = new PiplineStageWithoutDepth(new BundlePlusImpl {}, IF2ID)
   val IFStage = new InstFetchStage(IO2IF, IF2ID)
-  val IDStage = new PiplineStageWithoutDepth(IF2ID, ID2EX)
-  val EXStage = new PiplineStageWithoutDepth(ID2EX, new EX2WBBundle)
+  val IDStage = new InstDecodeStage(IF2ID, ID2EX)
+  val EXStage = new ExecStage(ID2EX, EX2WB)
+  val WBStage = new WriteBackStage(EX2WB, IDStage.regfile, IFStage.pc)
   IFStage.ALL_IOinit()
   IDStage.ALL_IOinit()
   EXStage.ALL_IOinit()
+  WBStage.ALL_IOinit()
 
-// IDStage.out.getElements.foreach(x => println(chiselTypeOf(x)== x ))
-// IDStage.out.getElements.foreach(x => println(chisel3.reflect.DataMirror.checkTypeEquivalence(x,Bits()  ) ))
-// IDStage.out.getElements.foreach(x => println(chisel3.reflect.DataMirror.directionOf(x)== ActualDirection.Output))
-
-IDStage.out.getElements.foreach(x => x match {
-  case b:chisel3.Bits => if(chisel3.reflect.DataMirror.directionOf(b) == ActualDirection.Output) b:=0.U
-  case e:BundlePlus => if(chisel3.reflect.DataMirror.directionOf(e) == ActualDirection.Output) e.IOinit(0.U)
-  case _ => println("Unknown")
-})
-/* IDStage.out.getElements.foreach(x => chisel3.reflect.DataMirror.directionOf(x) match {
-  case ActualDirection.Output => x.IOinit(0.U) ;println("Output")
-  case ActualDirection.Input => println("Input")
-  case _ => println("Unknown")
-}) */
   //  IFStage.out.bits .=>>(true.B)( IDStage.in.bits )
 
   IFStage.build()
   IDStage.build()
   EXStage.build()
-  StageConnect(withRegBeats = true)(IFStage, IDStage)
-  StageConnect(withRegBeats =  true)(IDStage, EXStage)
+  WBStage.build()
+  val isInsertReg = true
+  StageConnect(withRegBeats = isInsertReg)(IFStage, IDStage)
+  StageConnect(withRegBeats = isInsertReg)(IDStage, EXStage)
+  StageConnect(withRegBeats = isInsertReg)(EXStage, WBStage)
 
-  io.idu <> IDStage.in
-  io.ifu <> IFStage.out
+  io.monitor.connectStageIO(IFStage)
+  io.monitor.connectStageIO(IDStage)
+  io.monitor.connectStageIO(EXStage)
+  io.monitor.connectStageIO(WBStage)
+
   // StageConnect(IFStage, IDStage)
   // StageConnect(IDStage, EXStage)
   // StageConnect(withRegBeats=false)(EXStage, WBStage)

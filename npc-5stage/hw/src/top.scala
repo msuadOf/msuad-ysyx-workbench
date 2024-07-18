@@ -6,7 +6,7 @@ import chisel3.experimental.prefix
 
 import core._
 
-class diffIO extends Bundle with core.utils.WithIOInit with core.utils.OverrideIOinit{
+class diffIO extends Bundle with core.utils.WithIOInit with core.utils.OverrideIOinit {
   val diff_en  = Output(UInt(1.W))
   val DMemInst = Output(UInt(1.W))
   val pc       = Output(UInt(32.W))
@@ -19,16 +19,16 @@ class diffIO extends Bundle with core.utils.WithIOInit with core.utils.OverrideI
   val mtvec    = Output(UInt(32.W))
 
   override def IOinit[T <: Data](value: T): Unit = {
-    diff_en  := value
-    DMemInst := value
-    pc       := value
-    dnpc     := value
-    snpc     := value
-    regs.foreach(_:=0.U)
-    mepc     := value
-    mcause   := value
-    mstatus  := value
-    mtvec    := value
+    diff_en        := value
+    DMemInst       := value
+    pc             := value
+    dnpc           := value
+    snpc           := value
+    regs.foreach(_ := 0.U)
+    mepc           := value
+    mcause         := value
+    mstatus        := value
+    mtvec          := value
   }
   override def Flipped_IOinit[T <: Data](value: T): Unit = {}
 }

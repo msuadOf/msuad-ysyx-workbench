@@ -7,39 +7,39 @@ import core._
 import insts.RVIInstr
 
 class ExecStage(_in: ID2EXBundle, _out: EX2WBBundle) extends PiplineStageWithoutDepth(_in, _out) {
-  private def getExecEnv() = {
-    val env = new ExecEnv
-    env.src1    := in.bits.src1
-    env.src2    := in.bits.src2
-    env.pc      := in.bits.pc
-    env.rd      := in.bits.rd
-    env.inst_id := in.bits.inst_id
-    env.imm     := in.bits.imm
-    env
-  }
+
   override def build(): Unit = {
-    val env = getExecEnv()
+    super.build()
+    val env = ExecEnv(in.bits, out.bits)
 
     RVIInstr.tabelWithIndex.foreach((t) => {
       val (elem, inst_index)                                                              = t
       val (bitpat -> (instType_onTable :: fuType_onTable :: fuOp_onTable :: Nil) -> exec) = elem
       when(inst_index.U === env.inst_id) {
         exec(env)
-        printf(s"$bitpat")
       }
     })
-
+    out.bits.pc:=in.bits.pc
   }
 }
 
-class ExecEnv extends Bundle {
-  val src1    = UInt(32.W)
-  val src2    = UInt(32.W)
-  val pc      = UInt(32.W)
-  val rd      = UInt(5.W)
-  val Rrd     = UInt(32.W)
-  val inst_id = UInt()
-  val imm     = UInt()
+case class ExecEnv(in: ID2EXBundle, out: EX2WBBundle) extends Bundle {
+  val src1    = in.src1
+  val src2    = in.src2
+  val pc      = in.pc
+  val rd      = in.rd
+  val inst_id = in.inst_id
+  val imm     = in.imm
+  val dnpc    = out.dnpc
+  val Rrd     = out.Rrd
+  val RrdEn   = out.RrdEn
+  val dnpcEn  = out.dnpcEn
+  val ebreak  = out.ebreak
+  def REG_WRITE(reg: UInt, data: UInt): Unit = {
+    Rrd   := data
+    RrdEn := true.B
+  }
+  def REG_READ(reg: UInt) = 0.U
 
   def Mr(addr: UInt, width: Int) = 0.U
   def Mw(addr: UInt, width: Int, data: UInt): Unit = {}
@@ -48,4 +48,5 @@ class ExecEnv extends Bundle {
   def mret_impl(): Unit = {}
   def CSR_READ(idx: UInt) = 0.U
   def CSR_WRITE(idx: UInt, data: UInt): Unit = {}
+  def EBREAK(): Unit = ebreak := 1.B
 }
