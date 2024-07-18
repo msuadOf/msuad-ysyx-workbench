@@ -6,7 +6,7 @@ import chisel3.experimental.prefix
 
 import core._
 
-class diffIO extends Bundle with core.utils.WithIOInit {
+class diffIO extends Bundle with core.utils.WithIOInit with core.utils.OverrideIOinit {
   val diff_en  = Output(UInt(1.W))
   val DMemInst = Output(UInt(1.W))
   val pc       = Output(UInt(32.W))
@@ -18,19 +18,19 @@ class diffIO extends Bundle with core.utils.WithIOInit {
   val mstatus  = Output(UInt(32.W))
   val mtvec    = Output(UInt(32.W))
 
-  def IOinit[T <: Data](value: T): Unit = {
-    diff_en  := value
-    DMemInst := value
-    pc       := value
-    dnpc     := value
-    snpc     := value
-    regs.foreach(_:=0.U)
-    mepc     := value
-    mcause   := value
-    mstatus  := value
-    mtvec    := value
+  override def IOinit[T <: Data](value: T): Unit = {
+    diff_en        := value
+    DMemInst       := value
+    pc             := value
+    dnpc           := value
+    snpc           := value
+    regs.foreach(_ := 0.U)
+    mepc           := value
+    mcause         := value
+    mstatus        := value
+    mtvec          := value
   }
-  def Flipped_IOinit[T <: Data](value: T): Unit = {}
+  override def Flipped_IOinit[T <: Data](value: T): Unit = {}
 }
 class top(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {

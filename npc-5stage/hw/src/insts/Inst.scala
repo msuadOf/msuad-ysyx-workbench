@@ -94,54 +94,54 @@ object MOUOpType {
   def sfence_vma = "b10"
 }
 object ALUExec {
-  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.imm).asUInt
+  //def ADDI = (e: ExecEnv) => e.REG_WRITE(e.Rrd , (e.src1.asSInt + e.imm).asUInt
   def ADDI = (e: ExecEnv) => {
-    e.Rrd := e.src1 + e.imm; printf("[ADDI]:ADDR=%x,src1=%x,imm=%x}\n", e.src1 + e.imm, e.src1, e.imm)
+    e.REG_WRITE(e.Rrd, e.src1 + e.imm); printf("[ADDI]:ADDR=%x,src1=%x,imm=%x}\n", e.src1 + e.imm, e.src1, e.imm)
   }
-  def SLLI  = (e: ExecEnv) => e.Rrd := e.src1 << e.imm(5, 0)
-  def SLTI  = (e: ExecEnv) => e.Rrd := e.src1.asSInt < e.imm.asSInt
-  def SLTIU = (e: ExecEnv) => e.Rrd := e.src1 < e.imm
-  def XORI  = (e: ExecEnv) => e.Rrd := e.src1 ^ e.imm
-  def SRLI  = (e: ExecEnv) => e.Rrd := e.src1 >> e.imm(5, 0)
-  def ORI   = (e: ExecEnv) => e.Rrd := e.src1 | e.imm
-  def ANDI  = (e: ExecEnv) => e.Rrd := e.src1 & e.imm
-  def SRAI  = (e: ExecEnv) => e.Rrd := (e.src1.asSInt >> e.imm(5, 0).asUInt).asUInt(31, 0)
+  def SLLI  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 << e.imm(5, 0))
+  def SLTI  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1.asSInt < e.imm.asSInt)
+  def SLTIU = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 < e.imm)
+  def XORI  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 ^ e.imm)
+  def SRLI  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 >> e.imm(5, 0))
+  def ORI   = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 | e.imm)
+  def ANDI  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 & e.imm)
+  def SRAI  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, (e.src1.asSInt >> e.imm(5, 0).asUInt).asUInt(31, 0))
 
-  def ADD  = (e: ExecEnv) => e.Rrd := e.src1 + e.src2
-  def SLL  = (e: ExecEnv) => e.Rrd := e.src1 << e.src2(4, 0)
-  def SLT  = (e: ExecEnv) => e.Rrd := e.src1.asSInt < e.src2.asSInt //.asUInt
-  def SLTU = (e: ExecEnv) => e.Rrd := e.src1 < e.src2
-  def XOR  = (e: ExecEnv) => e.Rrd := e.src1 ^ e.src2
-  def SRL  = (e: ExecEnv) => e.Rrd := e.src1 >> e.src2(4, 0)
-  def OR   = (e: ExecEnv) => e.Rrd := e.src1 | e.src2
-  def AND  = (e: ExecEnv) => e.Rrd := e.src1 & e.src2
-  def SUB  = (e: ExecEnv) => e.Rrd := e.src1 - e.src2
-  def SRA  = (e: ExecEnv) => e.Rrd := (e.src1.asSInt >> e.src2.asUInt(4, 0)).asUInt(31, 0)
+  def ADD  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 + e.src2)
+  def SLL  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 << e.src2(4, 0))
+  def SLT  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1.asSInt < e.src2.asSInt) //.asUInt
+  def SLTU = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 < e.src2)
+  def XOR  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 ^ e.src2)
+  def SRL  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 >> e.src2(4, 0))
+  def OR   = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 | e.src2)
+  def AND  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 & e.src2)
+  def SUB  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 - e.src2)
+  def SRA  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, (e.src1.asSInt >> e.src2.asUInt(4, 0)).asUInt(31, 0))
 
-  def AUIPC = (e: ExecEnv) => e.Rrd := e.pc + e.imm
-  def LUI   = (e: ExecEnv) => e.Rrd := e.imm
+  def AUIPC = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.pc + e.imm)
+  def LUI   = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.imm)
 }
 
 object BRUExec {
-  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.imm).asUInt
-  def JAL  = (e: ExecEnv) => { e.Rrd := e.pc + 4.U; e.pc := e.pc + e.imm; }
-  def JALR = (e: ExecEnv) => { e.pc := (e.src1 + e.imm) & (-1.S(32.W)).asUInt; e.Rrd := e.pc + 4.U }
+  //def ADDI = (e: ExecEnv) => e.REG_WRITE(e.Rrd , (e.src1.asSInt + e.imm).asUInt)
+  def JAL  = (e: ExecEnv) => { e.REG_WRITE(e.Rrd, e.pc + 4.U); e.REG_WRITE(e.dnpc, e.pc + e.imm); }
+  def JALR = (e: ExecEnv) => { e.REG_WRITE(e.dnpc, (e.src1 + e.imm) & (-1.S(32.W)).asUInt); e.REG_WRITE(e.Rrd, e.pc + 4.U) }
   //s->dnpc = (src1 + imm) & ~(word_t)1; R(rd)= s->pc + 4 );
-  def BEQ  = (e: ExecEnv) => when(e.src1 === e.src2) { e.pc := e.pc + e.imm }
-  def BNE  = (e: ExecEnv) => when(e.src1 =/= e.src2) { e.pc := e.pc + e.imm }
-  def BLT  = (e: ExecEnv) => when(e.src1.asSInt < e.src2.asSInt) { e.pc := e.pc + e.imm }
-  def BGE  = (e: ExecEnv) => when(e.src1.asSInt >= e.src2.asSInt) { e.pc := e.pc + e.imm }
-  def BLTU = (e: ExecEnv) => when(e.src1 < e.src2) { e.pc := e.pc + e.imm }
-  def BGEU = (e: ExecEnv) => when(e.src1 >= e.src2) { e.pc := e.pc + e.imm }
+  def BEQ  = (e: ExecEnv) => when(e.src1 === e.src2) { e.REG_WRITE(e.dnpc, e.pc + e.imm) }
+  def BNE  = (e: ExecEnv) => when(e.src1 =/= e.src2) { e.REG_WRITE(e.dnpc, e.pc + e.imm) }
+  def BLT  = (e: ExecEnv) => when(e.src1.asSInt < e.src2.asSInt) { e.REG_WRITE(e.dnpc, e.pc + e.imm) }
+  def BGE  = (e: ExecEnv) => when(e.src1.asSInt >= e.src2.asSInt) { e.REG_WRITE(e.dnpc, e.pc + e.imm) }
+  def BLTU = (e: ExecEnv) => when(e.src1 < e.src2) { e.REG_WRITE(e.dnpc, e.pc + e.imm) }
+  def BGEU = (e: ExecEnv) => when(e.src1 >= e.src2) { e.REG_WRITE(e.dnpc, e.pc + e.imm) }
 
 }
 object LSUExec {
-  //def ADDI = (e: ExecEnv) => e.Rrd := (e.src1.asSInt + e.imm).asUInt
-  def LB  = (e: ExecEnv) => e.Rrd := (e.Mr(e.src1 + e.imm, 4).asUInt(8 - 1, 0).asSInt + 0.S(32.W)).asUInt
-  def LH  = (e: ExecEnv) => e.Rrd := (e.Mr(e.src1 + e.imm, 4).asUInt(16 - 1, 0).asSInt + 0.S(32.W)).asUInt
-  def LW  = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.imm, 4)
-  def LBU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.imm, 1)
-  def LHU = (e: ExecEnv) => e.Rrd := e.Mr(e.src1 + e.imm, 2)
+  //def ADDI = (e: ExecEnv) => e.REG_WRITE(e.Rrd , (e.src1.asSInt + e.imm).asUInt) )
+  def LB  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, (e.Mr(e.src1 + e.imm, 4).asUInt(8 - 1, 0).asSInt + 0.S(32.W)).asUInt)
+  def LH  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, (e.Mr(e.src1 + e.imm, 4).asUInt(16 - 1, 0).asSInt + 0.S(32.W)).asUInt)
+  def LW  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.Mr(e.src1 + e.imm, 4))
+  def LBU = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.Mr(e.src1 + e.imm, 1))
+  def LHU = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.Mr(e.src1 + e.imm, 2))
   def SB = (e: ExecEnv) => {
     e.Mw(e.src1 + e.imm, 1, e.src2); /* printf("[SB]:ADDR=%x,src1=%x,imm=%x}\n",e.src1 + e.imm,e.src1 ,e.imm) */
   }
@@ -150,8 +150,8 @@ object LSUExec {
 
 }
 object ZicsrExec {
-  def CSRRW  = (e: ExecEnv) => { e.Rrd := e.CSR_READ(e.imm); e.CSR_WRITE(e.imm, e.src1) }
-  def CSRRS  = (e: ExecEnv) => { e.Rrd := e.CSR_READ(e.imm); e.CSR_WRITE(e.imm, e.CSR_READ(e.imm) | e.src1) }
+  def CSRRW  = (e: ExecEnv) => { e.REG_WRITE(e.Rrd, e.CSR_READ(e.imm)); e.CSR_WRITE(e.imm, e.src1) }
+  def CSRRS  = (e: ExecEnv) => { e.REG_WRITE(e.Rrd, e.CSR_READ(e.imm)); e.CSR_WRITE(e.imm, e.CSR_READ(e.imm) | e.src1) }
   def CSRRC  = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
   def CSRRWI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
   def CSRRSI = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
@@ -163,13 +163,13 @@ object PriviledgedExec {
   def SFANCE_VMA = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
 
   def ECALL = (e: ExecEnv) => {
-    e.csr.mcause := 0xb.U; e.csr.mepc := e.pc; e.pc := e.csr.mtvec.read();
+    e.csr.mcause := 0xb.U; e.csr.mepc := e.pc; e.REG_WRITE(e.dnpc, e.csr.mtvec.read());
     e.csr.mstatus := ((((e.csr.mstatus.read() & (~(1.U << 7))) | ((e.csr.mstatus
       .read() & (1.U << 3)) << 4)) & (~(1.U << 3)))) | ((1.U << 11) + (1.U << 12));
   }
-  def EBREAK = (e: ExecEnv) => e.pc := e.pc + 4.U //stop npc
+  def EBREAK = (e: ExecEnv) => e.REG_WRITE(e.dnpc, e.pc + 4.U) //stop npc
   def MRET = (e: ExecEnv) =>
-    e.mret_impl() //{e.pc := e.csr.mepc.read();    e.csr.mstatus.MPRV:= Mux(e.csr.mstatus.MPP =/= 3.U,0.U,e.csr.mstatus.MPRV) ;e.csr.mstatus.MIE:=e.csr.mstatus.MPIE;e.csr.mstatus.MPIE:=1.U;e.csr.mstatus.MPP:=0.U;}
+    e.mret_impl() //{e.REG_WRITE(e.dnpc , e.csr.mepc.read());    e.csr.mstatus.MPRV:= Mux(e.csr.mstatus.MPP =/= 3.U,0.U,e.csr.mstatus.MPRV) ;e.csr.mstatus.MIE:=e.csr.mstatus.MPIE;e.csr.mstatus.MPIE:=1.U;e.csr.mstatus.MPP:=0.U;}
   def FENCE = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
   def WFI   = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
 }
@@ -313,4 +313,4 @@ object RVIInstr {
   val table =
     RV32I_ALUInstr.table ++ RV32I_BRUInstr.table ++ RV32I_LSUInstr.table ++ RVZicsrInstr.table ++ Priviledged.table
   val tabelWithIndex = table.zipWithIndex
-  }
+}
