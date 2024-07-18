@@ -67,6 +67,7 @@ object Decode {
           case Inst.U => immU
           case Inst.J => immJ
           case Inst.R => 0.U
+          case Inst.N => 0.U
           case _      => throw new IllegalArgumentException(s"Unkown Inst type [$instType_onTable] not supported(Let us see see where goes wrong ~)")
         })
       }

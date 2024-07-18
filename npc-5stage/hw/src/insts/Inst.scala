@@ -96,7 +96,7 @@ object MOUOpType {
 object ALUExec {
   //def ADDI = (e: ExecEnv) => e.REG_WRITE(e.Rrd , (e.src1.asSInt + e.imm).asUInt
   def ADDI = (e: ExecEnv) => {
-    e.REG_WRITE(e.Rrd, e.src1 + e.imm); printf("[ADDI]:ADDR=%x,src1=%x,imm=%x}\n", e.src1 + e.imm, e.src1, e.imm)
+    e.REG_WRITE(e.Rrd, e.src1 + e.imm); printf("[ADDI]:ADDR=%x,src1=%x,imm=%x}\n", e.pc, e.src1, e.imm)
   }
   def SLLI  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1 << e.imm(5, 0))
   def SLTI  = (e: ExecEnv) => e.REG_WRITE(e.Rrd, e.src1.asSInt < e.imm.asSInt)
@@ -309,8 +309,17 @@ object Priviledged {
     // FENCE          -> List(InstrB, FuType.mou, MOUOpType.fencei) -> PriviledgedExec.FENCE
   ) //++ (if (!Settings.get("MmodeOnly")) table_s else Array.empty)
 }
+object RVNOP{
+  def NOP=BitPat("b000000000000_00000_000_00000_0000000")
+  object NOPExec{
+    def NOP=(e: ExecEnv) =>printf("[NOP]:ADDR=%x,src1=%x,src2=%x}\n", e.pc, e.src1, e.src2)
+  }
+  val table = Array(
+    NOP -> List(Inst.N, FuType.alu, ALUOpType.add) -> NOPExec.NOP
+  )
+}
 object RVIInstr {
   val table =
-    RV32I_ALUInstr.table ++ RV32I_BRUInstr.table ++ RV32I_LSUInstr.table ++ RVZicsrInstr.table ++ Priviledged.table
-  val tabelWithIndex = table.zipWithIndex.map{case(e,i)=>(e,i+1)}
+    RVNOP.table ++ RV32I_ALUInstr.table ++ RV32I_BRUInstr.table ++ RV32I_LSUInstr.table ++ RVZicsrInstr.table ++ Priviledged.table
+  val tabelWithIndex = table.zipWithIndex//.map{case(e,i)=>(e,i+1)}
 }
