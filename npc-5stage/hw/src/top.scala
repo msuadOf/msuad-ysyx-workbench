@@ -44,5 +44,6 @@ class top(isa_info: String = "RISCV32") extends Module {
   io.diff.IOinit()
   val core = Module(new Core)
   core.io.monitor <> io.piplinetrace
+  core.io.diff <> io.diff
 
 }
