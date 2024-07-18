@@ -1,4 +1,4 @@
-# CONFIG_DIFFTEST=1
+CONFIG_DIFFTEST=1
 
 ifdef CONFIG_DIFFTEST
 DIFF_REF_SO = ${NEMU_HOME}/build/riscv32-nemu-interpreter-so
