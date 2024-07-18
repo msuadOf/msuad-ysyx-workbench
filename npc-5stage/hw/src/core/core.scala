@@ -6,12 +6,33 @@ import core.Stages._
 
 class IFUIO extends BundlePlusImpl {}
 class LSUIO extends BundlePlusImpl {}
-class CoreIO extends BundlePlus with StageBeatsImpl {
-  val LSUIO = new LSUIO
-  val IFUIO = new IFUIO
+class MonitorIO extends BundlePlus {
+  val if2id_if = Output(Handshake(new IF2IDBundle))
+  val if2id_id = Output(Handshake(new IF2IDBundle))
+  val id2ex_id = Output(Handshake(new ID2EXBundle))
+  val id2ex_ex = Output(Handshake(new ID2EXBundle))
+  val ex2wb_ex = Output(Handshake(new EX2WBBundle))
+  val ex2wb_wb = Output(Handshake(new EX2WBBundle))
 
-  val ifu = Output(Handshake(new IF2IDBundle))
-  val idu = Output(Handshake(new IF2IDBundle))
+  def connectStageIO(s: InstFetchStage): Unit = {
+    s.out <> if2id_if
+  }
+  def connectStageIO(s: InstDecodeStage): Unit = {
+    s.in <> if2id_id
+    s.out <> id2ex_id
+  }
+  def connectStageIO(s: ExecStage): Unit = {
+    s.in <> id2ex_ex
+    s.out <> ex2wb_ex
+  }
+  def connectStageIO(s: WriteBackStage): Unit = {
+    s.in <> ex2wb_wb
+  }
+}
+class CoreIO extends BundlePlus with StageBeatsImpl {
+  val LSUIO   = new LSUIO
+  val IFUIO   = new IFUIO
+  val monitor = new MonitorIO
 
   def IOIIInit[T <: Data](value: T): Unit = {
     // idu.IOinit(value)
@@ -57,13 +78,16 @@ class Core extends Module {
   IDStage.build()
   EXStage.build()
   WBStage.build()
-  val isInsertReg =  true
+  val isInsertReg = true
   StageConnect(withRegBeats = isInsertReg)(IFStage, IDStage)
   StageConnect(withRegBeats = isInsertReg)(IDStage, EXStage)
   StageConnect(withRegBeats = isInsertReg)(EXStage, WBStage)
 
-  io.idu <> IDStage.in
-  io.ifu <> IFStage.out
+  io.monitor.connectStageIO(IFStage)
+  io.monitor.connectStageIO(IDStage)
+  io.monitor.connectStageIO(EXStage)
+  io.monitor.connectStageIO(WBStage)
+
   // StageConnect(IFStage, IDStage)
   // StageConnect(IDStage, EXStage)
   // StageConnect(withRegBeats=false)(EXStage, WBStage)
