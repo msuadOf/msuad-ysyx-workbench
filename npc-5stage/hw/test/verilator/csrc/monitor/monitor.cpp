@@ -64,6 +64,23 @@ static int cmd_si(char *args)
   cpu_exec(n);
   return 0;
 }
+static int cmd_tick(char *args)
+{
+  args = strtok(NULL, " ");
+  int n;
+  if (args == NULL)
+  {
+    n = 1;
+  }
+  else
+  {
+    n = atoi(args);
+  }
+
+  cpu_exec(n);
+  return 0;
+
+}
 static int cmd_info(char *args)
 {
   args = strtok(NULL, " ");
@@ -102,6 +119,7 @@ static struct
   int (*handler)(char *);
 } cmd_table[] = {
     {"help", "Display information about all supported commands", cmd_help},
+    {"tick", "时钟单步调试", cmd_tick},
     {"c", "Continue the execution of the program", cmd_c},
     {"q", "Exit NEMU", cmd_q},
     {"si", "让程序单步执行N条指令后暂停执行,当N没有给出时, 缺省为1", cmd_si},

@@ -119,10 +119,10 @@ void tick_once() {
   
 }
 void exec_once(){
-  do
-  {
+  // do
+  // {
     tick_once();
     diff_cpuInfoUpdate(s);
-  }while (!diff_en);
+  //}while (!diff_en);
   
 }
