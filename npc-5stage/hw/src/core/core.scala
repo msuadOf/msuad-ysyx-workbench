@@ -79,7 +79,7 @@ class Core extends Module {
   IDStage.build()
   EXStage.build()
   WBStage.build()
-  io.diff.pc:=IFStage.pc.read
+  // io.diff.pc:=IFStage.pc.read
   val isInsertReg = false
   StageConnect(withRegBeats = isInsertReg)(IFStage, IDStage)
   StageConnect(withRegBeats = isInsertReg)(IDStage, EXStage)
