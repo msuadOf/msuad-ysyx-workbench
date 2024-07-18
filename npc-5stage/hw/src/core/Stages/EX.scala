@@ -20,6 +20,7 @@ class ExecStage(_in: ID2EXBundle, _out: EX2WBBundle) extends PiplineStageWithout
       }
     })
     out.bits.pc:=in.bits.pc
+    out.bits.rd:=in.bits.rd
   }
 }
 

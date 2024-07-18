@@ -65,6 +65,51 @@ void verilator_runtime_deinit(){
   delete contextp;
   delete tfp;
 }
+/* void piplinetrace_cpuInfoUpdate_if2id(CPU_state_diff_t* s){
+io_piplinetrace_if2id_if
+io_piplinetrace_if2id_id
+
+inst 
+pc   
+}
+void piplinetrace_cpuInfoUpdate_id2ex(CPU_state_diff_t* s){
+io_piplinetrace_id2ex_id
+io_piplinetrace_id2ex_ex
+
+pc      
+src1    
+src2    
+rd      
+imm     
+inst_id 
+}
+void piplinetrace_cpuInfoUpdate_ex2wb(CPU_state_diff_t* s){
+
+io_piplinetrace_ex2wb_ex_valid
+io_piplinetrace_ex2wb_ex_ready
+io_piplinetrace_ex2wb_ex_bits_pc    
+io_piplinetrace_ex2wb_ex_bits_dnpc  
+io_piplinetrace_ex2wb_ex_bits_dnpcEn
+io_piplinetrace_ex2wb_ex_bits_rd    
+io_piplinetrace_ex2wb_ex_bits_Rrd   
+io_piplinetrace_ex2wb_ex_bits_RrdEn 
+io_piplinetrace_ex2wb_ex_bits_ebreak
+
+io_piplinetrace_ex2wb_wb_valid
+io_piplinetrace_ex2wb_wb_ready
+io_piplinetrace_ex2wb_wb_bits_pc    
+io_piplinetrace_ex2wb_wb_bits_dnpc  
+io_piplinetrace_ex2wb_wb_bits_dnpcEn
+io_piplinetrace_ex2wb_wb_bits_rd    
+io_piplinetrace_ex2wb_wb_bits_Rrd   
+io_piplinetrace_ex2wb_wb_bits_RrdEn 
+io_piplinetrace_ex2wb_wb_bits_ebreak
+}
+
+void piplinetrace_cpuInfoUpdate(CPU_state_diff_t* s){
+
+}
+ */
 void diff_cpuInfoUpdate(CPU_state_diff_t* s){
   /*
   for i in range(0,32):
@@ -119,10 +164,13 @@ void tick_once() {
   
 }
 void exec_once(){
-  // do
-  // {
+  do
+  {
     tick_once();
     diff_cpuInfoUpdate(s);
-  //}while (!diff_en);
+    extern int is_ebreak;
+    extern void hit_exit(int status);
+    if(is_ebreak==1) hit_exit(0); 
+  }while (!diff_en);
   
 }
