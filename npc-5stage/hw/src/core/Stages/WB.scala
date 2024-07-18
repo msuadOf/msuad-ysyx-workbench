@@ -18,6 +18,7 @@ class WriteBackStage(_in: EX2WBBundle, regfile: RegFile, pc: PC,diff:diffIO) ext
 
     if(diff!=null){
       diff.regs:=regfile.reg
+      diff.pc:=pc.pc
     }
   }
 }
