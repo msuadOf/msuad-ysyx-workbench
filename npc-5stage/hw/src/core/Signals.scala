@@ -75,6 +75,7 @@ class ID2EXBundle extends BundlePlus {
   }
 }
 class EX2WBBundle extends BundlePlus {
+  val pc   = Output(UInt(32.W))
   val dnpc   = Output(UInt(32.W))
   val dnpcEn = Output(Bool())
   val rd     = Output(UInt(5.W))

@@ -13,8 +13,6 @@ class InstFetchStage(_in: IFUIO, _out: IF2IDBundle) extends Stage(_in, _out) {
     super.build()
     pc.init()
     val if_dpic = Module(new IF_DPIC)
-    //TODO: this.in的IOinit
-
     out.bits.inst    := if_dpic.io.inst
     out.bits.pc      := pc.read
     out.valid        := if_dpic.io.inst_en
