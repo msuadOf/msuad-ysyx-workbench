@@ -34,6 +34,7 @@ case class ExecEnv(in: ID2EXBundle, out: EX2WBBundle) extends Bundle {
   val Rrd     = out.Rrd
   val RrdEn   = out.RrdEn
   val dnpcEn  = out.dnpcEn
+  val ebreak  = out.ebreak
   def REG_WRITE(reg: UInt, data: UInt): Unit = {
     Rrd   := data
     RrdEn := true.B
@@ -47,4 +48,5 @@ case class ExecEnv(in: ID2EXBundle, out: EX2WBBundle) extends Bundle {
   def mret_impl(): Unit = {}
   def CSR_READ(idx: UInt) = 0.U
   def CSR_WRITE(idx: UInt, data: UInt): Unit = {}
+  def EBREAK(): Unit = ebreak := 1.B
 }

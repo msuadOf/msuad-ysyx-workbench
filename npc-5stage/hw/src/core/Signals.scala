@@ -80,6 +80,7 @@ class EX2WBBundle extends BundlePlus {
   val rd     = Output(UInt(5.W))
   val Rrd    = Output(UInt(32.W))
   val RrdEn  = Output(Bool())
+  val ebreak  = Output(Bool())
   def IOIIInit[T <: Data](value: T): Unit = {
     rd  := value
     Rrd := value

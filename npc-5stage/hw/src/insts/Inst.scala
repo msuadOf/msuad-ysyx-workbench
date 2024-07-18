@@ -167,7 +167,7 @@ object PriviledgedExec {
     e.csr.mstatus := ((((e.csr.mstatus.read() & (~(1.U << 7))) | ((e.csr.mstatus
       .read() & (1.U << 3)) << 4)) & (~(1.U << 3)))) | ((1.U << 11) + (1.U << 12));
   }
-  def EBREAK = (e: ExecEnv) => e.REG_WRITE(e.dnpc, e.pc + 4.U) //stop npc
+  def EBREAK = (e: ExecEnv) => {e.REG_WRITE(e.dnpc, e.pc);e.EBREAK()} //stop npc
   def MRET = (e: ExecEnv) =>
     e.mret_impl() //{e.REG_WRITE(e.dnpc , e.csr.mepc.read());    e.csr.mstatus.MPRV:= Mux(e.csr.mstatus.MPP =/= 3.U,0.U,e.csr.mstatus.MPRV) ;e.csr.mstatus.MIE:=e.csr.mstatus.MPIE;e.csr.mstatus.MPIE:=1.U;e.csr.mstatus.MPP:=0.U;}
   def FENCE = (e: ExecEnv) => assert(0.B, "The inst has not been impleted\n")
