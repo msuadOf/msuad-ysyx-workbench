@@ -5,7 +5,10 @@ import core._
 import core.utils.BundlePlus
 import chisel3._
 
-class WriteBackStage(_in: EX2WBBundle, regfile: RegFile, pc: PC) extends Stage(_in, new BundlePlus {}) {
+class WriteBackStage(_in: EX2WBBundle, regfile: RegFile, pc: PC,diff:diffIO) extends Stage(_in, new BundlePlus {}) {
+  def this(_in: EX2WBBundle, regfile: RegFile, pc: PC)={
+    this(_in, regfile, pc,null)
+  }
   override def build(): Unit = {
     in.ready:=1.B
     val ebreak=Module(new Ebreak)
@@ -13,5 +16,8 @@ class WriteBackStage(_in: EX2WBBundle, regfile: RegFile, pc: PC) extends Stage(_
     regfile.write(in.fire && in.bits.RrdEn, in.bits.rd, in.bits.Rrd)
     pc.write(in.fire && in.bits.dnpcEn, in.bits.dnpc)
 
+    if(diff!=null){
+      diff.regs:=regfile.reg
+    }
   }
 }

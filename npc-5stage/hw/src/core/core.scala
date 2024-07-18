@@ -33,6 +33,7 @@ class CoreIO extends BundlePlus with StageBeatsImpl {
   val LSUIO   = new LSUIO
   val IFUIO   = new IFUIO
   val monitor = new MonitorIO
+  val diff=new diffIO
 
   def IOIIInit[T <: Data](value: T): Unit = {
     // idu.IOinit(value)
@@ -66,7 +67,7 @@ class Core extends Module {
   val IFStage = new InstFetchStage(IO2IF, IF2ID)
   val IDStage = new InstDecodeStage(IF2ID, ID2EX)
   val EXStage = new ExecStage(ID2EX, EX2WB)
-  val WBStage = new WriteBackStage(EX2WB, IDStage.regfile, IFStage.pc)
+  val WBStage = new WriteBackStage(EX2WB, IDStage.regfile, IFStage.pc,io.diff)
   IFStage.ALL_IOinit()
   IDStage.ALL_IOinit()
   EXStage.ALL_IOinit()

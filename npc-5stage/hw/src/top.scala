@@ -1,3 +1,4 @@
+package core
 import chisel3._
 import chisel3.util._
 
@@ -5,8 +6,9 @@ import chisel3.util.experimental._
 import chisel3.experimental.prefix
 
 import core._
+import core.utils._
 
-class diffIO extends Bundle with core.utils.WithIOInit with core.utils.OverrideIOinit {
+class diffIO extends BundlePlus with core.utils.WithIOInit with core.utils.OverrideIOinit {
   val diff_en  = Output(UInt(1.W))
   val DMemInst = Output(UInt(1.W))
   val pc       = Output(UInt(32.W))
@@ -36,12 +38,11 @@ class top(isa_info: String = "RISCV32") extends Module {
   val io = IO(new Bundle {
     // val IMem = new InstIO
     // val DMem = new MemIO
-
+    val piplinetrace = new MonitorIO
     val diff = new diffIO
-    val core = new CoreIO
   })
   io.diff.IOinit()
   val core = Module(new Core)
-  core.io <> io.core
+  core.io.monitor <> io.piplinetrace
 
 }

@@ -1,5 +1,5 @@
 import circt.stage._
-
+import core._
 object Elaborate extends App {
   def top       = new top()
   val generator = Seq(chisel3.stage.ChiselGeneratorAnnotation(() => top))
