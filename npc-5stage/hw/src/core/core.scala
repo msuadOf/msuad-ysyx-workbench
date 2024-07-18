@@ -29,7 +29,7 @@ class MonitorIO extends BundlePlus {
     s.in <> ex2wb_wb
   }
 }
-class CoreIO extends BundlePlus with StageBeatsImpl {
+class CoreIO extends BundlePlus {
   val LSUIO   = new LSUIO
   val IFUIO   = new IFUIO
   val monitor = new MonitorIO
@@ -79,7 +79,7 @@ class Core extends Module {
   IDStage.build()
   EXStage.build()
   WBStage.build()
-  // io.diff.pc:=IFStage.pc.read
+
   val isInsertReg = false
   StageConnect(withRegBeats = isInsertReg)(IFStage, IDStage)
   StageConnect(withRegBeats = isInsertReg)(IDStage, EXStage)

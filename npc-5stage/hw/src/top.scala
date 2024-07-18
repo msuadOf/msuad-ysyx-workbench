@@ -8,7 +8,7 @@ import chisel3.experimental.prefix
 import core._
 import core.utils._
 
-class diffIO extends BundlePlus with core.utils.WithIOInit with core.utils.OverrideIOinit {
+class diffIO extends BundlePlus with core.utils.OverrideIOinit {
   val diff_en  = Output(UInt(1.W))
   val DMemInst = Output(UInt(1.W))
   val pc       = Output(UInt(32.W))
