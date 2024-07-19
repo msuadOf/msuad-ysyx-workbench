@@ -91,7 +91,7 @@ class Core extends Module {
   scoreBoard.id_record(id_out.rd,id_out.rd_en)
   scoreBoard.wb_record(WBStage.in.bits.rd,WBStage.in.bits.RrdEn)
   when(scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)()){
-      IDStage.out.ready := 0.B
+      EXStage.in.ready := 0.B
   }
 
   io.monitor.connectStageIO(IFStage)
