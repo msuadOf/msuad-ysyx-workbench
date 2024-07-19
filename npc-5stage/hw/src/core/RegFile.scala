@@ -5,7 +5,7 @@ import chisel3.util._
 class PC(init: UInt) {
   val pc_en = Wire(Bool())
   val dnpc  = Wire(UInt(32.W))
-  val pc    = RegEnable(dnpc, "h80000000".U(32.W),1.B)
+  val pc    = RegEnable(dnpc, "h80000000".U(32.W),pc_en)
   val snpc  = pc + 4.U
   dnpc  := snpc
   pc_en := 1.B
