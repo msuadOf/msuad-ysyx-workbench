@@ -107,6 +107,8 @@ object Decode {
     IDStage_out.bits.inst_id := inst_id
     IDStage_out.bits.pc      := pc
 
+    IDStage_out.bits.rs1 := rs1
+    IDStage_out.bits.rs2 := rs2
     IDStage_out.bits.rs1_en := rs1_en
     IDStage_out.bits.rs2_en := rs2_en
     IDStage_out.bits.rd_en  := rd_en
