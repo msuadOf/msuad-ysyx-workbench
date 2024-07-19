@@ -81,9 +81,9 @@ class Core extends Module {
   WBStage.build()
 
   val isInsertReg = true
-  StageConnect(withRegBeats = isInsertReg)(IFStage, IDStage)
-  StageConnect(withRegBeats = isInsertReg)(IDStage, EXStage)
-  StageConnect(withRegBeats = isInsertReg)(EXStage, WBStage)
+  StageConnect(withRegBeats = isInsertReg)(IFStage, IDStage,true.B)
+  StageConnect(withRegBeats = isInsertReg)(IDStage, EXStage,true.B)
+  StageConnect(withRegBeats = isInsertReg)(EXStage, WBStage,true.B)
 
   io.monitor.connectStageIO(IFStage)
   io.monitor.connectStageIO(IDStage)

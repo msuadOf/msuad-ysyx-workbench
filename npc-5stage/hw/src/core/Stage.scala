@@ -60,9 +60,9 @@ object StageConnect {
   def apply[A <: BundlePlus, B <: BundlePlus](
     withRegBeats: Boolean = true
   )(left:         Stage[A, B],
-    right:        Stage[A, B]
+    right:        Stage[A, B], clear:Bool = 0.B
   ): Unit = {
-    if (withRegBeats) { connectWithRegBeats(left, right) }
+    if (withRegBeats) { connectWithRegBeats(left, right,clear) }
     else { right.in <> left.out }
   }
   //TODO: [clear] the Beat reg —— clear信号用于冲刷流水线
