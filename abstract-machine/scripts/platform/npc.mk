@@ -14,7 +14,7 @@ LDFLAGS   += -T $(AM_HOME)/scripts/linker.ld \
 LDFLAGS   += --gc-sections -e _start
 CFLAGS += -I$(AM_HOME)/am/src/riscv/npc/include
 CFLAGS += -DMAINARGS=\"$(mainargs)\"
-NPCFLAGS += -b
+NPCFLAGS += #-b
 .PHONY: $(AM_HOME)/am/src/riscv/npc/trm.c
 
 image: $(IMAGE).elf
