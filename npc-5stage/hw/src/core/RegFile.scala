@@ -19,7 +19,7 @@ class PC(init: UInt) {
   def write(data: UInt) = dnpc := data
   def write(enable: Bool, data: UInt) = {
     when(enable){
-      pc_en := enable
+      // pc_en := enable
       dnpc  := Mux(enable, data, snpc)
     }
 

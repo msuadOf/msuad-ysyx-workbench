@@ -18,6 +18,7 @@ class InstFetchStage(_in: IFUIO, _out: IF2IDBundle) extends Stage(_in, _out) {
     out.valid        := if_dpic.io.inst_en
     if_dpic.io.pc_en := 1.U
     if_dpic.io.pc    := pc.read
+    when(out.ready){pc.pc_en:=0.B}
   }
 }
 class IF_DPIC extends BlackBox with HasBlackBoxInline {
