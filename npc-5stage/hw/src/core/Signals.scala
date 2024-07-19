@@ -45,9 +45,13 @@ class another_ID2EXBundle extends BundlePlus {
 class ID2EXBundle extends BundlePlus {
   val pc      = Output(UInt(32.W))
   val src1    = Output(UInt(32.W))
+  val rs1_en = Output(Bool())
   val src2    = Output(UInt(32.W))
+  val rs2_en = Output(Bool())
   val rd      = Output(UInt(5.W))
+  val rd_en   = Output(Bool())
   val imm     = Output(UInt())
+  val imm_en = Output(Bool())
   val inst_id = Output(UInt())
   def toList: List[UInt] = {
     pc :: src1 :: src2 :: rd :: imm :: inst_id :: Nil

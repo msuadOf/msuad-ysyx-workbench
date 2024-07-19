@@ -27,12 +27,21 @@ object Decode {
     val inst = IDStage_in.bits.inst
     val pc   = IDStage_in.bits.pc
 
-    val rs1 = inst(19, 15)
-    val rs2 = inst(24, 20)
+    val rs1_en = Wire(Bool())
+    val rs2_en = Wire(Bool())
+    val rd_en  = Wire(Bool())
+    val imm_en = Wire(Bool())
 
-    val rd   = inst(11, 7)
+    val rs1 = inst(19, 15)
+    rs1_en := 0.B
+    val rs2 = inst(24, 20)
+    rs2_en := 0.B
+
+    val rd = inst(11, 7)
+    rd_en := 0.B
     val src1 = R.read(rs1)
     val src2 = R.read(rs2)
+    imm_en := 0.B
 
     val immI = (inst(31, 20).asSInt + 0.S(32.W)).asUInt //imm = SEXT(BITS(i, 31, 20), 12);
     val immU = ((inst(31, 12) << 12).asSInt + 0.S(32.W)).asUInt //imm = SEXT(BITS(i, 31, 12), 20) << 12;
@@ -70,6 +79,23 @@ object Decode {
           case Inst.N => 0.U
           case _      => throw new IllegalArgumentException(s"Unkown Inst type [$instType_onTable] not supported(Let us see see where goes wrong ~)")
         })
+        val (_rd_en, _rs1_en, _rs2_en, _imm_en) = (instType_onTable match {
+          case Inst.I => (1.B, 1.B, 0.B, 1.B)
+          case Inst.S => (0.B, 1.B, 1.B, 1.B)
+          case Inst.B => (0.B, 1.B, 1.B, 1.B)
+          case Inst.U => (1.B, 0.B, 0.B, 1.B)
+          case Inst.J => (1.B, 0.B, 0.B, 1.B)
+          case Inst.R => (1.B, 1.B, 1.B, 0.B)
+          case Inst.N => (0.B, 0.B, 0.B, 0.B)
+          case _      => throw new IllegalArgumentException(s"Unkown Inst type [$instType_onTable] not supported(Let us see see where goes wrong ~)")
+
+        })
+
+        rd_en  := _rd_en
+        rs1_en := _rs1_en
+        rs2_en := _rs2_en
+        imm_en := _imm_en
+
       }
 
     })
@@ -80,6 +106,11 @@ object Decode {
     IDStage_out.bits.imm     := imm
     IDStage_out.bits.inst_id := inst_id
     IDStage_out.bits.pc      := pc
+
+    IDStage_out.bits.rs1_en := rs1_en
+    IDStage_out.bits.rs2_en := rs2_en
+    IDStage_out.bits.rd_en  := rd_en
+    IDStage_out.bits.imm_en := imm_en
 
   }
 }
