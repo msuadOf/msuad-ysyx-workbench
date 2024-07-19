@@ -36,11 +36,16 @@ case class ExecEnv(in: ID2EXBundle, out: EX2WBBundle) extends Bundle {
   val RrdEn   = out.RrdEn
   val dnpcEn  = out.dnpcEn
   val ebreak  = out.ebreak
+
   def REG_WRITE(reg: UInt, data: UInt): Unit = {
-    Rrd   := data
-    RrdEn := true.B
+    reg match {
+      case `Rrd` => {    Rrd   := data; RrdEn := true.B}
+      case `dnpc` => {dnpc   := data; dnpcEn := true.B}
+      case _   => {println("need to impl REG_WRITE"); require(false,"need to impl REG_WRITE")}
+    }
+
   }
-  def REG_READ(reg: UInt) = 0.U
+  def REG_READ(reg: UInt) = require(false,"need to impl REG_READ")
 
   def Mr(addr: UInt, width: Int) = 0.U
   def Mw(addr: UInt, width: Int, data: UInt): Unit = {}

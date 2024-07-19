@@ -80,10 +80,19 @@ class Core extends Module {
   EXStage.build()
   WBStage.build()
 
-  val isInsertReg = false
-  StageConnect(withRegBeats = isInsertReg)(IFStage, IDStage)
-  StageConnect(withRegBeats = isInsertReg)(IDStage, EXStage)
-  StageConnect(withRegBeats = isInsertReg)(EXStage, WBStage)
+  val isInsertReg = true
+  val piplineFlushSignal = WBStage.in.bits.dnpcEn
+  StageConnect(withRegBeats = isInsertReg)(IFStage, IDStage,piplineFlushSignal)
+  StageConnect(withRegBeats = isInsertReg)(IDStage, EXStage,piplineFlushSignal)
+  StageConnect(withRegBeats = isInsertReg)(EXStage, WBStage,piplineFlushSignal)
+
+  val scoreBoard=new ScoreBoard
+  val id_out=IDStage.out.bits
+  scoreBoard.id_record(id_out.rd,id_out.rd_en)
+  scoreBoard.wb_record(WBStage.in.bits.rd,WBStage.in.bits.RrdEn)
+  when(scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)()){
+      EXStage.in.ready := 0.B
+  }
 
   io.monitor.connectStageIO(IFStage)
   io.monitor.connectStageIO(IDStage)

@@ -60,13 +60,14 @@ object StageConnect {
   def apply[A <: BundlePlus, B <: BundlePlus](
     withRegBeats: Boolean = true
   )(left:         Stage[A, B],
-    right:        Stage[A, B]
+    right:        Stage[A, B], clear:Bool = 0.B
   ): Unit = {
-    if (withRegBeats) { connectWithRegBeats(left, right) }
+    if (withRegBeats) { connectWithRegBeats(left, right,clear) }
     else { right.in <> left.out }
   }
   //TODO: [clear] the Beat reg —— clear信号用于冲刷流水线
-  def connectWithRegBeats[A <: BundlePlus, B <: BundlePlus](left_stage: Stage[A, B], right_stage: Stage[A, B]): Unit = {
+  def connectWithRegBeats[A <: BundlePlus, B <: BundlePlus](left_stage: Stage[A, B], right_stage: Stage[A, B]): Unit =connectWithRegBeats(left_stage,right_stage,0.B)
+  def connectWithRegBeats[A <: BundlePlus, B <: BundlePlus](left_stage: Stage[A, B], right_stage: Stage[A, B],clear:Bool): Unit = {
     val beatReg_busy = RegInit(0.B)
 
     val left  = left_stage.out
@@ -85,7 +86,7 @@ object StageConnect {
         "b111".U -> 1.B // false
       )
     )
-    beatReg_busy := beatReg_busy_wire
+    beatReg_busy := beatReg_busy_wire && !clear
     (left_stage.out.bits =>> right_stage.in.bits).enable(beatReg_busy_wire) //这个enable就是标志busy寄存器的wire，wire打一拍，数据打一拍，标志寄存器数据就和数据同步了
   }
 
