@@ -18,8 +18,11 @@ class PC(init: UInt) {
 //   def write(idx:UInt,data:UInt) = Mux( (idx===0.U) , reg(32) ,reg(idx) ) :=data
   def write(data: UInt) = dnpc := data
   def write(enable: Bool, data: UInt) = {
-    pc_en := enable
-    dnpc  := Mux(enable, data, snpc)
+    when(enable){
+      pc_en := enable
+      dnpc  := Mux(enable, data, snpc)
+    }
+
   }
 }
 class RegFile(val ISet: String) {
