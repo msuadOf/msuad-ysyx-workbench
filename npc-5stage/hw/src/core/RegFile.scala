@@ -8,12 +8,11 @@ class PC(init: UInt) {
   val pc_wire = Wire(UInt(32.W))
   val pc      = RegEnable(Mux(pc_en, dnpc, pc_wire), "h80000000".U(32.W), 1.B)
   val snpc    = pc + 4.U
-  pc_wire := pc
+
+  def init(): Unit = {
+      pc_wire := pc
   dnpc    := snpc
   pc_en   := 1.B
-  def init(): Unit = {
-    /*     dnpc := snpc
-    pc_en:=0.B */
   }
   def read = pc
 //   def write(idx:UInt,data:UInt) = Mux( (idx===0.U) , reg(32) ,reg(idx) ) :=data
