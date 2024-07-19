@@ -40,7 +40,7 @@ case class ExecEnv(in: ID2EXBundle, out: EX2WBBundle) extends Bundle {
   def REG_WRITE(reg: UInt, data: UInt): Unit = {
     reg match {
       case Rrd => {    Rrd   := data; RrdEn := true.B}
-      case `pc` => {dnpc   := data; dnpcEn := true.B}
+      case `dnpc` => {dnpc   := data; dnpcEn := true.B}
       case _   => {println("need to impl REG_WRITE"); require(false,"need to impl REG_WRITE")}
     }
 
