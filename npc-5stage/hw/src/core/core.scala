@@ -13,6 +13,7 @@ class MonitorIO extends BundlePlus {
   val id2ex_ex = Output(Handshake(new ID2EXBundle))
   val ex2wb_ex = Output(Handshake(new EX2WBBundle))
   val ex2wb_wb = Output(Handshake(new EX2WBBundle))
+  val scoreBoard=Output(UInt(32.W))
 
   def connectStageIO(s: InstFetchStage): Unit = {
     s.out <> if2id_if
@@ -93,7 +94,7 @@ class Core extends Module {
   when(scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)()){
       EXStage.in.ready := 0.B
   }
-
+  io.monitor.scoreBoard:= Cat(scoreBoard.regfileBusy)
   io.monitor.connectStageIO(IFStage)
   io.monitor.connectStageIO(IDStage)
   io.monitor.connectStageIO(EXStage)
