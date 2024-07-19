@@ -168,9 +168,6 @@ void exec_once(){
   {
     tick_once();
     diff_cpuInfoUpdate(s);
-    extern int is_ebreak;
-    extern void hit_exit(int status);
-    if(is_ebreak==1) hit_exit(0); 
   }while (!diff_en);
   
 }
