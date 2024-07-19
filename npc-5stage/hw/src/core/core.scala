@@ -80,7 +80,7 @@ class Core extends Module {
   EXStage.build()
   WBStage.build()
 
-  val isInsertReg = false
+  val isInsertReg = true
   StageConnect(withRegBeats = isInsertReg)(IFStage, IDStage)
   StageConnect(withRegBeats = isInsertReg)(IDStage, EXStage)
   StageConnect(withRegBeats = isInsertReg)(EXStage, WBStage)
