@@ -93,6 +93,7 @@ class Core extends Module {
   when(scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)()){
       IDStage.in.ready := 0.B
   }
+  IDStage.in.ready := 0.B
 
   io.monitor.connectStageIO(IFStage)
   io.monitor.connectStageIO(IDStage)
