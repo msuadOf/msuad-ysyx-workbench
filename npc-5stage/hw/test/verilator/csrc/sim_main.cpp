@@ -147,7 +147,7 @@ void cpu_exec(uint64_t n)
     npc_state.state = NPC_STOP;
     break;
 
-  case NPC_END:
+  case NPC_END:Log("NPC END");
   case NPC_ABORT:
     Log("npc: %s at pc = " FMT_WORD,
         (npc_state.state == NPC_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED) : (npc_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN) : ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
