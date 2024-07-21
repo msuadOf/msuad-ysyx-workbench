@@ -7,14 +7,14 @@ import core.Stages._
 class IFUIO extends BundlePlusImpl {}
 class LSUIO extends BundlePlusImpl {}
 class MonitorIO extends BundlePlus {
-  val if2id_if = Output(Handshake(new IF2IDBundle))
-  val if2id_id = Output(Handshake(new IF2IDBundle))
-  val id2ex_id = Output(Handshake(new ID2EXBundle))
-  val id2ex_ex = Output(Handshake(new ID2EXBundle))
-  val ex2wb_ex = Output(Handshake(new EX2WBBundle))
-  val ex2wb_wb = Output(Handshake(new EX2WBBundle))
-  val scoreBoard=Output(UInt(32.W))
-  val RAW=Output(Bool())
+  val if2id_if   = Output(Handshake(new IF2IDBundle))
+  val if2id_id   = Output(Handshake(new IF2IDBundle))
+  val id2ex_id   = Output(Handshake(new ID2EXBundle))
+  val id2ex_ex   = Output(Handshake(new ID2EXBundle))
+  val ex2wb_ex   = Output(Handshake(new EX2WBBundle))
+  val ex2wb_wb   = Output(Handshake(new EX2WBBundle))
+  val scoreBoard = Output(UInt(32.W))
+  val RAW        = Output(Bool())
 
   def connectStageIO(s: InstFetchStage): Unit = {
     s.out <> if2id_if
@@ -35,7 +35,7 @@ class CoreIO extends BundlePlus {
   val LSUIO   = new LSUIO
   val IFUIO   = new IFUIO
   val monitor = new MonitorIO
-  val diff=new diffIO
+  val diff    = new diffIO
 
   def IOIIInit[T <: Data](value: T): Unit = {
     // idu.IOinit(value)
@@ -69,7 +69,7 @@ class Core extends Module {
   val IFStage = new InstFetchStage(IO2IF, IF2ID)
   val IDStage = new InstDecodeStage(IF2ID, ID2EX)
   val EXStage = new ExecStage(ID2EX, EX2WB)
-  val WBStage = new WriteBackStage(EX2WB, IDStage.regfile, IFStage.pc,io.diff)
+  val WBStage = new WriteBackStage(EX2WB, IDStage.regfile, IFStage.pc, io.diff)
   IFStage.ALL_IOinit()
   IDStage.ALL_IOinit()
   EXStage.ALL_IOinit()
@@ -82,25 +82,41 @@ class Core extends Module {
   EXStage.build()
   WBStage.build()
 
-  val isInsertReg = true
+  val isInsertReg        = true
   val piplineFlushSignal = WBStage.in.bits.dnpcEn && WBStage.in.fire
-  StageConnect(withRegBeats = isInsertReg)(IFStage, IDStage,piplineFlushSignal)
-  StageConnect(withRegBeats = isInsertReg)(IDStage, EXStage,piplineFlushSignal)
-  StageConnect(withRegBeats = isInsertReg)(EXStage, WBStage,piplineFlushSignal)
+  StageConnect(withRegBeats = isInsertReg)(IFStage, IDStage, piplineFlushSignal)
+  StageConnect(withRegBeats = isInsertReg)(IDStage, EXStage, piplineFlushSignal)
+  StageConnect(withRegBeats = isInsertReg)(EXStage, WBStage, piplineFlushSignal)
 
-  val scoreBoard=new ScoreBoard
-  val id_out=IDStage.out.bits
+  val scoreBoard = new ScoreBoard
+  val id_out     = IDStage.out.bits
 
-  scoreBoard.id_record(id_out.rd,id_out.rd_en,IDStage.out.fire)
-  scoreBoard.wb_record(WBStage.in.bits.rd,WBStage.in.bits.RrdEn,WBStage.in.fire)
-  val sb_out : ()=>Bool =scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)
-  when(IDStage.in.valid &&scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)()){
-     IDStage.out.valid:=0.B
-    IDStage.out.ready:=0.B
+  scoreBoard.id_record(id_out.rd, id_out.rd_en, IDStage.out.fire)
+  scoreBoard.wb_record(WBStage.in.bits.rd, WBStage.in.bits.RrdEn, WBStage.in.fire)
+  val sb_out: () => Bool = scoreBoard.id_judgeRAW(id_out.rs1, id_out.rs1_en, id_out.rs2, id_out.rs2_en)
+  val dataHazard_block = false
+  when(IDStage.in.valid && scoreBoard.id_judgeRAW(id_out.rs1, id_out.rs1_en, id_out.rs2, id_out.rs2_en)()) {
+    if (dataHazard_block) {
+      IDStage.out.valid := 0.B
+      IDStage.out.ready := 0.B
+    } else {
+      IDStage.out.bits.rs1_isforward := (scoreBoard.readRegfileBusy(id_out.rs1) === 1.B)
+      IDStage.out.bits.rs2_isforward := (scoreBoard.readRegfileBusy(id_out.rs2) === 1.B)
+    }
   }
-  
-  io.monitor.RAW:=sb_out()
-  io.monitor.scoreBoard:= Cat(scoreBoard.regfileBusy)
+  if (!dataHazard_block) {
+    when(EXStage.in.fire  && WBStage.in.fire && WBStage.in.bits.RrdEn) {
+      when(EXStage.in.bits.rs1_isforward ) {
+        EXStage.in.bits.src1 := WBStage.in.bits.Rrd
+      }
+      when(EXStage.in.bits.rs2_isforward) {
+        EXStage.in.bits.src2 := WBStage.in.bits.Rrd
+      }
+    }
+  }
+
+  io.monitor.RAW        := sb_out()
+  io.monitor.scoreBoard := Cat(scoreBoard.regfileBusy)
   io.monitor.connectStageIO(IFStage)
   io.monitor.connectStageIO(IDStage)
   io.monitor.connectStageIO(EXStage)
