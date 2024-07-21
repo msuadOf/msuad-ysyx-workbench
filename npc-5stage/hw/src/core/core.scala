@@ -83,7 +83,7 @@ class Core extends Module {
   WBStage.build()
 
   val isInsertReg = true
-  val piplineFlushSignal = WBStage.in.bits.dnpcEn && WBStage.in.fire
+  val piplineFlushSignal = WBStage.in.fire//WBStage.in.bits.dnpcEn && WBStage.in.fire
   StageConnect(withRegBeats = isInsertReg)(IFStage, IDStage,piplineFlushSignal)
   StageConnect(withRegBeats = isInsertReg)(IDStage, EXStage,piplineFlushSignal)
   StageConnect(withRegBeats = isInsertReg)(EXStage, WBStage,piplineFlushSignal)
@@ -91,15 +91,15 @@ class Core extends Module {
   val scoreBoard=new ScoreBoard
   val id_out=IDStage.out.bits
 
-  scoreBoard.id_record(id_out.rd,id_out.rd_en,IDStage.out.fire)
-  scoreBoard.wb_record(WBStage.in.bits.rd,WBStage.in.bits.RrdEn,WBStage.in.fire)
-  val sb_out : ()=>Bool =scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)
-  when(scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)()){
-     //IDStage.out.valid:=0.B
-    IDStage.out.ready:=0.B
-  }
+  // scoreBoard.id_record(id_out.rd,id_out.rd_en,IDStage.out.fire)
+  // scoreBoard.wb_record(WBStage.in.bits.rd,WBStage.in.bits.RrdEn,WBStage.in.fire)
+  // val sb_out : ()=>Bool =scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)
+  // when(scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)()){
+  //    //IDStage.out.valid:=0.B
+  //   IDStage.out.ready:=0.B
+  // }
   
-  io.monitor.RAW:=sb_out()
+  //io.monitor.RAW:=sb_out()
   io.monitor.scoreBoard:= Cat(scoreBoard.regfileBusy)
   io.monitor.connectStageIO(IFStage)
   io.monitor.connectStageIO(IDStage)
