@@ -90,7 +90,7 @@ object StageConnect {
         )
       ))
     )
-    left.ready:=right.ready
+    left.ready:=right.ready&& !clear
       beatReg_busy:=res(1) 
       regNext_en:=res(0)
     (left_stage.out.bits =>> right_stage.in.bits).enable(regNext_en)
