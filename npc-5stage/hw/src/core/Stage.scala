@@ -46,7 +46,15 @@ class HandshakeIO[+T <: BundlePlus](gen: T) extends BundlePlus with StageBeatsIm
       val _bits = Wire(chiselTypeOf(bits))
         (_bits.getElements zip bits.getElements).foreach{
           case (thiswire, thatwire) =>
-              thiswire:=Mux(fire,thatwire,chiselTypeOf(thatwire))  
+              thiswire:=Mux(fire,thatwire,thatwire.asTypeOf(chiselTypeOf(thatwire)) ) 
+        }
+      _bits
+   }
+   def getValidBits={ 
+      val _bits = Wire(chiselTypeOf(bits))
+        (_bits.getElements zip bits.getElements).foreach{
+          case (thiswire, thatwire) =>
+              thiswire:=Mux(valid,thatwire,thatwire.asTypeOf(chiselTypeOf(thatwire)) ) 
         }
       _bits
    }
