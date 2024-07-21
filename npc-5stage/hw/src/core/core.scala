@@ -100,8 +100,18 @@ class Core extends Module {
       IDStage.out.valid := 0.B
       IDStage.out.ready := 0.B
     } else {
-      IDStage.out.bits.rs1_isforward := (scoreBoard.readRegfileBusy(id_out.rs1)===1.B)
-       IDStage.out.bits.rs2_isforward := ( scoreBoard.readRegfileBusy(id_out.rs2)===1.B)
+      IDStage.out.bits.rs1_isforward := (scoreBoard.readRegfileBusy(id_out.rs1) === 1.B)
+      IDStage.out.bits.rs2_isforward := (scoreBoard.readRegfileBusy(id_out.rs2) === 1.B)
+    }
+  }
+  if (!dataHazard_block) {
+    when(EXStage.in.fire  && WBStage.in.fire && WBStage.in.bits.RrdEn) {
+      when(EXStage.in.bits.rs1_isforward ) {
+        EXStage.in.bits.src1 := WBStage.in.bits.Rrd
+      }
+      when(EXStage.in.bits.rs2_isforward) {
+        EXStage.in.bits.src2 := WBStage.in.bits.Rrd
+      }
     }
   }
 
