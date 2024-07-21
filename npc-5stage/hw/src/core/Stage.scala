@@ -2,6 +2,7 @@ package core
 import chisel3._
 import chisel3.util._
 import core.utils._
+import coursier.core.shaded.sourcecode.Macros.Chunk.Val
 
 class StageBundle extends Bundle {}
 class HandshakeIO[+T <: BundlePlus](gen: T) extends BundlePlus with StageBeatsImpl {
@@ -33,6 +34,22 @@ class HandshakeIO[+T <: BundlePlus](gen: T) extends BundlePlus with StageBeatsIm
 
   def fire: Bool = this.ready && this.valid
 
+  def map[B <: BundlePlus](f: T => B): HandshakeIO[B] = {
+    val _map_bits = f(bits)
+    val _map = Wire(new HandshakeIO(chiselTypeOf(_map_bits)))
+    _map.bits := _map_bits
+    _map.valid := valid
+    ready := _map.ready
+    _map
+  }
+  def getFiredBits={ 
+      val _bits = Wire(chiselTypeOf(bits))
+        (_bits.getElements zip bits.getElements).foreach{
+          case (thiswire, thatwire) =>
+              thiswire:=Mux(fire,thatwire,chiselTypeOf(thatwire))  
+        }
+      _bits
+   }
   /** A stable typeName for this `ValidReadyIO` and any of its implementations
     * using the supplied `Data` generator's `typeName`
     */
