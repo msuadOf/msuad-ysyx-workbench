@@ -87,7 +87,7 @@ object StageConnect {
       )
     )
     beatReg_busy := beatReg_busy_wire && !clear
-    (left_stage.out.bits =>> right_stage.in.bits).enable(beatReg_busy_wire && right.ready && (!right.fire && !left.fire && beatReg_busy)) //这个enable就是标志busy寄存器的wire，wire打一拍，数据打一拍，标志寄存器数据就和数据同步了
+    (left_stage.out.bits =>> right_stage.in.bits).enable(beatReg_busy_wire && right.ready ) //这个enable就是标志busy寄存器的wire，wire打一拍，数据打一拍，标志寄存器数据就和数据同步了
     //Change Log: enable参数，下面没准备好，就憋RegNext;也就是说，busy和enabel不是一个真值表
   }
 
