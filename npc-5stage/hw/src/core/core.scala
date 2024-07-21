@@ -95,7 +95,7 @@ class Core extends Module {
   val sb_out : ()=>Bool =scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)
   when(scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)()){
       IDStage.out.valid:=0.B
-
+    IDStage.out.ready:=0.B
   }
   io.monitor.RAW:=sb_out()
   io.monitor.scoreBoard:= Cat(scoreBoard.regfileBusy)
