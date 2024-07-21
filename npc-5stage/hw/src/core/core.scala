@@ -91,10 +91,8 @@ class Core extends Module {
   val scoreBoard=new ScoreBoard
   val id_out=IDStage.out.bits
 
-  when(IDStage.out.fire){
-  scoreBoard.id_record(id_out.rd,id_out.rd_en)
-  scoreBoard.wb_record(WBStage.in.bits.rd,WBStage.in.bits.RrdEn)
-  }
+  scoreBoard.id_record(id_out.rd,id_out.rd_en,IDStage.out.fire)
+  scoreBoard.wb_record(WBStage.in.bits.rd,WBStage.in.bits.RrdEn,WBStage.in.fire)
   val sb_out : ()=>Bool =scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)
   when(scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)()){
      //IDStage.out.valid:=0.B
