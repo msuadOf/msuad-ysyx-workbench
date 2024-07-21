@@ -72,7 +72,7 @@ object StageConnect {
 
     val left  = left_stage.out
     val right = right_stage.in
-    left.ready  := !beatReg_busy || right.ready
+    left.ready  := right.ready//更改逻辑：下面没好，不准打拍（原来的是下面没好，先打一拍存着）left.ready  := !beatReg_busy || right.ready
     right.valid := beatReg_busy
     val beatReg_busy_wire = MuxLookup(Cat(left.fire, right.fire, beatReg_busy), 0.B)(
       Seq(
@@ -80,7 +80,7 @@ object StageConnect {
         "b001".U -> 1.B, // false
         //// "b010".U -> 1.B, // 不可能
         "b011".U -> 0.B, // false
-        "b100".U -> 1.B, // true
+        "b100".U -> 0.B,//更改逻辑：下面没好，不准打拍（原来的是下面没好，先打一拍存着） "b100".U -> 1.B, // true
         ////"b101".U -> 0.B, // 不可能
         ////"b110".U -> 1.B, // 不可能
         "b111".U -> 1.B // false
@@ -88,7 +88,7 @@ object StageConnect {
     )
     beatReg_busy := beatReg_busy_wire && !clear
     (left_stage.out.bits =>> right_stage.in.bits).enable(beatReg_busy_wire && right.fire) //这个enable就是标志busy寄存器的wire，wire打一拍，数据打一拍，标志寄存器数据就和数据同步了
-    //Change Log: enable参数，下面没准备好，就憋RegNext
+    //Change Log: enable参数，下面没准备好，就憋RegNext;也就是说，busy和enabel不是一个真值表
   }
 
 }
