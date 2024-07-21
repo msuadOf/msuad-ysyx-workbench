@@ -6,12 +6,12 @@ class PC(init: UInt) {
   private val pc_en   = Wire(Bool())
   private val dnpc    = Wire(UInt(32.W))
   private val pc_wire = Wire(UInt(32.W))
-  val pc      = RegEnable(Mux(pc_en, dnpc, pc_wire), "h80000000".U(32.W), 1.B)
+  val pc      = RegEnable(dnpc, "h80000000".U(32.W), 1.B)
   private val snpc    = pc + 4.U
 
   def init(): Unit = {
       pc_wire := pc
-  dnpc    := snpc
+  dnpc    := Mux(pc_en, snpc, pc_wire)
   pc_en   := 1.B
   }
   def read = pc
@@ -20,7 +20,7 @@ class PC(init: UInt) {
   def write(enable: Bool, data: UInt) = {
     when(enable){
       // pc_en := enable
-      dnpc  := Mux(enable, data, snpc)
+      dnpc  :=  data
     }
   }
   def stopWhen(stop_en:Bool):Unit={
