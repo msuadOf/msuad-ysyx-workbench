@@ -2,7 +2,6 @@ package core
 import chisel3._
 import chisel3.util._
 import core.utils._
-import coursier.core.shaded.sourcecode.Macros.Chunk.Val
 
 class StageBundle extends Bundle {}
 class HandshakeIO[+T <: BundlePlus](gen: T) extends BundlePlus with StageBeatsImpl {
