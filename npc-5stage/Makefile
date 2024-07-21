@@ -16,8 +16,8 @@ sim run:verilator-binary $(DIFF_REF_SO)
 wave:
 	code ${BUILD_DIR}/wave.vcd
 cputest:
-	cd ../am-kernels/tests/cpu-tests/
-	make run ARCH=riscv32e-npc ALL=dummy
+	cd ../am-kernels/tests/cpu-tests/ \
+	&& make run ARCH=riscv32e-npc ALL=dummy
 -include ../Makefile
 clean:
 	-rm -rf obj_dir logs *.log *.dmp *.vpd coverage.dat build

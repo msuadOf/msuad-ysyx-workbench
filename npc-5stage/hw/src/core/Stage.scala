@@ -33,6 +33,30 @@ class HandshakeIO[+T <: BundlePlus](gen: T) extends BundlePlus with StageBeatsIm
 
   def fire: Bool = this.ready && this.valid
 
+  def map[B <: BundlePlus](f: T => B): HandshakeIO[B] = {
+    val _map_bits = f(bits)
+    val _map = Wire(new HandshakeIO(chiselTypeOf(_map_bits)))
+    _map.bits := _map_bits
+    _map.valid := valid
+    ready := _map.ready
+    _map
+  }
+  def getFiredBits={ 
+      val _bits = Wire(chiselTypeOf(bits))
+        (_bits.getElements zip bits.getElements).foreach{
+          case (thiswire, thatwire) =>
+              thiswire:=Mux(fire,thatwire,thatwire.asTypeOf(chiselTypeOf(thatwire)) ) 
+        }
+      _bits
+   }
+   def getValidBits={ 
+      val _bits = Wire(chiselTypeOf(bits))
+        (_bits.getElements zip bits.getElements).foreach{
+          case (thiswire, thatwire) =>
+              thiswire:=Mux(valid,thatwire,thatwire.asTypeOf(chiselTypeOf(thatwire)) ) 
+        }
+      _bits
+   }
   /** A stable typeName for this `ValidReadyIO` and any of its implementations
     * using the supplied `Data` generator's `typeName`
     */
@@ -60,34 +84,41 @@ object StageConnect {
   def apply[A <: BundlePlus, B <: BundlePlus](
     withRegBeats: Boolean = true
   )(left:         Stage[A, B],
-    right:        Stage[A, B], clear:Bool = 0.B
+    right:        Stage[A, B],
+    clear:        Bool    = 0.B
   ): Unit = {
-    if (withRegBeats) { connectWithRegBeats(left, right,clear) }
+    if (withRegBeats) { connectWithRegBeats(left, right, clear) }
     else { right.in <> left.out }
   }
   //TODO: [clear] the Beat reg —— clear信号用于冲刷流水线
-  def connectWithRegBeats[A <: BundlePlus, B <: BundlePlus](left_stage: Stage[A, B], right_stage: Stage[A, B]): Unit =connectWithRegBeats(left_stage,right_stage,0.B)
-  def connectWithRegBeats[A <: BundlePlus, B <: BundlePlus](left_stage: Stage[A, B], right_stage: Stage[A, B],clear:Bool): Unit = {
+  def connectWithRegBeats[A <: BundlePlus, B <: BundlePlus](left_stage: Stage[A, B], right_stage: Stage[A, B]): Unit = connectWithRegBeats(left_stage, right_stage, 0.B)
+  def connectWithRegBeats[A <: BundlePlus, B <: BundlePlus](left_stage: Stage[A, B], right_stage: Stage[A, B], clear: Bool): Unit = {
     val beatReg_busy = RegInit(0.B)
 
     val left  = left_stage.out
     val right = right_stage.in
-    left.ready  := !beatReg_busy || right.ready
     right.valid := beatReg_busy
-    val beatReg_busy_wire = MuxLookup(Cat(left.fire, right.fire, beatReg_busy), 0.B)(
-      Seq(
-        "b000".U -> 0.B, // true
-        "b001".U -> 1.B, // false
-        //// "b010".U -> 1.B, // 不可能
-        "b011".U -> 0.B, // false
-        "b100".U -> 1.B, // true
-        ////"b101".U -> 0.B, // 不可能
-        ////"b110".U -> 1.B, // 不可能
-        "b111".U -> 1.B // false
-      )
+    val regNext_en = Wire(Bool())
+    
+     val res= Mux(clear,0.U,
+      (MuxLookup(Cat(beatReg_busy, left.valid, right.ready), 0.U)(
+        Seq(
+          "b000".U -> "b000".U, // true
+          "b001".U -> "b100".U, // false
+          "b010".U -> "b000".U, //
+          "b011".U -> "b111".U, // false
+          "b100".U -> "b010".U,
+          "b101".U -> "b100".U, //
+          "b110".U -> "b010".U, //
+          "b111".U -> "b111".U // false
+        )
+      ))
     )
-    beatReg_busy := beatReg_busy_wire && !clear
-    (left_stage.out.bits =>> right_stage.in.bits).enable(beatReg_busy_wire) //这个enable就是标志busy寄存器的wire，wire打一拍，数据打一拍，标志寄存器数据就和数据同步了
+    left.ready:=right.ready&& !clear
+      beatReg_busy:=res(1) 
+      regNext_en:=res(0)
+    (left_stage.out.bits =>> right_stage.in.bits).enable(regNext_en,clear)
+
   }
 
 }

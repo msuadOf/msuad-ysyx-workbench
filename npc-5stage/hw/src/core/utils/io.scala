@@ -46,19 +46,19 @@ trait WithIOInit {
   }
 }
 abstract class BundlePlus extends Bundle with WithIOInit {
-  def do_=>>[T <: BundlePlus](enable: Bool)(that: T): Unit = {
+  def do_=>>[T <: BundlePlus](enable: Bool,clear:Bool)(that: T): Unit = {
     val this_wirelist = this.getElements
     val that_wirelist = that.getElements
     (this_wirelist.zip(that_wirelist)).foreach {
       case (thiswire, thatwire) => {
-        thatwire := RegEnable(thiswire, 0.U, enable)
+        thatwire := RegEnable(Mux(clear,0.U.asTypeOf(chiselTypeOf(thiswire)),thiswire), 0.U, enable)
       }
     }
   }
   // for =>> operator like "(A =>> B).enable(C.asBool)"
   class StageConnect_CallChain(left: BundlePlus, right: BundlePlus) {
-    def enable(enable_bool: Bool): Unit = {
-      left.do_=>>(enable_bool)(right)
+    def enable(enable_bool: Bool,clear:Bool): Unit = {
+      left.do_=>>(enable_bool,clear)(right)
     }
   }
   def =>>(that: BundlePlus) = new StageConnect_CallChain(this, that)
