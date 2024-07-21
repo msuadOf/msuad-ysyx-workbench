@@ -93,6 +93,7 @@ class Core extends Module {
   scoreBoard.wb_record(WBStage.in.bits.rd,WBStage.in.bits.RrdEn)
   when(scoreBoard.id_judgeRAW(id_out.rs1,id_out.rs1_en,id_out.rs2,id_out.rs2_en)()){
       IDStage.out.valid:=0.B
+      IDStage.in.ready:=0.B
       IFStage.out.ready:=0.B
   }
   io.monitor.scoreBoard:= Cat(scoreBoard.regfileBusy)
