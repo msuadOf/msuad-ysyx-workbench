@@ -1,5 +1,5 @@
 NAME=npc
-WORK_DIR  = $(shell pwd)
+WORK_DIR  = .#$(shell pwd)
 BUILD_DIR = $(WORK_DIR)/build
 
 Q := @ 
