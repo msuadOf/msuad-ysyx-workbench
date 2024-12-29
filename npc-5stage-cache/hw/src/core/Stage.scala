@@ -1,6 +1,9 @@
 package core
 import chisel3._
 import chisel3.util._
+import chisel3.reflect.DataMirror
+import chisel3.experimental.{requireIsChiselType, Direction}
+
 import core.utils._
 
 class StageBundle extends Bundle {}
@@ -73,6 +76,37 @@ object Handshake {
   def empty:   HandshakeIO[BundlePlus] = Handshake()
 
 }
+/** A concrete subclass of HandshakeIO that promises to not change
+  * the value of 'bits' after a cycle where 'valid' is high and 'ready' is low.
+  * Additionally, once 'valid' is raised it will never be lowered until after
+  * 'ready' has also been raised.
+  * @param gen the type of data to be wrapped in IrrevocableNewIO
+  * @groupdesc Signals The actual hardware fields of the Bundle
+  */
+class IrrevocableNewIO[+T <: BundlePlus](gen: T) extends HandshakeIO[T](gen)
+
+/** Factory adds an IrrevocableNew handshaking protocol to a data bundle. */
+object IrrevocableNew {
+  def apply[T <: BundlePlus](gen: T): IrrevocableNewIO[T] = new IrrevocableNewIO(gen)
+
+  /** Upconverts a HandshakeIO input to an IrrevocableNewIO, allowing an IrrevocableNewIO to be used
+    * where a HandshakeIO is expected.
+    *
+    * @note unsafe (and will error) on the consumer (output) side of an HandshakeIO
+    */
+  def apply[T <: BundlePlus](dec: HandshakeIO[T]): IrrevocableNewIO[T] = {
+    require(
+      DataMirror.directionOf(dec.bits) == Direction.Input,
+      "Only safe to cast consumed Handshake bits to IrrevocableNew."
+    )
+    val i = Wire(new IrrevocableNewIO(chiselTypeOf(dec.bits)))
+    dec.bits := i.bits
+    dec.valid := i.valid
+    i.ready := dec.ready
+    i
+  }
+}
+
 object StageConnect {
   def apply[A <: BundlePlus, B <: BundlePlus](left: Stage[A, B], right: Stage[A, B]): Unit = {
     val arch = "pipeline"

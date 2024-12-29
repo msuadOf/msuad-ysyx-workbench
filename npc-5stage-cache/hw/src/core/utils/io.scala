@@ -8,22 +8,26 @@ trait OverrideIOinit {
 }
 trait WithIOInit {
   def getElements: Seq[Data]
-  def IOinit[T <: Data](value: T): Unit = this.getElements.foreach(x =>
-    x match {
-      case b: chisel3.Bits   => if (chisel3.reflect.DataMirror.directionOf(b) == ActualDirection.Output) b := value
-      case e: BundlePlus     => if (chisel3.reflect.DataMirror.directionOf(e) == ActualDirection.Output) e.IOinit(value)
-      case v: OverrideIOinit => if (chisel3.reflect.DataMirror.directionOf(v) == ActualDirection.Output) v.IOinit(value)
-      case _ => throw new IllegalArgumentException(s"Unknown type(${x}) in IOinit")
-    }
-  )
-  def Flipped_IOinit[T <: Data](value: T): Unit = this.getElements.foreach(x =>
-    x match {
-      case b: chisel3.Bits   => if (chisel3.reflect.DataMirror.directionOf(b) == ActualDirection.Input) b := value
-      case e: BundlePlus     => if (chisel3.reflect.DataMirror.directionOf(e) == ActualDirection.Input) e.IOinit(value)
-      case v: OverrideIOinit => if (chisel3.reflect.DataMirror.directionOf(v) == ActualDirection.Output) v.IOinit(value)
-      case _ => throw new IllegalArgumentException(s"Unknown type(${x}) in IOinit")
-    }
-  )
+  def _IOinit_processor[A <: Data, B <: Data](value: A)(x: B): Unit = x match {
+    case b: chisel3.Bits   => if (chisel3.reflect.DataMirror.directionOf(b) == ActualDirection.Output) b := value
+    case e: BundlePlus     => if (chisel3.reflect.DataMirror.directionOf(e) == ActualDirection.Output) e.IOinit(value)
+    case v: OverrideIOinit => if (chisel3.reflect.DataMirror.directionOf(v) == ActualDirection.Output) v.IOinit(value)
+    case r: Reset          => 
+    case r: Clock          => 
+    case _ => throw new IllegalArgumentException(s"Unknown type(${x}) in IOinit")
+  }
+  def IOinit[T <: Data](value:         T): Unit = this.getElements.foreach(x=>x match{
+    case b: chisel3.Bits   => if (chisel3.reflect.DataMirror.directionOf(b) == ActualDirection.Output) b := value
+    case e: BundlePlus     => e.IOinit(value)
+    case v: OverrideIOinit => v.IOinit(value) 
+    case _ => throw new IllegalArgumentException(s"Unknown type(${x}) in IOinit")
+  })
+  def Flipped_IOinit[T <: Data](value: T): Unit = this.getElements.foreach(x=>x match{
+    case b: chisel3.Bits   => if (chisel3.reflect.DataMirror.directionOf(b) == ActualDirection.Input) b := value
+    case e: BundlePlus     => e.Flipped_IOinit(value)
+    case v: OverrideIOinit => v.Flipped_IOinit(value)
+    case _ => throw new IllegalArgumentException(s"Unknown type(${x}) in IOinit")
+  })
   def IOinit(): Unit = {
     this.IOinit(0.U)
   }
@@ -44,21 +48,25 @@ trait WithIOInit {
     IOinit()
     Flipped_IOinit()
   }
+  def Double_IOinit(): Unit = {
+    IOinit()
+    Flipped_IODontCare()
+  }
 }
 abstract class BundlePlus extends Bundle with WithIOInit {
-  def do_=>>[T <: BundlePlus](enable: Bool,clear:Bool)(that: T): Unit = {
+  def do_=>>[T <: BundlePlus](enable: Bool, clear: Bool)(that: T): Unit = {
     val this_wirelist = this.getElements
     val that_wirelist = that.getElements
     (this_wirelist.zip(that_wirelist)).foreach {
       case (thiswire, thatwire) => {
-        thatwire := RegEnable(Mux(clear,0.U.asTypeOf(chiselTypeOf(thiswire)),thiswire), 0.U, enable)
+        thatwire := RegEnable(Mux(clear, 0.U.asTypeOf(chiselTypeOf(thiswire)), thiswire), 0.U, enable)
       }
     }
   }
   // for =>> operator like "(A =>> B).enable(C.asBool)"
   class StageConnect_CallChain(left: BundlePlus, right: BundlePlus) {
-    def enable(enable_bool: Bool,clear:Bool): Unit = {
-      left.do_=>>(enable_bool,clear)(right)
+    def enable(enable_bool: Bool, clear: Bool): Unit = {
+      left.do_=>>(enable_bool, clear)(right)
     }
   }
   def =>>(that: BundlePlus) = new StageConnect_CallChain(this, that)

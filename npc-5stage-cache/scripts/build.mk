@@ -76,7 +76,7 @@ endif
 CHISEL_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.scala) #search all hw/
 CHISEL_SRC_FILE+=$(shell find $(WORK_DIR)/hw -name *.v) #search all hw/
 
-CHISEL_GEN_VERILOG_FILE=$(BUILD_DIR)/top.v #build/top.v
+CHISEL_GEN_VERILOG_FILE=$(BUILD_DIR)/ysyx_23060093.v #build/top.v
 
 VERILOG_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.v)
 C_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.c) #search all hw/
@@ -84,6 +84,7 @@ CPP_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.cpp) #search all hw/
 C_HEAD_SRC_FILE=$(shell find $(WORK_DIR)/hw -name *.h) #search all hw/
 
 verilog:$(CHISEL_GEN_VERILOG_FILE)
+	sed -i -e 's/_\(aw\|ar\|w\|r\|b\)_\(\|bits_\)/_\1/g' $(CHISEL_GEN_VERILOG_FILE)
 	sed -i '/\/\/ ----- 8< ----- FILE "firrtl_black_box_resource_files.f" ----- 8< -----$$/,+3d' $(CHISEL_GEN_VERILOG_FILE) #删除Chisel BlackBox的脏东西
 ifeq ($(NODISPLAY),y) 
 	@ echo "display disabled in top.v ...... yes"
